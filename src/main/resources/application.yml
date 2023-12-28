@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    username: root
+    password: Nhuan123
+    url: jdbc:mysql://localhost:3306/chatapp
+    driver-class-name: com.mysql.cj.jdbc.Driver
