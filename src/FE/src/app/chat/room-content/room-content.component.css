@@ -1,0 +1,37 @@
+.room-content {
+  padding: 3rem;
+  height: 100%;
+  z-index: 3;
+  box-shadow: 0 2px 4px rgba(15, 34, 58, 0.12);
+  position: relative;
+}
+.room-content .message-form {
+  border-top: 1px solid #f0eff5;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem;
+}
+.room-content .message-form .input-message {
+  flex: 1;
+  padding: 1.2rem;
+  margin-right: 1rem;
+  border-radius: 0.6rem;
+  outline: none;
+  border: 1px solid #e6ebf5;
+  background-color: #e6ebf5;
+}
+.room-content .message-form .form-group-options .btn-submit {
+  padding: 1rem 1.6rem;
+  font-size: 1.6rem;
+  border-radius: 0.6rem;
+  background-color: #7269ef;
+  border: 1px solid #7269ef;
+  color: #fff;
+}
+
+/*# sourceMappingURL=room-content.component.css.map */

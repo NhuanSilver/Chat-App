@@ -23,16 +23,16 @@ export class ChatRoomsComponent {
       status: STATUS.ONLINE
     },
     {
-      username : "nhuan",
+      username : "nhi",
       fullName : "Một Ngươi Nào Đó",
       imgUrl: "http://chatvia-light.react.themesbrand.com/static/media/avatar-4.b23e41d9c09997efbc21.jpg",
       status: STATUS.ONLINE
     },
     {
-      username : "nhuan",
+      username : "linh",
       fullName : "Mà Ta Có Thể Tìm Thấy",
       imgUrl: "http://chatvia-light.react.themesbrand.com/static/media/avatar-5.a5c59cee7b3dfda1156d.jpg",
-      status: STATUS.ONLINE
+      status: STATUS.OFFLINE
     },
   ];
 

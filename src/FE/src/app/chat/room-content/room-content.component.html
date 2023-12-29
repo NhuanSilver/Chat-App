@@ -1,0 +1,15 @@
+<div class="room-content">
+  <ng-container *ngFor="let message of chatMessages">
+    <app-message [message]="message" ></app-message>
+  </ng-container>
+
+  <form class="message-form" [formGroup]="messageForm" (ngSubmit)="onSubmit()">
+      <input class="input-message" placeholder="Nhập tin nhắn..." type="text" formControlName="messageControl" >
+    <div class="form-group-options">
+      <button type="submit" class="btn btn-submit">
+        <fa-icon [icon]= "faPaperPlane"></fa-icon>
+      </button>
+    </div>
+  </form>
+
+</div>
