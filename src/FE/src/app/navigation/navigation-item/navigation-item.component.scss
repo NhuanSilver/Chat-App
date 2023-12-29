@@ -1,0 +1,17 @@
+span{
+  display: block;
+  text-align: center;
+  padding: 2.4rem 0;
+  cursor: pointer;
+  .icon {
+    font-size: 2rem;
+  }
+  img {
+    width: 40%;
+    border-radius: 50%;
+    object-fit: contain;
+  }
+  :last-child{
+    padding-bottom: 0;
+  }
+}

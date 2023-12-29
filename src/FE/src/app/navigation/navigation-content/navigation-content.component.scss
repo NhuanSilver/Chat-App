@@ -1,0 +1,9 @@
+@import "../../../assets/variables";
+.nav-content {
+  padding: 2.4rem;
+  height: 100%;
+  width: 100%;
+  background-color: $nav-bar-bg;
+  color: $light-text-color;
+  box-shadow: 0 2px 4px rgba(15,34,58,.12);
+}

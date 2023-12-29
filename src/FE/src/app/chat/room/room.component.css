@@ -1,0 +1,43 @@
+.room-user {
+  cursor: pointer;
+  display: flex;
+  height: fit-content;
+  align-items: center;
+  gap: 2rem;
+  font-size: 1.6rem;
+  margin-top: 2rem;
+}
+.room-user .user {
+  position: relative;
+  width: 3rem;
+}
+.room-user .user .user-img {
+  border-radius: 50%;
+  width: 100%;
+  object-fit: contain;
+}
+.room-user .user .user-status {
+  position: absolute;
+  bottom: 0.3rem;
+  right: 0.2rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  background-color: green;
+  border-radius: 50%;
+}
+.room-user .room {
+  flex: 1;
+}
+.room-user .room .message-info {
+  display: flex;
+  justify-content: space-between;
+}
+.room-user .room .message-info .time {
+  font-size: 1.3rem;
+}
+.room-user .room p {
+  font-size: 1.3rem;
+  padding-top: 0.4rem;
+}
+
+/*# sourceMappingURL=room.component.css.map */

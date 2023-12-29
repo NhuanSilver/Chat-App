@@ -1,0 +1,19 @@
+span {
+  display: block;
+  text-align: center;
+  padding: 2.4rem 0;
+  cursor: pointer;
+}
+span .icon {
+  font-size: 2rem;
+}
+span img {
+  width: 40%;
+  border-radius: 50%;
+  object-fit: contain;
+}
+span :last-child {
+  padding-bottom: 0;
+}
+
+/*# sourceMappingURL=navigation-item.component.css.map */

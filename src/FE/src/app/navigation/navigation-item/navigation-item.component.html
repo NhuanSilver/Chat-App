@@ -1,0 +1,6 @@
+<span *ngIf="item.icon != undefined">
+  <fa-icon class="icon" [icon]="item.icon"></fa-icon>
+</span>
+<span *ngIf="item.imgUrl.length > 0">
+  <img [src]="item.imgUrl" alt="user">
+</span>

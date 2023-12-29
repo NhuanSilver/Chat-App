@@ -1,0 +1,16 @@
+<div class="room-user">
+  <div class="user">
+    <img class="user-img" [src]="user.imgUrl" alt="">
+    <span class="user-status" *ngIf="user.status === STATUS.ONLINE">
+    </span>
+  </div>
+
+  <div class="room">
+    <div class="message-info">
+      <span class="user-fullName">{{user.fullName}}</span>
+      <span class="time">02:50 PM</span>
+    </div>
+    <p>Latest message</p>
+  </div>
+
+</div>
