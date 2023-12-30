@@ -3,6 +3,8 @@ import {UserService} from "../../service/user.service";
 import {Router} from "@angular/router";
 import {Component} from "@angular/core";
 import {HttpClientModule} from "@angular/common/http";
+import {Websocket} from "../../service/websocket";
+import {StorageService} from "../../service/storage.service";
 
 @Component({
   selector: 'app-login',
@@ -16,7 +18,11 @@ import {HttpClientModule} from "@angular/common/http";
 })
 export class LoginComponent {
   loginForm !: FormGroup;
-  constructor(private fb : FormBuilder, private userService: UserService, private router: Router) {
+  constructor(private fb : FormBuilder,
+              private userService: UserService,
+              private router: Router,
+              private websocketService : Websocket,
+              private storageService : StorageService) {
     this.loginForm = this.fb.group(
       {
         'username' : ['', Validators.required],
@@ -26,11 +32,11 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    console.log(this.loginForm.get('username')?.value + " " + this.loginForm.get('password')?.value)
     this.userService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value)
       .subscribe({
         next: user => {
-            console.log(user)
+            this.storageService.saveUser(user)
+            this.websocketService.connect()
             this.router.navigate(['/home'])
           },
         error: err => {

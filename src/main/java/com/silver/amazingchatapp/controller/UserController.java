@@ -5,6 +5,7 @@ import com.silver.amazingchatapp.dto.UserDto;
 import com.silver.amazingchatapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api")
 public class UserController {
     private final UserService userService;
