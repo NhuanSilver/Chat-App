@@ -9,8 +9,8 @@ import java.sql.Timestamp;
 @Builder
 public class ChatMessageDTO {
     private Long id;
+    private String conversationId;
     private String senderId;
-    private String recipientId;
     private String content;
     private Timestamp sentAt;
 }

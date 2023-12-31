@@ -1,4 +1,4 @@
-<div class="message-wrapper" [ngClass]="message.senderId ===  getCurrentUser().username ? 'sender' : '' " >
+<div #messageElement class="message-wrapper" [ngClass]="message.senderId ===  getCurrentUser().username ? 'sender' : '' " >
   <div class="message-container">
     <img class="user-img" src="{{ getCurrentUser().avatarUrl}}" alt="">
     <p class="message-content">{{message.content}}</p>

@@ -1,8 +1,9 @@
 <div class="room-content">
-  <div class="message-area">
+  <div  class="message-area">
     <ng-container *ngFor="let message of chatMessages">
-      <app-message [message]="message" ></app-message>
+      <app-message *ngIf="message" [message]="message" ></app-message>
     </ng-container>
+    <div #chatBox></div>
   </div>
 
   <form class="message-form" [formGroup]="messageForm" (ngSubmit)="onSubmit()">
@@ -13,5 +14,4 @@
       </button>
     </div>
   </form>
-
 </div>

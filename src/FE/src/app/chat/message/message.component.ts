@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, ElementRef, Input, ViewChild} from '@angular/core';
 import {ChatMessage} from "../../model/ChatMessage";
 import {NgClass} from "@angular/common";
 import {UserService} from "../../service/user.service";

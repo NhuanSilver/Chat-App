@@ -71,6 +71,7 @@ public class ChatMessageService {
             messagingTemplate.convertAndSendToUser(recipient.getUsername(), "/queue/messages",
                     ChatMessageDTO.builder()
                             .id(chatMessage.getId())
+                            .conversationId(conversation.getId())
                             .senderId(chatMessage.getSender().getUsername())
                             .content(chatMessage.getContent())
                             .sentAt(chatMessage.getSentAt())
@@ -89,6 +90,7 @@ public class ChatMessageService {
         return messages.stream()
                 .map(m -> ChatMessageDTO.builder()
                         .id(m.getId())
+                        .conversationId(conversation.getId())
                         .senderId(m.getSender().getUsername())
                         .content(m.getContent())
                         .sentAt(m.getSentAt())

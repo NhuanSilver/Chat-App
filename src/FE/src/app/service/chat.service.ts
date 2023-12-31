@@ -30,6 +30,12 @@ export class ChatService {
   getAllConversations() {
     return  this.http.get<Conversation[]>(`http://localhost:8080/conversations/user/${this.userService.getCurrentUser().username}`)
   }
+  getMessages$() {
+    return this.websocketService.getMessage$();
+  }
+  getUser$() {
+    return this.websocketService.getUser$();
+  }
 
 
 }

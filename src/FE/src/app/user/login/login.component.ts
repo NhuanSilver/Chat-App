@@ -5,6 +5,7 @@ import {Component} from "@angular/core";
 import {HttpClientModule} from "@angular/common/http";
 import {WebsocketService} from "../../service/websocket.service";
 import {StorageService} from "../../service/storage.service";
+import {STATUS} from "../../model/STATUS";
 
 @Component({
   selector: 'app-login',
@@ -35,8 +36,9 @@ export class LoginComponent {
     this.userService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value)
       .subscribe({
         next: user => {
-            this.storageService.saveUser(user)
             this.websocketService.connect()
+            user.status = STATUS.ONLINE
+            this.storageService.saveUser(user)
             this.router.navigate(['/home'])
           },
         error: err => {
