@@ -1,13 +1,13 @@
 package com.silver.amazingchatapp.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,10 +19,8 @@ public class User {
     private String fullName;
     private String avatarUrl;
     private Status status;
-    @OneToMany(mappedBy = "user")
-    private List<ChatMessage> messages;
     @ManyToMany
-    @JoinTable(name = "user_room", joinColumns = @JoinColumn(name = "user"),
-            inverseJoinColumns = @JoinColumn(name = "room"))
-    private List<ChatRoom> rooms;
+    private Set<Conversation> conversations;
+    @OneToMany(mappedBy = "sender")
+    private List<ChatMessage> messages;
 }

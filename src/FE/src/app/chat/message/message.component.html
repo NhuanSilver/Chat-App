@@ -1,6 +1,6 @@
-<div class="message-wrapper" [ngClass]="message.senderId ===  'nhuan' ? 'sender' : '' " >
+<div class="message-wrapper" [ngClass]="message.senderId ===  getCurrentUser().username ? 'sender' : '' " >
   <div class="message-container">
-    <img class="user-img" src="http://chatvia-light.react.themesbrand.com/static/media/avatar-5.a5c59cee7b3dfda1156d.jpg" alt="">
+    <img class="user-img" src="{{ getCurrentUser().avatarUrl}}" alt="">
     <p class="message-content">{{message.content}}</p>
   </div>
 </div>

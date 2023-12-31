@@ -1,5 +1,6 @@
 .message-wrapper {
   display: flex;
+  margin: 0.3rem 0;
   flex-direction: row;
 }
 .message-wrapper .message-container {

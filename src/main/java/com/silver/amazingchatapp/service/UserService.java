@@ -6,9 +6,10 @@ import com.silver.amazingchatapp.model.Status;
 import com.silver.amazingchatapp.model.User;
 import com.silver.amazingchatapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +20,8 @@ public class UserService {
         User user = userRepository.findById(loginRequest.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Not found user"));
 
-        if (!user.getPassword().equals(loginRequest.getPassword())) throw new IllegalArgumentException("Password invalid");
+        if (!user.getPassword().equals(loginRequest.getPassword()))
+            throw new IllegalArgumentException("Password invalid");
         return UserDto.builder()
                 .username(user.getUsername())
                 .fullName(user.getFullName())
@@ -34,5 +36,18 @@ public class UserService {
         user.setStatus(Status.ONLINE);
         userDto.setStatus(userRepository.save(user).getStatus());
         return userDto;
+    }
+
+    public List<UserDto> getAllUsers() {
+        return this.userRepository.findAll().stream()
+                .map(
+                        user -> UserDto.builder()
+                                .username(user.getUsername())
+                                .avatarUrl(user.getAvatarUrl())
+                                .status(user.getStatus())
+                                .fullName(user.getFullName())
+                                .build()
+                )
+                .collect(Collectors.toList());
     }
 }

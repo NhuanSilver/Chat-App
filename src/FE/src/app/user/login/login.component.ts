@@ -3,7 +3,7 @@ import {UserService} from "../../service/user.service";
 import {Router} from "@angular/router";
 import {Component} from "@angular/core";
 import {HttpClientModule} from "@angular/common/http";
-import {Websocket} from "../../service/websocket";
+import {WebsocketService} from "../../service/websocket.service";
 import {StorageService} from "../../service/storage.service";
 
 @Component({
@@ -21,7 +21,7 @@ export class LoginComponent {
   constructor(private fb : FormBuilder,
               private userService: UserService,
               private router: Router,
-              private websocketService : Websocket,
+              private websocketService : WebsocketService,
               private storageService : StorageService) {
     this.loginForm = this.fb.group(
       {
