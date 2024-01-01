@@ -2,34 +2,35 @@ import { Component } from '@angular/core';
 import {NavigationItemComponent} from "../navigation-item/navigation-item.component";
 import {NavItem} from "../../model/NavItem";
 import {faAddressBook, faMoon, faUser, faUserGroup} from "@fortawesome/free-solid-svg-icons";
-import {NgForOf} from "@angular/common";
+import {CommonModule, NgForOf} from "@angular/common";
+import {UserService} from "../../service/user.service";
 
 @Component({
   selector: 'app-navigation-bar',
   standalone: true,
   imports: [
     NavigationItemComponent,
-    NgForOf
+    CommonModule
   ],
   templateUrl: './navigation-bar.component.html',
   styleUrl: './navigation-bar.component.scss'
 })
 export class NavigationBarComponent {
+  user = this.userService.getCurrentUser()
+  constructor(private userService: UserService) {
+  }
   private navItems: NavItem[] =  [
     {
       name : "chat",
       icon : faUser,
-      imgUrl: ""
     },
     {
       name: "group",
       icon: faUserGroup,
-      imgUrl: ""
     },
     {
       name: "contact",
       icon: faAddressBook,
-      imgUrl: ""
     },
   ]
 
@@ -37,12 +38,6 @@ export class NavigationBarComponent {
     {
       name : "theme",
       icon : faMoon,
-      imgUrl: ""
-    },
-    {
-      name: "user",
-      icon: undefined,
-      imgUrl: "http://chatvia-light.react.themesbrand.com/static/media/avatar-1.3921191a8acf79d3e907.jpg"
     },
   ]
   public getNavItems () : NavItem[] {

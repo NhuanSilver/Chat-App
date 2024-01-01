@@ -22,7 +22,6 @@ export class LoginComponent {
   constructor(private fb : FormBuilder,
               private userService: UserService,
               private router: Router,
-              private websocketService : WebsocketService,
               private storageService : StorageService) {
     this.loginForm = this.fb.group(
       {
@@ -36,7 +35,6 @@ export class LoginComponent {
     this.userService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value)
       .subscribe({
         next: user => {
-            this.websocketService.connect()
             user.status = STATUS.ONLINE
             this.storageService.saveUser(user)
             this.router.navigate(['/home'])

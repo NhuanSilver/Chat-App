@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {NavItem} from "../../model/NavItem";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {NgIf, NgOptimizedImage} from "@angular/common";

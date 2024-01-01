@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {User} from "../model/User";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {StorageService} from "./storage.service";
 
 @Injectable({
@@ -9,6 +9,7 @@ import {StorageService} from "./storage.service";
 })
 
 export class UserService {
+  private recipientsSubject = new BehaviorSubject<User[]>([]);
   constructor(private http: HttpClient,
               private storageService : StorageService) {
 
@@ -21,5 +22,11 @@ export class UserService {
   }
   getCurrentUser() : User {
     return this.storageService.getCurrentUser()
+  }
+  getRecipients$() {
+    return this.recipientsSubject.asObservable();
+  }
+  setRecipients(recipient : User[]) {
+    this.recipientsSubject.next(recipient);
   }
 }

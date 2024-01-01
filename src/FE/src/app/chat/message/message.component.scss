@@ -8,7 +8,9 @@
     width: 50%;
     align-items: center;
     .user-img {
-      width: 3rem;
+      width: 3.4rem;
+      height: 3.4rem;
+      object-fit: cover;
       border-radius: 50%;
     }
     .message-content {

@@ -18,7 +18,6 @@ import {ChatMessage} from "../../model/ChatMessage";
 export class RoomComponent extends BaseComponent implements OnInit{
   @Input() conversation !: Conversation
   protected readonly STATUS = STATUS;
-  isActive: boolean= false;
   members : User[] = [];
   latestMessage !: ChatMessage
   constructor(private chatService : ChatService,
@@ -52,7 +51,11 @@ export class RoomComponent extends BaseComponent implements OnInit{
   }
 
   setConversation() {
-    this.chatService.setConversation(this.conversation)
+    this.chatService.setConversation(this.conversation);
+    this.userService.setRecipients(this.conversation.members);
+  }
+  getConversation$(){
+    return this.chatService.conversation$
   }
 
 }

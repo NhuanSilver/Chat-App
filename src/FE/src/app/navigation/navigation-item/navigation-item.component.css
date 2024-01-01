@@ -7,13 +7,5 @@ span {
 span .icon {
   font-size: 2rem;
 }
-span img {
-  width: 40%;
-  border-radius: 50%;
-  object-fit: contain;
-}
-span :last-child {
-  padding-bottom: 0;
-}
 
 /*# sourceMappingURL=navigation-item.component.css.map */

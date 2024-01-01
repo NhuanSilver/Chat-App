@@ -1,17 +1,37 @@
-<div class="room-content">
-  <div  class="message-area">
-    <ng-container *ngFor="let message of chatMessages">
-      <app-message *ngIf="message" [message]="message" ></app-message>
-    </ng-container>
-    <div #chatBox></div>
-  </div>
+<ng-container *ngIf="recipients$ | async as recipients">
+  <div class="room-content" *ngIf="recipients.length > 0" >
+    <div class="room-header-container" *ngIf="recipients">
+      <div class="room-user-area">
+        <div class="room-user-img">
+          <img [src]="recipient.avatarUrl" alt="" *ngFor="let recipient of recipients">
+        </div>
+        <div class="room-user-name">
+          <span class="room-user-name-content" *ngFor="let recipient of recipients; let isLast = last">
+            {{recipient.fullName}}{{isLast ? '' : ','}}
+          </span>
+          <div class="room-user-online" *ngIf="recipients.length === 1"></div>
+        </div>
+      </div>
+      <ul class="room-user-actions">
+        <li *ngFor="let item of roomNavItems" app-navigation-item [item]="item">
+        </li>
+      </ul>
+    </div>
+    <div  class="message-area">
+      <ng-container *ngFor="let message of chatMessages">
+        <app-message *ngIf="message" [conversation]="conversation" [message]="message" ></app-message>
+      </ng-container>
+      <div #chatBox></div>
+    </div>
 
-  <form class="message-form" [formGroup]="messageForm" (ngSubmit)="onSubmit()">
+    <form class="message-form" [formGroup]="messageForm" (ngSubmit)="onSubmit(recipients)">
       <input class="input-message" placeholder="Nhập tin nhắn..." type="text" formControlName="messageControl" >
       <div class="form-group-options">
-      <button type="submit" class="btn btn-submit">
-        <fa-icon [icon]= "faPaperPlane"></fa-icon>
-      </button>
-    </div>
-  </form>
-</div>
+        <button type="submit" class="btn btn-submit">
+          <fa-icon [icon]= "faPaperPlane"></fa-icon>
+        </button>
+      </div>
+    </form>
+  </div>
+
+</ng-container>

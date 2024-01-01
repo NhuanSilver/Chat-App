@@ -1,9 +1,53 @@
 .room-content {
-  padding-top: 3rem;
   display: flex;
   flex-direction: column;
   box-shadow: 0 2px 4px rgba(15, 34, 58, 0.12);
   height: 100%;
+}
+.room-content .room-header-container {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #f0eff5;
+}
+.room-content .room-header-container .room-user-area {
+  display: flex;
+  padding-left: 3rem;
+  align-items: center;
+  gap: 1rem;
+}
+.room-content .room-header-container .room-user-area .room-user-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-size: 1.6rem;
+}
+.room-content .room-header-container .room-user-area .room-user-name .room-user-online {
+  display: block;
+  border-radius: 50%;
+  border: 4px solid green;
+  width: 1rem;
+  height: 1rem;
+  background-color: #fff;
+}
+.room-content .room-header-container .room-user-area .room-user-img {
+  flex-wrap: wrap;
+  display: flex;
+  width: fit-content;
+}
+.room-content .room-header-container .room-user-area .room-user-img img {
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  object-fit: cover;
+}
+.room-content .room-header-container .room-user-actions {
+  display: flex;
+  list-style: none;
+  margin-right: 3rem;
+}
+.room-content .room-header-container .room-user-actions li {
+  padding-left: 2.4rem;
 }
 .room-content .message-area {
   overflow-y: scroll;
@@ -29,6 +73,7 @@
 .room-content .message-form .form-group-options .btn-submit {
   padding: 1rem 1.6rem;
   font-size: 1.6rem;
+  cursor: pointer;
   border-radius: 0.6rem;
   background-color: #7269ef;
   border: 1px solid #7269ef;

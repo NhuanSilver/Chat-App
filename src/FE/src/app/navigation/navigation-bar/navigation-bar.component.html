@@ -10,5 +10,11 @@
   <ul>
     <li *ngFor="let item of getUserNavItems()" app-navigation-item [item]=item>
     </li>
+    <li class="user-nav">
+      <div *ngIf="user">
+        <img [src]="user.avatarUrl" alt="user">
+      </div>
+
+    </li>
   </ul>
 </div>
