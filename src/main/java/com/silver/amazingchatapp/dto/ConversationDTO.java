@@ -8,7 +8,8 @@ import java.util.List;
 @Data
 @Builder
 public class ConversationDTO  {
-    private String id;
+    private Long id;
     private String name;
+    private ChatMessageDTO latestMessage;
     private List<UserDto> members;
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Builder
 public class ChatMessageRequest {
-    private String conversationId;
+    private Long conversationId;
     private String senderId;
     private List<String> recipientIds;
     private String content;

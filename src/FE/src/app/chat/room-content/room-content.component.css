@@ -51,7 +51,7 @@
 }
 .room-content .message-area {
   overflow-y: scroll;
-  padding: 0 3rem;
+  padding: 2rem 3rem 0;
   flex: 1;
 }
 .room-content .message-form {

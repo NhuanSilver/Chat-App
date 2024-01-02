@@ -1,6 +1,6 @@
 package com.silver.amazingchatapp.model;
 
-public enum Status {
+public enum USER_STATUS {
     ONLINE,
     OFFLINE
 }

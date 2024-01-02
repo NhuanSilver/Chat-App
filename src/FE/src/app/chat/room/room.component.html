@@ -8,9 +8,9 @@
   <div class="room">
     <div class="message-info">
       <span class="user-fullName" *ngFor="let member of members">{{member.fullName}}</span>
-      <span class="time" *ngIf="latestMessage" >{{latestMessage.sentAt | date}}</span>
+      <span class="time" *ngIf="conversation.latestMessage?.sentAt" >{{conversation.latestMessage?.sentAt | date}}</span>
     </div>
-    <p *ngIf="latestMessage">{{latestMessage.content}}</p>
+    <p *ngIf="conversation.latestMessage">{{conversation.latestMessage?.content}}</p>
   </div>
 
 </div>

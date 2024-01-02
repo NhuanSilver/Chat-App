@@ -6,7 +6,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faPaperPlane} from "@fortawesome/free-regular-svg-icons";
 import {ChatService} from "../../service/chat.service";
-import {map, of, switchMap} from "rxjs";
+import {combineLatest, map, of, switchMap} from "rxjs";
 import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../BaseComponent";
 import {NavigationItemComponent} from "../../navigation/navigation-item/navigation-item.component";
@@ -45,11 +45,18 @@ export class RoomContentComponent extends BaseComponent {
   chatMessages: ChatMessage[] = [];
   conversation !: Conversation
 
-  chatMessagesSub = this.chatService.conversation$.pipe(
-    switchMap(cvs => {
-      if (cvs) {
-        this.conversation = cvs
-        return this.chatService.getConversationMessages(cvs.id)
+  chatMessagesSub = combineLatest([
+    this.userService.getRecipients$(),
+    this.chatService.conversation$
+  ]).pipe(
+    map(([recipients, conversation]) : {recipients : User[], conversation : Conversation | undefined} => ({
+      recipients, conversation
+    })),
+    switchMap(value => {
+      if (value && value.conversation != undefined && value.recipients) {
+        this.conversation = value.conversation
+        return this.chatService.getConversationMessages(value.conversation.id,
+          new Set([...value.recipients.map(r => r.username, this.currentUser.username)]))
       }
       return of([]);
     })
@@ -57,12 +64,14 @@ export class RoomContentComponent extends BaseComponent {
     this.chatMessages = value;
     this.scrollToBottom()
   })
-  newMessageSub = this.chatService.getMessages$().pipe(
-  ).subscribe(value => {
-    if (value && this.conversation.id === value.conversationId) {
 
-      this.chatMessages.push(value)
-      this.scrollToBottom()
+  newMessageSub = this.chatService.getMessage$().pipe(
+  ).subscribe(value => {
+    if (value != undefined) {
+     if ( this.conversation?.id === value.conversationId) {
+       this.chatMessages.push(value)
+       this.scrollToBottom()
+     }
     }
   })
   recipients$ = this.userService.getRecipients$()
@@ -80,9 +89,8 @@ export class RoomContentComponent extends BaseComponent {
     this.subscriptions.push(this.newMessageSub)
   }
 
-  onSubmit(recipients : User[]) {
+  onSubmit(recipients: User[]) {
     const recipientsClone = [...recipients]
-    recipientsClone.push(this.currentUser)
     this.chatService.sendMessage({
       conversationId: this.conversation.id || '',
       recipientIds: recipientsClone.map(re => re.username),
@@ -91,7 +99,7 @@ export class RoomContentComponent extends BaseComponent {
     this.messageForm.get('messageControl')?.setValue('')
   }
 
-  scrollToBottom() {
+  private scrollToBottom() {
     if (this.conversation != undefined) {
       setTimeout(() => {
         this.chatBox.nativeElement.scrollIntoView()

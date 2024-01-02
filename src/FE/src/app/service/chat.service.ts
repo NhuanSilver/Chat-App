@@ -20,8 +20,8 @@ export class ChatService {
   sendMessage(message: {conversationId : string, recipientIds: string[], content: string }){
     this.websocketService.sendMessage(message)
   }
-  getConversationMessages(conversationId : string) {
-    return this.http.get<ChatMessage[]>(`http://localhost:8080/conversations/${conversationId}/messages`)
+  getConversationMessages(conversationId : string, usernames : Set<string>) {
+    return this.http.get<ChatMessage[]>(`http://localhost:8080/conversations/${conversationId}/messages/${[...usernames]}`);
   }
 
   setConversation(conversation : Conversation) {
@@ -30,7 +30,7 @@ export class ChatService {
   getAllConversations() {
     return  this.http.get<Conversation[]>(`http://localhost:8080/conversations/user/${this.userService.getCurrentUser().username}`)
   }
-  getMessages$() {
+  getMessage$() {
     return this.websocketService.getMessage$();
   }
   getUser$() {

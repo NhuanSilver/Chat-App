@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {ChatMessage} from "../model/ChatMessage";
 import {Client} from "@stomp/stompjs";
@@ -11,18 +11,20 @@ import {UserService} from "./user.service";
 })
 export class WebsocketService {
   private stompClient !: Client;
-  private messageSubject: BehaviorSubject<ChatMessage | undefined> =
-    new BehaviorSubject<ChatMessage | undefined>(undefined);
-  private userSubject  = new BehaviorSubject<User | undefined>(undefined);
-  constructor(private userService : UserService) { }
-  connect(){
+  private messageSubject: BehaviorSubject<ChatMessage | undefined> = new BehaviorSubject<ChatMessage | undefined>(undefined);
+  private userSubject : BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
+
+  constructor(private userService: UserService) {
+  }
+
+  connect() {
     this.stompClient = new Client({
       brokerURL: 'ws://localhost:8080/ws',
       onConnect: () => {
         this.subscribe()
         this.stompClient.publish({
-          destination : '/app/user.Connect',
-          body : JSON.stringify(this.userService.getCurrentUser())
+          destination: '/app/user.Connect',
+          body: JSON.stringify(this.userService.getCurrentUser())
         })
       },
       onStompError: () => {
@@ -31,15 +33,17 @@ export class WebsocketService {
     });
     this.stompClient.activate()
   }
-  getMessage$(): Observable<ChatMessage |undefined> {
+
+  getMessage$(): Observable<ChatMessage | undefined> {
     return this.messageSubject.asObservable();
   }
-  getUser$() {
+  getUser$(): Observable< User | undefined> {
     return this.userSubject.asObservable();
   }
-  sendMessage(message: {conversationId : string, recipientIds:  string[], content: string }) {
+
+  sendMessage(message: { conversationId: string, recipientIds: string[], content: string }) {
     if (this.stompClient && this.stompClient.connected) {
-      this.publishMessage(message)
+      this.publishMessage(message);
     } else {
       this.stompClient = new Client({
         brokerURL: 'ws://localhost:8080/ws',
@@ -54,12 +58,13 @@ export class WebsocketService {
       this.stompClient.activate()
     }
   }
-  publishMessage(message: {conversationId : string, recipientIds: string[], content: string }): void {
+
+  publishMessage(message: { conversationId: string, recipientIds: string[], content: string }): void {
     this.stompClient.publish(
       {
-        destination : '/app/chat',
+        destination: '/app/chat',
         body: JSON.stringify({
-          conversationId : message.conversationId,
+          conversationId: message.conversationId,
           senderId: this.userService.getCurrentUser().username,
           recipientIds: message.recipientIds,
           content: message.content
@@ -67,13 +72,13 @@ export class WebsocketService {
       }
     )
   }
+
   subscribe(): void {
     if (this.stompClient && this.stompClient.connected) {
       this.stompClient.subscribe(`/topic/public`, (resp) => {
-         this.userSubject.next(JSON.parse(resp.body))
+        this.userSubject.next(JSON.parse(resp.body))
       });
       this.stompClient.subscribe(`/user/${this.userService.getCurrentUser().username}/queue/messages`, resp => {
-        console.log(JSON.parse(resp.body))
         this.messageSubject.next(JSON.parse(resp.body))
       });
     } else {

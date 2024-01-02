@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -20,7 +22,9 @@ public class ChatMessage {
     private String content;
     private Timestamp sentAt;
     @ManyToOne
-    private Conversation conversation;
-    @ManyToOne
     private User sender;
+    @ManyToOne
+    private Conversation conversation;
+    @ManyToMany(mappedBy = "messages")
+    private Set<User> users = new HashSet<>();
 }

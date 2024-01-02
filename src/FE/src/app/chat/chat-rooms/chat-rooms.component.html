@@ -1,6 +1,6 @@
 <h4>Tin nhắn</h4>
 <h5>Gần đây</h5>
 <ng-container *ngFor="let conversation of conversations">
-  <app-room [conversation]="conversation" ></app-room>
+  <app-room [conversation]="conversation" (sendConversationId)="receiveConversationIdFromChild($event)" ></app-room>
 </ng-container>
 

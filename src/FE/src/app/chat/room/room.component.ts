@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {User} from "../../model/User";
 import {STATUS} from "../../model/STATUS";
 import {CommonModule} from "@angular/common";
@@ -15,47 +15,55 @@ import {ChatMessage} from "../../model/ChatMessage";
   templateUrl: './room.component.html',
   styleUrl: './room.component.scss'
 })
-export class RoomComponent extends BaseComponent implements OnInit{
+export class RoomComponent extends BaseComponent implements OnInit {
   @Input() conversation !: Conversation
   protected readonly STATUS = STATUS;
-  members : User[] = [];
-  latestMessage !: ChatMessage
-  constructor(private chatService : ChatService,
-              private userService : UserService) {
+  members: User[] = [];
+  @Output() sendConversationId = new EventEmitter<ChatMessage>();
+
+  constructor(private chatService: ChatService,
+              private userService: UserService) {
     super();
   }
+
   ngOnInit(): void {
     this.members = this.conversation.members.filter(
-      member => this.userService.getCurrentUser().username !== member.username
+      member => {
+        return this.userService.getCurrentUser().username !== member.username
+      }
     )
-    const userSub = this.chatService.getUser$().subscribe( user => {
+    const userSub = this.chatService.getUser$().subscribe(user => {
       if (user) {
-        const member =  this.members.find(m => m.username === user.username);
+        const member = this.members.find(m => m.username === user.username);
         if (member) member.status = user.status;
       }
     })
 
-    const latestSub = this.chatService.getConversationMessages(this.conversation.id).subscribe(mesages => {
-      this.latestMessage = mesages[mesages.length - 1]
-    })
 
-    const newMessageSub = this.chatService.getMessages$().subscribe( value => {
-        if (value && value.conversationId === this.conversation.id) {
-          this.latestMessage = value
+    const usernames = new Set<string>(this.members.map(m => m.username));
+    usernames.add(this.userService.getCurrentUser().username)
+
+
+    const newMessageSub = this.chatService.getMessage$().subscribe(value => {
+      if (value && value.conversationId === this.conversation.id) {
+          this.sendConversationIdToParent(value);
         }
-      })
+    })
 
     this.subscriptions.push(newMessageSub)
     this.subscriptions.push(userSub);
-    this.subscriptions.push(latestSub)
   }
 
   setConversation() {
     this.chatService.setConversation(this.conversation);
     this.userService.setRecipients(this.conversation.members);
   }
-  getConversation$(){
+
+  getConversation$() {
     return this.chatService.conversation$
   }
 
+  sendConversationIdToParent(newMessage: ChatMessage) {
+    this.sendConversationId.emit(newMessage)
+  }
 }

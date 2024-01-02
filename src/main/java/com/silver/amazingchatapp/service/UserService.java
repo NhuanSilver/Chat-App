@@ -2,7 +2,7 @@ package com.silver.amazingchatapp.service;
 
 import com.silver.amazingchatapp.dto.LoginRequest;
 import com.silver.amazingchatapp.dto.UserDto;
-import com.silver.amazingchatapp.model.Status;
+import com.silver.amazingchatapp.model.USER_STATUS;
 import com.silver.amazingchatapp.model.User;
 import com.silver.amazingchatapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class UserService {
     public UserDto connect(UserDto userDto) {
         User user = userRepository.findById(userDto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Not found user"));
-        user.setStatus(Status.ONLINE);
+        user.setStatus(USER_STATUS.ONLINE);
         userDto.setStatus(userRepository.save(user).getStatus());
         return userDto;
     }

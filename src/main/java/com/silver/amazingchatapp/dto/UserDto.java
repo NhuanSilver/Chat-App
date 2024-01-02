@@ -1,6 +1,6 @@
 package com.silver.amazingchatapp.dto;
 
-import com.silver.amazingchatapp.model.Status;
+import com.silver.amazingchatapp.model.USER_STATUS;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,5 +10,5 @@ public class UserDto {
     private String username;
     private String fullName;
     private String avatarUrl;
-    private Status status;
+    private USER_STATUS status;
 }

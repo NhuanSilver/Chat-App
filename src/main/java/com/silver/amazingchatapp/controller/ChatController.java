@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @AllArgsConstructor
@@ -25,9 +26,9 @@ public class ChatController {
         this.messageService.saveMessage(message);
     }
 
-    @GetMapping("/conversations/{id}/messages")
-    public List<ChatMessageDTO> getChatMessagesByConversationId(@PathVariable String id) {
-        return messageService.getChatMessagesByConversationId(id);
+    @GetMapping("/conversations/{id}/messages/{usernames}")
+    public List<ChatMessageDTO> getChatMessagesByConversationId(@PathVariable Long id, @PathVariable Set<String> usernames) {
+        return messageService.getChatMessagesByConversationId(id, usernames);
     }
     @GetMapping("/conversations/user/{id}")
     public List<ConversationDTO> getAllConversations(@PathVariable String id) {
