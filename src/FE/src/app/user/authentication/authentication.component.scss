@@ -1,0 +1,54 @@
+@import "../../../assets/variables.scss";
+.login {
+  height: 100%;
+  background-image: url('https://images.alphacoders.com/129/1291249.png');
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .main-content {
+    text-align: center;
+    color: #fff;
+    background-color: #444242;
+    width: 30%;
+    padding: 5rem;
+    .logo {
+      height: 7rem;
+    }
+    .login-text {
+      font-size: 1.6rem;
+    }
+    form {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin-top: 2rem;
+      .form-group {
+        width: 100%;
+      }
+    }
+    .btn-submit {
+      height: 4.3rem;
+      outline: none;
+      width: 100%;
+      font-size: 1.6rem;
+      border: 1px solid #ffff;
+      color: #fff;
+      margin-top: 2rem;
+      border-radius: 0.4rem;
+      background-color: $primary-color;
+      &:hover {
+        opacity: 0.9;
+        cursor: pointer;
+      }
+    }
+    .register-container {
+      margin-top: 2rem;
+      font-size: 1.4rem;
+      a {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
+  }
+}

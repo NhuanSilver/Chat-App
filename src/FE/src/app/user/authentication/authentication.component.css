@@ -1,0 +1,55 @@
+.login {
+  height: 100%;
+  background-image: url("https://images.alphacoders.com/129/1291249.png");
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login .main-content {
+  text-align: center;
+  color: #fff;
+  background-color: #444242;
+  width: 30%;
+  padding: 5rem;
+}
+.login .main-content .logo {
+  height: 7rem;
+}
+.login .main-content .login-text {
+  font-size: 1.6rem;
+}
+.login .main-content form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 2rem;
+}
+.login .main-content form .form-group {
+  width: 100%;
+}
+.login .main-content .btn-submit {
+  height: 4.3rem;
+  outline: none;
+  width: 100%;
+  font-size: 1.6rem;
+  border: 1px solid white;
+  color: #fff;
+  margin-top: 2rem;
+  border-radius: 0.4rem;
+  background-color: #7269ef;
+}
+.login .main-content .btn-submit:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
+.login .main-content .register-container {
+  margin-top: 2rem;
+  font-size: 1.4rem;
+}
+.login .main-content .register-container a {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/*# sourceMappingURL=authentication.component.css.map */

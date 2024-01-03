@@ -1,0 +1,42 @@
+<div class="login" *ngIf="actionType">
+  <div class="main-content">
+    <img class="logo" src="https://freepngimg.com/save/97432-logo-chat-photos-download-free-image/512x512" alt="">
+    <p class="login-text">Đăng nhập tài khoản Amazing Chat
+      để kết nối với ứng dụng Amazing Chat</p>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <app-user-form-group [type]="'text'"
+                             [placeholder]="'Tài khoản'"
+                             [icon]="faUser"
+                             [control]="getControl('username')"></app-user-form-group>
+      </div>
+      <div class="form-group">
+        <app-user-form-group [type]="'password'"
+                             [placeholder]="'Mật khẩu'"
+                             [icon]="faLock"
+                             [control]="getControl('password')"></app-user-form-group>
+      </div>
+
+      <div class="form-group" *ngIf="actionType === 'dang-ky'">
+        <app-user-form-group [type]="'text'"
+                             [placeholder]="'Họ và tên'"
+                             [icon]="faLock"
+                             [control]="getControl('fullName')"></app-user-form-group>
+      </div>
+
+      <button class="btn-submit" type="submit">{{actionType === 'dang-nhap'? 'Đăng nhập' : 'Đăng ký'}}</button>
+    </form>
+
+    <div class="register-container">
+      <div *ngIf="actionType === 'dang-nhap'">
+        Chưa có tài khoản? <a>Đăng ký ngay</a>
+      </div>
+      <div *ngIf="actionType === 'dang-ky'">
+        Đã có tài khoản? <a>Đăng nhập</a>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
