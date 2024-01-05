@@ -18,6 +18,7 @@ public class Conversation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private boolean isGroup;
     @ManyToMany(mappedBy = "conversations")
     private Set<User> users;
     @OneToMany(mappedBy = "conversation")

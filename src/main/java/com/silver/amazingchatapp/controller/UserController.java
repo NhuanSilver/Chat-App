@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
 
@@ -31,11 +31,16 @@ public class UserController {
         return userService.login(request);
     }
 
-    @GetMapping("/users")
+    @GetMapping()
     public List<UserDto> getAllUser() {
         return userService.getAllUsers();
     }
 
+    @GetMapping("/search/{value}")
+    public List<UserDto> getUserByUsernameOrName(@PathVariable String value) {
+        log.info(value);
+        return this.userService.getUserByUsernameOrName(value);
+    }
 
 
 }

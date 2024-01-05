@@ -19,6 +19,7 @@ export class UserFormGroupComponent{
   @Input() placeholder = '';
   @Input() type !: 'text' | 'password' | 'email' | 'number' ;
   @Input() icon !: IconDefinition;
+  @Input() backgroundColorInput ?: string
 
   constructor() {
 

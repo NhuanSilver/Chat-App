@@ -6,4 +6,5 @@ export interface Conversation {
   name: string,
   latestMessage : ChatMessage
   members : User[]
+  isActive: boolean
 }

@@ -5,10 +5,11 @@ import {NavigationBarComponent} from "./navigation/navigation-bar/navigation-bar
 import {NavigationContentComponent} from "./navigation/navigation-content/navigation-content.component";
 import {RoomContentComponent} from "./chat/room-content/room-content.component";
 
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink,NavigationBarComponent, NavigationContentComponent, RoomContentComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, NavigationBarComponent, NavigationContentComponent, RoomContentComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

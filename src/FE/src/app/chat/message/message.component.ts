@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {Component,  Input} from '@angular/core';
 import {ChatMessage} from "../../model/ChatMessage";
 import {NgClass} from "@angular/common";
 import {UserService} from "../../service/user.service";
@@ -16,13 +16,13 @@ import {Conversation} from "../../model/Conversation";
 })
 export class MessageComponent {
   @Input() message !: ChatMessage
-  @Input() conversation !:Conversation
+  @Input() conversation :Conversation | undefined
   constructor(private userService : UserService) {
   }
   getCurrentUser() : User {
    return this.userService.getCurrentUser()
   }
   getAvatarUrl() {
-   return  this.conversation.members.find(member => member.username === this.message.senderId)?.avatarUrl
+   return  this.conversation?.members.find(member => member.username === this.message.senderId)?.avatarUrl
   }
 }

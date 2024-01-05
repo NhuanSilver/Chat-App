@@ -9,13 +9,12 @@ import {StorageService} from "./storage.service";
 })
 
 export class UserService {
-  private recipientsSubject = new BehaviorSubject<User[]>([]);
   constructor(private http: HttpClient,
               private storageService : StorageService) {
 
   }
   public login(username: string, password: string): Observable<User> {
-    return  this.http.post<User>('http://localhost:8080/api/login', {username: username, password : password})
+    return  this.http.post<User>('http://localhost:8080/api/users/login', {username: username, password : password})
   }
   public getAllUsers() {
     return this.http.get<User[]>('http://localhost:8080/api/users')
@@ -23,10 +22,7 @@ export class UserService {
   getCurrentUser() : User {
     return this.storageService.getCurrentUser()
   }
-  getRecipients$() {
-    return this.recipientsSubject.asObservable();
-  }
-  setRecipients(recipient : User[]) {
-    this.recipientsSubject.next(recipient);
+  searchUserByUsernameOrName(value : string) {
+    return this.http.get<User[]>(`http://localhost:8080/api/users/search/${value}`)
   }
 }

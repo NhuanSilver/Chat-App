@@ -1,3 +1,12 @@
-<div class="nav-content">
-  <app-chat-rooms></app-chat-rooms>
+<div class="side-content">
+  <h4>Đoạn chat</h4>
+  <button class="btn-search" (click)="openSearchModal()">
+    <fa-icon [icon]="faSearch"></fa-icon>
+    <span>Tìm kiếm</span>
+  </button>
+  <h5>Hộp thư</h5>
+
+  <ng-container *ngFor="let conversation of conversations">
+    <app-room  [conversation]="conversation" ></app-room>
+  </ng-container>
 </div>

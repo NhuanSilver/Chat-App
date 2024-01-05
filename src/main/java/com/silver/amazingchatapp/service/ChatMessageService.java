@@ -24,13 +24,13 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
     private final ConversationRepository conversationRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final UserRepository userRepository;
 
+    @Transactional
     public void saveMessage(ChatMessageRequest message) {
 
         User sender = userRepository.findById(message.getSenderId()).orElseThrow();
@@ -40,13 +40,20 @@ public class ChatMessageService {
                 .map(recipientId -> userRepository.findById(recipientId).orElseThrow())
                 .collect(Collectors.toSet());
 
-        // Get conversation or create new
-        Conversation conversation = this.conversationRepository.findById(message.getConversationId())
-                .orElse(Conversation.builder()
-                        .name( sender.getUsername())
-                        .users(recipients)
-                        .messages(new ArrayList<>())
-                        .build());
+        Conversation conversation;
+        // Create new Conversation
+        if (message.getConversationId() == null) {
+            conversation = Conversation.builder()
+                    .name(sender.getUsername())
+                    .users(recipients)
+                    .messages(new ArrayList<>())
+                    .build();
+        } else {
+
+            // Get existed Conversation
+            conversation = this.conversationRepository.findById(message.getConversationId())
+                    .orElseThrow();
+        }
 
         // Create new message
         ChatMessage chatMessage = ChatMessage.builder()
@@ -67,8 +74,10 @@ public class ChatMessageService {
         chatMessageRepository.save(chatMessage);
         userRepository.save(sender);
 
+        conversationRepository.flush();
+
         // Save and notify to recipients
-        for ( User recipient : recipients) {
+        for (User recipient : recipients) {
             recipient.getConversations().add(conversation);
             userRepository.save(recipient);
             this.notifyMessage(recipient.getUsername(), conversation.getId(), chatMessage);
@@ -79,7 +88,6 @@ public class ChatMessageService {
     }
 
     public List<ChatMessageDTO> getChatMessagesByConversationId(Long id, Set<String> usernames) {
-        Set<User> users = usernames.stream().map(username -> this.userRepository.findById(username).orElseThrow()).collect(Collectors.toSet());
 
         List<ChatMessage> messages = this.chatMessageRepository.findByConversationIdAndUsersIn(id, usernames);
 
@@ -95,7 +103,7 @@ public class ChatMessageService {
                 .collect(Collectors.toList());
     }
 
-    private void notifyMessage(String destinationUsername, Long conversationID ,ChatMessage chatMessage) {
+    private void notifyMessage(String destinationUsername, Long conversationID, ChatMessage chatMessage) {
         messagingTemplate.convertAndSendToUser(destinationUsername, "/queue/messages",
                 ChatMessageDTO.builder()
                         .id(chatMessage.getId())

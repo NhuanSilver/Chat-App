@@ -1,6 +1,6 @@
-<ng-container *ngIf="recipients$ | async as recipients">
-  <div class="room-content" *ngIf="recipients.length > 0" >
-    <div class="room-header-container" *ngIf="recipients">
+<ng-container *ngIf="recipients.length > 0">
+  <div class="room-content"  >
+    <div class="room-header-container">
       <div class="room-user-area">
         <div class="room-user-img">
           <img [src]="recipient.avatarUrl" alt="" *ngFor="let recipient of recipients">
@@ -9,7 +9,7 @@
           <span class="room-user-name-content" *ngFor="let recipient of recipients; let isLast = last">
             {{recipient.fullName}}{{isLast ? '' : ','}}
           </span>
-          <div class="room-user-online" *ngIf="recipients.length === 1"></div>
+          <div class="room-user-online" *ngIf="recipients.length === 1 && recipients[0].status === STATUS.ONLINE"></div>
         </div>
       </div>
       <ul class="room-user-actions">

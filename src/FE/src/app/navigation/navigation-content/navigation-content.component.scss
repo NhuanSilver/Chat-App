@@ -1,8 +1,32 @@
 @import "../../../assets/variables";
-.nav-content {
+.side-content {
   padding: 2rem;
   height: 100%;
   width: 100%;
   background-color: $nav-bar-bg;
   color: $light-text-color;
+  .btn-search {
+    display: flex;
+    width: 100%;
+    height: 4rem;
+    font-size: 1.6rem;
+    gap: 0.8rem;
+    justify-content: center;
+    align-items: center;
+    background-color: $primary-color;
+    border: 0;
+    border-radius: 0.4rem;
+    color: #ffff;
+    cursor: pointer;
+    margin-bottom: 2rem;
+  }
+  h4 {
+    font-size: 2.4rem;
+  }
+  h5 {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+  }
+
 }

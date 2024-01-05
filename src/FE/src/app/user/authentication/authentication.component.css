@@ -49,6 +49,7 @@
 }
 .login .main-content .register-container a {
   cursor: pointer;
+  color: #7269ef;
   text-decoration: underline;
 }
 

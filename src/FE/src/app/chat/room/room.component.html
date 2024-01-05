@@ -1,4 +1,4 @@
-<div class="room-user" (click)="setConversation()" [class.isActive]="conversation === (getConversation$() | async )">
+<div class="room-user" (click)="setConversation()" [class.isActive]="conversation.id === (getActivatedCvs() | async)?.id">
   <div class="user" *ngFor="let member of members">
     <img class="user-img" [src]="member.avatarUrl" alt="">
     <span class="user-status" *ngIf="member.status === STATUS.ONLINE">
@@ -10,7 +10,7 @@
       <span class="user-fullName" *ngFor="let member of members">{{member.fullName}}</span>
       <span class="time" *ngIf="conversation.latestMessage?.sentAt" >{{conversation.latestMessage?.sentAt | date}}</span>
     </div>
-    <p *ngIf="conversation.latestMessage">{{conversation.latestMessage?.content}}</p>
+    <span class="latest-message" *ngIf="conversation.latestMessage">{{conversation.latestMessage?.content}}</span>
   </div>
 
 </div>

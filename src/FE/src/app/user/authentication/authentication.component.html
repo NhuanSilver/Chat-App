@@ -8,31 +8,31 @@
         <app-user-form-group [type]="'text'"
                              [placeholder]="'Tài khoản'"
                              [icon]="faUser"
-                             [control]="getControl('username')"></app-user-form-group>
+                             [control]="getControl(FORM_CONTROL.USERNAME)"></app-user-form-group>
       </div>
       <div class="form-group">
         <app-user-form-group [type]="'password'"
                              [placeholder]="'Mật khẩu'"
                              [icon]="faLock"
-                             [control]="getControl('password')"></app-user-form-group>
+                             [control]="getControl(FORM_CONTROL.PASSWORD)"></app-user-form-group>
       </div>
 
       <div class="form-group" *ngIf="actionType === 'dang-ky'">
         <app-user-form-group [type]="'text'"
                              [placeholder]="'Họ và tên'"
                              [icon]="faLock"
-                             [control]="getControl('fullName')"></app-user-form-group>
+                             [control]="getControl(FORM_CONTROL.FULL_NAME)"></app-user-form-group>
       </div>
 
-      <button class="btn-submit" type="submit">{{actionType === 'dang-nhap'? 'Đăng nhập' : 'Đăng ký'}}</button>
+      <button class="btn-submit" type="submit">{{actionType === USER_ACTION.LOGIN? 'Đăng nhập' : 'Đăng ký'}}</button>
     </form>
 
     <div class="register-container">
-      <div *ngIf="actionType === 'dang-nhap'">
-        Chưa có tài khoản? <a>Đăng ký ngay</a>
+      <div *ngIf="actionType === USER_ACTION.LOGIN">
+        Chưa có tài khoản? <a routerLink="/tai-khoan/dang-ky">Đăng ký ngay</a>
       </div>
-      <div *ngIf="actionType === 'dang-ky'">
-        Đã có tài khoản? <a>Đăng nhập</a>
+      <div *ngIf="actionType === USER_ACTION.REGISTER">
+        Đã có tài khoản? <a routerLink="/tai-khoan/dang-nhap">Đăng nhập</a>
       </div>
 
     </div>

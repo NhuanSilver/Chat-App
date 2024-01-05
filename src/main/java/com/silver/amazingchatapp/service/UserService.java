@@ -50,4 +50,15 @@ public class UserService {
                 )
                 .collect(Collectors.toList());
     }
+
+    public List<UserDto> getUserByUsernameOrName(String value) {
+        return this.userRepository.findByUsernameContainingOrFullNameContaining(value, value)
+                .stream()
+                .map(user -> UserDto.builder()
+                        .username(user.getUsername())
+                        .fullName(user.getFullName())
+                        .status(user.getStatus())
+                        .avatarUrl(user.getAvatarUrl())
+                        .build()).toList();
+    }
 }

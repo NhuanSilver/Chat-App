@@ -6,7 +6,6 @@ import {ChatService} from "../../service/chat.service";
 import {UserService} from "../../service/user.service";
 import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../BaseComponent";
-import {ChatMessage} from "../../model/ChatMessage";
 
 @Component({
   selector: 'app-room',
@@ -19,7 +18,7 @@ export class RoomComponent extends BaseComponent implements OnInit {
   @Input() conversation !: Conversation
   protected readonly STATUS = STATUS;
   members: User[] = [];
-  @Output() sendConversationId = new EventEmitter<ChatMessage>();
+  isActive : boolean = false;
 
   constructor(private chatService: ChatService,
               private userService: UserService) {
@@ -38,32 +37,26 @@ export class RoomComponent extends BaseComponent implements OnInit {
         if (member) member.status = user.status;
       }
     })
-
+    this.chatService.getActiveConversation$().subscribe(value => {
+      this.isActive = value?.id === this.conversation.id
+    });
 
     const usernames = new Set<string>(this.members.map(m => m.username));
     usernames.add(this.userService.getCurrentUser().username)
 
-
-    const newMessageSub = this.chatService.getMessage$().subscribe(value => {
-      if (value && value.conversationId === this.conversation.id) {
-          this.sendConversationIdToParent(value);
-        }
-    })
-
-    this.subscriptions.push(newMessageSub)
     this.subscriptions.push(userSub);
   }
 
   setConversation() {
     this.chatService.setConversation(this.conversation);
-    this.userService.setRecipients(this.conversation.members);
+    this.notifyActiveCvs()
   }
 
-  getConversation$() {
-    return this.chatService.conversation$
+  notifyActiveCvs() {
+    this.chatService.setActiveConversation(this.conversation)
+  }
+  getActivatedCvs() {
+    return this.chatService.getActiveConversation$()
   }
 
-  sendConversationIdToParent(newMessage: ChatMessage) {
-    this.sendConversationId.emit(newMessage)
-  }
 }

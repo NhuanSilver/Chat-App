@@ -33,17 +33,22 @@
 }
 .room-user .room {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .room-user .room .message-info {
   display: flex;
+  font-size: 1.6rem;
   justify-content: space-between;
 }
 .room-user .room .message-info .time {
   font-size: 1.3rem;
 }
-.room-user .room p {
+.room-user .room .latest-message {
   font-size: 1.3rem;
-  padding-top: 0.4rem;
+  gap: 0.1rem;
+  margin: 0;
 }
 
 /*# sourceMappingURL=room.component.css.map */
