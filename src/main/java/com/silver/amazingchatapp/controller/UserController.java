@@ -2,6 +2,7 @@ package com.silver.amazingchatapp.controller;
 
 import com.silver.amazingchatapp.dto.AddFriendRequest;
 import com.silver.amazingchatapp.dto.LoginRequest;
+import com.silver.amazingchatapp.dto.RegistrationRequest;
 import com.silver.amazingchatapp.dto.UserDto;
 import com.silver.amazingchatapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class UserController {
     public UserDto disconnect(@Payload UserDto userDto) {
        return this.userService.disconnect(userDto);
     }
+
     @MessageMapping("/user.AddFriend")
     public void addFriend(@Payload AddFriendRequest request) {
         this.userService.addFriend(request);
@@ -39,6 +41,11 @@ public class UserController {
     @PostMapping("/login")
     public UserDto login(@RequestBody LoginRequest request) {
         return userService.login(request);
+    }
+
+    @PostMapping("/register")
+    public UserDto register(@RequestBody RegistrationRequest request) {
+        return this.userService.register(request);
     }
 
     @GetMapping()

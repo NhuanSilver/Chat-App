@@ -11,6 +11,7 @@ import {UserService} from "./user.service";
 })
 export class WebsocketService {
   private stompClient !: Client;
+  private currentUser = this.userService.getCurrentUser();
   private messageSubject: BehaviorSubject<ChatMessage | undefined> = new BehaviorSubject<ChatMessage | undefined>(undefined);
   private userSubject : BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
 
@@ -20,6 +21,9 @@ export class WebsocketService {
   connect() {
     this.stompClient = new Client({
       brokerURL: 'ws://localhost:8080/ws',
+      connectHeaders: {
+        Authorization: 'Bearer ' + this.currentUser.token,
+      },
       onConnect: () => {
         this.subscribe()
         this.stompClient.publish({
@@ -44,18 +48,6 @@ export class WebsocketService {
   sendMessage(message: { conversationId: string, recipientIds: string[], content: string }) {
     if (this.stompClient && this.stompClient.connected) {
       this.publishMessage(message);
-    } else {
-      this.stompClient = new Client({
-        brokerURL: 'ws://localhost:8080/ws',
-        onConnect: () => {
-          this.subscribe()
-          this.publishMessage(message)
-        },
-        onStompError: () => {
-          console.log("that bai")
-        }
-      });
-      this.stompClient.activate()
     }
   }
 

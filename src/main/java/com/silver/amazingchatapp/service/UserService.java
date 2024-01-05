@@ -1,9 +1,6 @@
 package com.silver.amazingchatapp.service;
 
-import com.silver.amazingchatapp.dto.AddFriendRequest;
-import com.silver.amazingchatapp.dto.FriendDTO;
-import com.silver.amazingchatapp.dto.LoginRequest;
-import com.silver.amazingchatapp.dto.UserDto;
+import com.silver.amazingchatapp.dto.*;
 import com.silver.amazingchatapp.exception.ApiRequestException;
 import com.silver.amazingchatapp.mapper.UserDTOMapper;
 import com.silver.amazingchatapp.model.FRIEND_STATUS;
@@ -15,6 +12,9 @@ import com.silver.amazingchatapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,17 +26,46 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final UserDTOMapper userDTOMapper;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
     private final FriendRepository friendRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     public UserDto login(LoginRequest loginRequest) {
-        User user = userRepository.findById(loginRequest.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("Not found user"));
 
-        if (!user.getPassword().equals(loginRequest.getPassword()))
-            throw new IllegalArgumentException("Password invalid");
-        return this.userDTOMapper.toDTO(user);
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                )
+        );
+
+        User user = userRepository.findById(loginRequest.getUsername())
+                .orElseThrow(() -> new ApiRequestException("User not found"));
+
+        String jwtToken = jwtService.generateToken(user);
+
+        UserDto userDto = this.userDTOMapper.toDTO(user);
+        userDto.setToken(jwtToken);
+        return userDto;
     }
+
+
+    public UserDto register(RegistrationRequest request) {
+        boolean isUsernameExist = userRepository.existsById(request.getUsername());
+        if (isUsernameExist) throw new ApiRequestException("username is existed");
+        User user = User.builder()
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .fullName(request.getFullName())
+                .status(USER_STATUS.OFFLINE)
+                .avatarUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0De2xVUr6gbBHHbPQIbW8-bgFLL4V0v2gcaiwPixV4Q&s")
+                .role("USER")
+                .build();
+        return userDTOMapper.toDTO(userRepository.save(user));
+    }
+
 
     public UserDto connect(UserDto userDto) {
         User user = userRepository.findById(userDto.getUsername())

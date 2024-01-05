@@ -10,5 +10,6 @@ public class UserDto {
     private String username;
     private String fullName;
     private String avatarUrl;
+    private String token;
     private USER_STATUS status;
 }

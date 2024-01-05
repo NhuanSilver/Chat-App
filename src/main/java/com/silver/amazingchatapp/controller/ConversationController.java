@@ -21,7 +21,6 @@ public class ConversationController {
 
     @GetMapping("/{id}")
     public ConversationDTO getConversionById(@PathVariable Long id) {
-        log.info(id + "");
         return conversationService.getConversationById(id);
     }
 
