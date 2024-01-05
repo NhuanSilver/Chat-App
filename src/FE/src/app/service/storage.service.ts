@@ -17,4 +17,7 @@ export class StorageService {
   saveUser(user : User) {
     this.sessionStorage.setItem(this.userKey, JSON.stringify(user));
   }
+  removeUser() {
+    this.sessionStorage.removeItem(this.userKey)
+  }
 }

@@ -87,4 +87,10 @@ export class WebsocketService {
   }
 
 
+  disconnect() {
+    this.stompClient.publish({
+      destination: '/app/user.Disconnect',
+      body: JSON.stringify(this.userService.getCurrentUser())
+    })
+  }
 }

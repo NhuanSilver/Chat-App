@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {User} from "../model/User";
 import {BehaviorSubject, Observable} from "rxjs";
 import {StorageService} from "./storage.service";
+import {WebsocketService} from "./websocket.service";
 
 @Injectable({
   providedIn: 'root'
@@ -24,5 +25,10 @@ export class UserService {
   }
   searchUserByUsernameOrName(value : string) {
     return this.http.get<User[]>(`http://localhost:8080/api/users/search/${value}`)
+  }
+
+  logOut() {
+    this.getCurrentUser().status
+    this.storageService.removeUser();
   }
 }

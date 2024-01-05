@@ -11,9 +11,19 @@
     <li *ngFor="let item of getUserNavItems()" app-navigation-item [item]=item>
     </li>
     <li class="user-nav">
-      <div *ngIf="user">
+      <div *ngIf="user" #toggleButton (click)="toggleMenu()">
         <img [src]="user.avatarUrl" alt="user">
       </div>
+        <ul #menu class="user-menu" [class.show]="isMenuOpen">
+          <li>
+            <span>Hồ sơ</span>
+            <fa-icon [icon]="faUser"/>
+          </li>
+          <li (click)="logOut()">
+            <span>Đăng xuất</span> <fa-icon [icon]="faArrowRightFromBracket"/>
+          </li>
+
+        </ul>
 
     </li>
   </ul>

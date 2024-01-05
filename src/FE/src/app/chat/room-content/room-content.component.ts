@@ -130,7 +130,6 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
   }
 
   ngOnInit(): void {
-
     }
 
   onSubmit(recipients: User[]) {
