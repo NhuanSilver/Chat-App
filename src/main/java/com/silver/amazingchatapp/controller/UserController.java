@@ -1,10 +1,10 @@
 package com.silver.amazingchatapp.controller;
 
+import com.silver.amazingchatapp.dto.AddFriendRequest;
 import com.silver.amazingchatapp.dto.LoginRequest;
 import com.silver.amazingchatapp.dto.UserDto;
 import com.silver.amazingchatapp.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -26,6 +26,16 @@ public class UserController {
         return userService.connect(userDto);
     }
 
+    @MessageMapping("/user.Disconnect")
+    @SendTo("/topic/public")
+    public UserDto disconnect(@Payload UserDto userDto) {
+       return this.userService.disconnect(userDto);
+    }
+    @MessageMapping("/user.AddFriend")
+    public void addFriend(@Payload AddFriendRequest request) {
+        this.userService.addFriend(request);
+    }
+
     @PostMapping("/login")
     public UserDto login(@RequestBody LoginRequest request) {
         return userService.login(request);
@@ -38,7 +48,6 @@ public class UserController {
 
     @GetMapping("/search/{value}")
     public List<UserDto> getUserByUsernameOrName(@PathVariable String value) {
-        log.info(value);
         return this.userService.getUserByUsernameOrName(value);
     }
 

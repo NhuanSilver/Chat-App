@@ -16,9 +16,9 @@ public class ConversationService {
     private final ConversationRepository conversationRepository;
     private final ConversationDTOMapper conversationDtoMapper;
 
-    public List<ConversationDTO> getAll() {
-        return null;
-    }
+//    public List<ConversationDTO> getAll() {
+//        return null;
+//    }
 
     public List<ConversationDTO> getConversationByUserId(String userId) {
         return this.conversationRepository.findByUsersUsername(userId).stream()
@@ -27,7 +27,8 @@ public class ConversationService {
 
     public ConversationDTO getPrivateConversation(String sender, String recipient) {
 
-        Conversation conversation = this.conversationRepository.findConversationByUsers(Set.of(sender, recipient),  2L, false).orElse(null);
+        Conversation conversation = this.conversationRepository
+                .findConversationByUsers(Set.of(sender, recipient),  2L, false).orElse(null);
         if (conversation == null) return null;
         return this.conversationDtoMapper.conversationDto(conversation);
     }

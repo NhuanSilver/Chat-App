@@ -2,6 +2,7 @@ package com.silver.amazingchatapp.service;
 
 import com.silver.amazingchatapp.dto.ChatMessageDTO;
 import com.silver.amazingchatapp.dto.ChatMessageRequest;
+import com.silver.amazingchatapp.exception.ApiRequestException;
 import com.silver.amazingchatapp.model.ChatMessage;
 import com.silver.amazingchatapp.model.Conversation;
 import com.silver.amazingchatapp.model.User;
@@ -33,11 +34,14 @@ public class ChatMessageService {
     @Transactional
     public void saveMessage(ChatMessageRequest message) {
 
-        User sender = userRepository.findById(message.getSenderId()).orElseThrow();
+        User sender = userRepository.findById(message.getSenderId())
+                .orElseThrow(() -> new ApiRequestException("Sender doesn't exist"));
 
         // Get recipients
         Set<User> recipients = message.getRecipientIds().stream()
-                .map(recipientId -> userRepository.findById(recipientId).orElseThrow())
+                .map(recipientId -> userRepository.findById(recipientId)
+                        .orElseThrow(() -> new ApiRequestException("Recipient doesn't exist by id: " + recipientId))
+                )
                 .collect(Collectors.toSet());
 
         Conversation conversation;
@@ -52,7 +56,7 @@ public class ChatMessageService {
 
             // Get existed Conversation
             conversation = this.conversationRepository.findById(message.getConversationId())
-                    .orElseThrow();
+                    .orElseThrow(() -> new ApiRequestException("Conversation not found by id: " + message.getConversationId()));
         }
 
         // Create new message

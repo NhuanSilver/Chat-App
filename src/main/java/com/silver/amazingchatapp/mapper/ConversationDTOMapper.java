@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 public class ConversationDTOMapper {
 
     public ConversationDTO conversationDto(Conversation conversation) {
@@ -19,6 +18,7 @@ public class ConversationDTOMapper {
                 .name(conversation.getName())
                 .latestMessage(
                         conversation.getLatestMessage() != null ? ChatMessageDTO.builder()
+                                .id(conversation.getLatestMessage().getId())
                                 .conversationId(conversation.getId())
                                 .content(conversation.getLatestMessage().getContent())
                                 .senderId(conversation.getLatestMessage().getSender().getUsername())
