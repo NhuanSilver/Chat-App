@@ -4,6 +4,7 @@ import {User} from "../model/User";
 import {BehaviorSubject, Observable} from "rxjs";
 import {StorageService} from "./storage.service";
 import {WebsocketService} from "./websocket.service";
+import {Friend} from "../model/Friend";
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,9 @@ export class UserService {
   }
   searchUserByUsernameOrName(value : string) {
     return this.http.get<User[]>(`http://localhost:8080/api/users/search/${value}`)
+  }
+  getAllFriend() {
+    return this.http.get<User[]>(`http://localhost:8080/api/users/${this.getCurrentUser().username}/friends`)
   }
 
   logOut() {

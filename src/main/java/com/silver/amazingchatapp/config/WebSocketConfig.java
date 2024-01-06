@@ -53,7 +53,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
                     final String token = accessor.getFirstNativeHeader("Authorization");
                     Authentication user = webSocketAuthorizationService.authenticationToken(token);
-                    log.info(user.getAuthorities().toString());
                     accessor.setUser(user);
                 }
                 return message;

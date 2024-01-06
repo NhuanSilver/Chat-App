@@ -12,6 +12,7 @@ import {catchError, debounceTime, distinctUntilChanged, filter, map, Observable,
 import {User} from "../../model/User";
 import {ChatService} from "../../service/chat.service";
 import {BaseComponent} from "../../BaseComponent";
+import {Friend} from "../../model/Friend";
 
 @Component({
   selector: 'app-search',
@@ -34,6 +35,7 @@ export class SearchComponent extends BaseComponent implements OnInit {
   protected readonly faUserFriends = faUserFriends;
   formGroup !: FormGroup;
   users$ ?: Observable<User[]>;
+  friends : User[] = []
 
   constructor(private fb: FormBuilder,
               private chatService: ChatService,
@@ -65,10 +67,17 @@ export class SearchComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.subscriptions.push( this.userService.getAllFriend().subscribe( friends => {
+      console.log(friends)
+      this.friends = friends;
+    }))
   }
 
 
-  addFriend(username: string) {
+  addFriend(username: string, e: Event) {
+    e.stopPropagation();
+    console.log(username)
+    this.chatService.addFriend(username);
   }
 
   setMember(user: User) {
@@ -92,5 +101,10 @@ export class SearchComponent extends BaseComponent implements OnInit {
       })
     this.diaglogRef.close()
     this.subscriptions.push(cvsSub);
+  }
+
+  isNotFriend(user: User): boolean {
+    console.log(!this.friends.some(u => u.username === user.username))
+    return !this.friends.some(u => u.username === user.username);
   }
 }

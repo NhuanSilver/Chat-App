@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,10 +105,36 @@ public class UserService {
     }
 
     public void addFriend(AddFriendRequest request) {
+
         User owner = userRepository.findById(request.getOwner())
                 .orElseThrow(() -> new ApiRequestException("User not found"));
-        User requestTo = userRepository.findById(request.getOwner())
+        User requestTo = userRepository.findById(request.getRequestTo())
                 .orElseThrow(() -> new ApiRequestException("Request to user not found"));
+
+        Set<Friend> friends = this.friendRepository
+                .findByOwnerAndRequestOrRequestAndOwner(owner, requestTo, owner, requestTo);
+
+        if (friends.size() > 1) return;
+
+        if (friends.size() == 1) {
+            Friend existedFriend = friends.stream().toList().get(0);
+
+            if (existedFriend.getOwner().getUsername().equals(request.getOwner())) return;
+            if (existedFriend.getRequest().getUsername().equals(request.getOwner())) {
+
+                Friend acceptFriend = Friend.builder()
+                        .owner(owner)
+                        .request(requestTo)
+                        .status(FRIEND_STATUS.ACTIVE)
+                        .build();
+                friendRepository.save(acceptFriend);
+
+                existedFriend.setStatus(FRIEND_STATUS.ACTIVE);
+                friendRepository.save(existedFriend);
+            }
+            return;
+        }
+
         Friend friendRequest = this.friendRepository.save(
 
                 Friend.builder()
@@ -127,5 +154,11 @@ public class UserService {
         this.simpMessagingTemplate.convertAndSendToUser(request.getOwner(), "/queue/friends", friendDTO);
         this.simpMessagingTemplate.convertAndSendToUser(request.getRequestTo(), "/queue/friends", friendDTO);
 
+    }
+
+    public List<UserDto> getAllFriends(String username) {
+        User user = this.userRepository.findById(username).orElseThrow(() -> new ApiRequestException("User not found"));
+        return friendRepository.findByOwnerAndStatus(user, FRIEND_STATUS.ACTIVE)
+                .stream().map(friend -> userDTOMapper.toDTO(friend.getRequest())).toList();
     }
 }

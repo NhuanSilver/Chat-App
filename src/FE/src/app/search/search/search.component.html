@@ -16,7 +16,7 @@
         <span>{{user.fullName}}</span>
       </div>
       <div class="action">
-        <fa-icon [icon]="faUserFriends" (click)="addFriend(user.username)"></fa-icon>
+        <fa-icon [icon]="faUserFriends" *ngIf="isNotFriend(user)" (click)="addFriend(user.username, $event)"></fa-icon>
         <fa-icon [icon]="faPaperPlane"  (click)="setMember(user)" ></fa-icon>
       </div>
     </tr>

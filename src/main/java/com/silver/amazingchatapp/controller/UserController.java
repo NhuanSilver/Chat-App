@@ -58,5 +58,10 @@ public class UserController {
         return this.userService.getUserByUsernameOrName(value);
     }
 
+    @GetMapping("/{username}/friends")
+    public List<UserDto> getAllFriendsByUsername(@PathVariable String username){
+        return this.userService.getAllFriends(username);
+    }
+
 
 }

@@ -4,6 +4,7 @@ import {ChatMessage} from "../model/ChatMessage";
 import {Client} from "@stomp/stompjs";
 import {User} from "../model/User";
 import {UserService} from "./user.service";
+import {Friend} from "../model/Friend";
 
 
 @Injectable({
@@ -14,6 +15,7 @@ export class WebsocketService {
   private currentUser = this.userService.getCurrentUser();
   private messageSubject: BehaviorSubject<ChatMessage | undefined> = new BehaviorSubject<ChatMessage | undefined>(undefined);
   private userSubject : BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
+  private friendSubject: BehaviorSubject<Friend | undefined> = new BehaviorSubject<Friend | undefined>(undefined);
 
   constructor(private userService: UserService) {
   }
@@ -31,8 +33,9 @@ export class WebsocketService {
           body: JSON.stringify(this.userService.getCurrentUser())
         })
       },
-      onStompError: () => {
-        console.log("fail to connect to server")
+      onStompError: (frame) => {
+        console.log('Broker reported error: ' + frame.headers['message']);
+        console.log('Additional details: ' + frame.body);
       }
     });
     this.stompClient.activate()
@@ -70,9 +73,14 @@ export class WebsocketService {
       this.stompClient.subscribe(`/topic/public`, (resp) => {
         this.userSubject.next(JSON.parse(resp.body))
       });
-      this.stompClient.subscribe(`/user/${this.userService.getCurrentUser().username}/queue/messages`, resp => {
+      this.stompClient.subscribe(`/user/${this.currentUser.username}/queue/messages`, resp => {
         this.messageSubject.next(JSON.parse(resp.body))
       });
+
+      this.stompClient.subscribe(`/user/${this.currentUser.username}/queue/friends`, resp => {
+        this.friendSubject.next(JSON.parse(resp.body))
+      })
+
     } else {
       console.error("Stomp client is not connected.");
     }
@@ -84,5 +92,18 @@ export class WebsocketService {
       destination: '/app/user.Disconnect',
       body: JSON.stringify(this.userService.getCurrentUser())
     })
+    this.stompClient.deactivate()
+  }
+
+  addFriend(username: string) {
+
+    this.stompClient.publish({
+      destination: '/app/user.AddFriend',
+      body: JSON.stringify({
+        owner: this.currentUser.username,
+        requestTo: username
+      })
+    })
+
   }
 }
