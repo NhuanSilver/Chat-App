@@ -34,7 +34,7 @@ public class ConversationService {
     }
 
     public ConversationDTO getConversationById(Long id) {
-        Conversation conversation = this.conversationRepository.findById(id).orElseThrow(null);
+        Conversation conversation = this.conversationRepository.findById(id).orElse(null);
         if (conversation == null) return null;
         return this.conversationDtoMapper.conversationDto(conversation);
     }

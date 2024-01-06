@@ -1,12 +1,27 @@
 <div class="side-content">
-  <h4>Đoạn chat</h4>
-  <button class="btn-search" (click)="openSearchModal()">
-    <fa-icon [icon]="faSearch"></fa-icon>
-    <span>Tìm kiếm</span>
-  </button>
-  <h5>Hộp thư</h5>
+  <form #form (keydown.enter)="$event.preventDefault()" class="search-form" [formGroup]="formGroup">
+    <div #searchInput class="form-group" [class.show]="onFocus">
+      <fa-icon [icon]="faSearch"></fa-icon>
+      <input [formControlName]="environment.FORM_CONTROL.SEARCH" class="search-input" placeholder="Tìm kiếm"/>
+    </div>
+    <div class="user-action" *ngIf="!isSearchMenu">
+      <fa-icon title="Tạo nhóm" [icon]="faUserGroup"></fa-icon>
+    </div>
+    <div class="user-action" *ngIf="isSearchMenu">
+      <button (click)="isSearchMenu = !isSearchMenu" class="btn-close">Đóng</button>
+    </div>
+  </form>
 
-  <ng-container *ngFor="let conversation of conversations">
-    <app-room  [conversation]="conversation" ></app-room>
+  <ng-container *ngIf="(currentTab | async) === TAB.CHAT">
+    <ng-container  *ngFor="let conversation of conversations">
+      <app-room [conversation]="conversation"></app-room>
+    </ng-container>
   </ng-container>
+  <ng-container *ngIf="(currentTab | async) === TAB.FRIEND">
+    New tab
+  </ng-container>
+
+  <div #searchMenu class="search-menu" [class.show]="isSearchMenu">
+    <app-search [users$]="users$"></app-search>
+  </div>
 </div>

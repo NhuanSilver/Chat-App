@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogClose, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment.development";
@@ -33,42 +33,17 @@ export class SearchComponent extends BaseComponent implements OnInit {
   protected readonly environment = environment;
   protected readonly faPaperPlane = faPaperPlane;
   protected readonly faUserFriends = faUserFriends;
-  formGroup !: FormGroup;
-  users$ ?: Observable<User[]>;
+  @Input() users$ ?: Observable<User[]>;
   friends : User[] = []
 
   constructor(private fb: FormBuilder,
               private chatService: ChatService,
-              private userService: UserService,
-              private diaglogRef: MatDialogRef<SearchComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any) {
+              private userService: UserService) {
     super();
-    this.formGroup = this.fb.group({
-      [environment.FORM_CONTROL.SEARCH]: ['']
-    })
-    let searchInput = this.formGroup.get(environment.FORM_CONTROL.SEARCH);
-    this.users$ = searchInput?.valueChanges.pipe(
-      debounceTime(100),
-      distinctUntilChanged(),
-      switchMap(value => {
-          if (value.length === 0) return of([])
-          return this.userService.searchUserByUsernameOrName(value).pipe(
-            map(users => users.filter(user => user.username !== this.userService.getCurrentUser().username)),
-            catchError(_ => {
-              return of([])
-            })
-          )
-        }
-      ),
-      catchError(_ => {
-        return of([])
-      })
-    )
   }
 
   ngOnInit(): void {
     this.subscriptions.push( this.userService.getAllFriend().subscribe( friends => {
-      console.log(friends)
       this.friends = friends;
     }))
   }
@@ -76,7 +51,6 @@ export class SearchComponent extends BaseComponent implements OnInit {
 
   addFriend(username: string, e: Event) {
     e.stopPropagation();
-    console.log(username)
     this.chatService.addFriend(username);
   }
 
@@ -99,12 +73,10 @@ export class SearchComponent extends BaseComponent implements OnInit {
           this.chatService.setConversation(undefined)
         }
       })
-    this.diaglogRef.close()
     this.subscriptions.push(cvsSub);
   }
 
   isNotFriend(user: User): boolean {
-    console.log(!this.friends.some(u => u.username === user.username))
     return !this.friends.some(u => u.username === user.username);
   }
 }

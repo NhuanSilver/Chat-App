@@ -1,23 +1,12 @@
 <div class="search-container">
-  <h4 class="search-header">Tìm kiếm người dùng</h4>
-  <form class="form" [formGroup]="formGroup">
-    <div class="form-group">
-      <input [formControlName]="environment.FORM_CONTROL.SEARCH" placeholder="Nhập tên hoặc ID người dùng" class="username-input">
-      <div>
-        <fa-icon [icon]="faSearch"></fa-icon>
-        Tìm kiếm
-      </div>
-    </div>
-  </form>
   <table>
     <tr class="user" (click)="setMember(user)" *ngFor="let user of (users$ | async)">
       <div class="info">
         <img [src]="user.avatarUrl" alt="">
         <span>{{user.fullName}}</span>
       </div>
-      <div class="action">
-        <fa-icon [icon]="faUserFriends" *ngIf="isNotFriend(user)" (click)="addFriend(user.username, $event)"></fa-icon>
-        <fa-icon [icon]="faPaperPlane"  (click)="setMember(user)" ></fa-icon>
+      <div class="action" *ngIf="isNotFriend(user)">
+        <button (click)="addFriend(user.username, $event)">Kết bạn</button>
       </div>
     </tr>
   </table>

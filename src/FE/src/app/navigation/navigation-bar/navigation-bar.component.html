@@ -4,7 +4,7 @@
          src="https://freepngimg.com/save/97432-logo-chat-photos-download-free-image/512x512">
   </a>
   <ul>
-    <li *ngFor="let item of getNavItems()" app-navigation-item [item]=item>
+    <li *ngFor="let item of getNavItems()" (click)="changeTab(item)" app-navigation-item [item]=item>
     </li>
   </ul>
   <ul>

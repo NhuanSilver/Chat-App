@@ -13,6 +13,8 @@ import {UserService} from "../../service/user.service";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {WebsocketService} from "../../service/websocket.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {TAB} from "../../model/TAB";
+import {TabService} from "../../service/tab.service";
 
 @Component({
   selector: 'app-navigation-bar',
@@ -34,6 +36,7 @@ export class NavigationBarComponent implements AfterViewInit{
   user = this.userService.getCurrentUser()
   constructor(private userService: UserService,
               private webSocketService: WebsocketService,
+              private tabService: TabService,
               private router: Router,
               private renderer : Renderer2) {
 
@@ -41,11 +44,11 @@ export class NavigationBarComponent implements AfterViewInit{
   }
   private navItems: NavItem[] =  [
     {
-      name : "chat",
+      name : TAB.CHAT,
       icon : faUser,
     },
     {
-      name: "group",
+      name: TAB.FRIEND,
       icon: faUserGroup,
     },
     {
@@ -84,5 +87,9 @@ export class NavigationBarComponent implements AfterViewInit{
     this.userService.logOut()
     this.router.navigate(['/tai-khoan/dang-nhap'])
 
+  }
+
+  changeTab(item: NavItem) {
+    this.tabService.setTab(item.name)
   }
 }

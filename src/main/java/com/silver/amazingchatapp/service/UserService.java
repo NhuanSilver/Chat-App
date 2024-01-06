@@ -114,12 +114,18 @@ public class UserService {
         Set<Friend> friends = this.friendRepository
                 .findByOwnerAndRequestOrRequestAndOwner(owner, requestTo, owner, requestTo);
 
+        // Already in friendship
         if (friends.size() > 1) return;
 
+        // Request is exist
         if (friends.size() == 1) {
             Friend existedFriend = friends.stream().toList().get(0);
 
+            // User already had requested
             if (existedFriend.getOwner().getUsername().equals(request.getOwner())) return;
+
+
+            // Accept friend
             if (existedFriend.getRequest().getUsername().equals(request.getOwner())) {
 
                 Friend acceptFriend = Friend.builder()
@@ -130,11 +136,17 @@ public class UserService {
                 friendRepository.save(acceptFriend);
 
                 existedFriend.setStatus(FRIEND_STATUS.ACTIVE);
-                friendRepository.save(existedFriend);
+                Friend friendAcceptedDTO = friendRepository.save(existedFriend);
+
+                this.simpMessagingTemplate.convertAndSendToUser(request.getOwner(), "/queue/friends", friendAcceptedDTO);
+
+                this.simpMessagingTemplate.convertAndSendToUser(request.getRequestTo(), "/queue/friends", friendAcceptedDTO);
             }
             return;
         }
 
+
+        // Create new friend request
         Friend friendRequest = this.friendRepository.save(
 
                 Friend.builder()
@@ -144,6 +156,7 @@ public class UserService {
                         .build()
 
         );
+
         FriendDTO friendDTO = FriendDTO.builder()
                 .id(friendRequest.getId())
                 .owner(this.userDTOMapper.toDTO(owner))
