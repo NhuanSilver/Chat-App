@@ -2,6 +2,7 @@
   height: 100%;
   width: 100%;
   background-color: #f5f7fb;
+  border-right: 1px solid #e6e8ea;
   color: #333;
   position: relative;
 }

@@ -18,7 +18,7 @@
     </ng-container>
   </ng-container>
   <ng-container *ngIf="(currentTab | async) === TAB.FRIEND">
-    New tab
+    <app-tabs-list></app-tabs-list>
   </ng-container>
 
   <div #searchMenu class="search-menu" [class.show]="isSearchMenu">

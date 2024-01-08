@@ -1,12 +1,12 @@
 import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {RoomComponent} from "../../chat/room/room.component";
+import {RoomComponent} from "../../component/room/room.component";
 import {CommonModule} from "@angular/common";
 import {ChatService} from "../../service/chat.service";
 import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../BaseComponent";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faAdd, faSearch, faUserGroup} from "@fortawesome/free-solid-svg-icons";
-import {SearchComponent} from "../../search/search/search.component";
+import {SearchComponent} from "../search/search.component";
 import {catchError, debounceTime, distinctUntilChanged, map, Observable, of, switchMap} from "rxjs";
 import {UserService} from "../../service/user.service";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
@@ -14,6 +14,7 @@ import {environment} from "../../../environments/environment.development";
 import {User} from "../../model/User";
 import {TAB} from "../../model/TAB";
 import {TabService} from "../../service/tab.service";
+import {TabsListComponent} from "../tabs-list/tabs-list.component";
 
 @Component({
   selector: 'app-navigation-content',
@@ -23,7 +24,8 @@ import {TabService} from "../../service/tab.service";
     RoomComponent,
     FaIconComponent,
     SearchComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TabsListComponent
   ],
   templateUrl: './navigation-content.component.html',
   styleUrl: './navigation-content.component.scss'

@@ -1,0 +1,26 @@
+.tab__list__container .tab__item {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  padding: 2rem;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+.tab__list__container .tab__item span {
+  font-weight: 500;
+}
+.tab__list__container .tab__item fa-icon {
+  min-width: 2rem;
+  font-size: 1.6rem;
+}
+.tab__list__container .tab__item.active {
+  background-color: #e6ebf5;
+}
+.tab__list__container .tab__item.active:hover {
+  background-color: #e6ebf5;
+}
+.tab__list__container .tab__item:hover {
+  background-color: #e6e8ea;
+}
+
+/*# sourceMappingURL=tabs-list.component.css.map */

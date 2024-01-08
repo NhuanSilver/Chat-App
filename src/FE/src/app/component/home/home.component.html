@@ -1,0 +1,11 @@
+<div class="main">
+  <app-navigation-bar style="width: 7.4rem; z-index: 1"></app-navigation-bar>
+  <app-navigation-content style="width: 39rem"></app-navigation-content>
+  <div *ngIf="(mainTab$ | async) === TAB.CHAT" style="flex: 1; z-index: 1">
+    <app-room-content></app-room-content>
+  </div>
+
+  <div *ngIf="(mainTab$ | async) === TAB.FRIEND" style="flex: 1; z-index: 1">
+    <app-contact></app-contact>
+  </div>
+</div>

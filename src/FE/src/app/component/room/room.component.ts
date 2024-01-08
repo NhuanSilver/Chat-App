@@ -6,6 +6,8 @@ import {ChatService} from "../../service/chat.service";
 import {UserService} from "../../service/user.service";
 import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../BaseComponent";
+import {TabService} from "../../service/tab.service";
+import {TAB} from "../../model/TAB";
 
 @Component({
   selector: 'app-room',
@@ -20,6 +22,7 @@ export class RoomComponent extends BaseComponent implements OnInit {
   members: User[] = [];
 
   constructor(private chatService: ChatService,
+              private tabService : TabService,
               private userService: UserService) {
     super();
   }
@@ -43,6 +46,8 @@ export class RoomComponent extends BaseComponent implements OnInit {
   setConversation() {
     this.chatService.setConversation(this.conversation);
     this.chatService.setActiveConversation(this.conversation)
+    this.tabService.setMainTabSubject(TAB.CHAT)
+
   }
 
   getActivatedCvs() {

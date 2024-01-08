@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RouterLink, RouterOutlet} from '@angular/router';
-import {NavigationBarComponent} from "./navigation/navigation-bar/navigation-bar.component";
-import {NavigationContentComponent} from "./navigation/navigation-content/navigation-content.component";
-import {RoomContentComponent} from "./chat/room-content/room-content.component";
+import {NavigationBarComponent} from "./component/navigation-bar/navigation-bar.component";
+import {NavigationContentComponent} from "./component/navigation-content/navigation-content.component";
+import {RoomContentComponent} from "./component/room-content/room-content.component";
 
 
 @Component({

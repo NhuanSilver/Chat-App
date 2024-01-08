@@ -2,7 +2,7 @@ import {Component, Inject, Input, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogClose, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment.development";
-import {UserFormGroupComponent} from "../../user/user-form-group/user-form-group.component";
+import {UserFormGroupComponent} from "../user-form-group/user-form-group.component";
 import {faSearch, faUserFriends} from "@fortawesome/free-solid-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faPaperPlane} from "@fortawesome/free-regular-svg-icons";

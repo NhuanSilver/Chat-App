@@ -1,0 +1,28 @@
+.tab__list__container {
+
+
+  .tab__item {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    padding: 2rem;
+    font-size: 1.6rem;
+    cursor: pointer;
+    span {
+      font-weight: 500;
+    }
+    fa-icon {
+      min-width: 2rem;
+      font-size: 1.6rem;
+    }
+    &.active {
+      background-color: #e6ebf5;
+      &:hover {
+        background-color: #e6ebf5;
+      }
+    }
+    &:hover {
+      background-color: #e6e8ea;
+    }
+  }
+}

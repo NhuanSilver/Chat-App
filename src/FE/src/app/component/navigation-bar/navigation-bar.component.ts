@@ -3,7 +3,7 @@ import {NavigationItemComponent} from "../navigation-item/navigation-item.compon
 import {NavItem} from "../../model/NavItem";
 import {
   faAddressBook,
-  faArrowRightFromBracket,
+  faArrowRightFromBracket, faMessage,
   faMoon,
   faUser,
   faUserGroup
@@ -45,7 +45,7 @@ export class NavigationBarComponent implements AfterViewInit{
   private navItems: NavItem[] =  [
     {
       name : TAB.CHAT,
-      icon : faUser,
+      icon : faMessage,
     },
     {
       name: TAB.FRIEND,
@@ -91,5 +91,6 @@ export class NavigationBarComponent implements AfterViewInit{
 
   changeTab(item: NavItem) {
     this.tabService.setTab(item.name)
+    this.tabService.setMainTabSubject(item.name)
   }
 }

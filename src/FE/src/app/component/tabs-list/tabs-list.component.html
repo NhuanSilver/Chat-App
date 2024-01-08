@@ -1,0 +1,19 @@
+<div class="tab__list__container">
+  <div (click)="setActive(TAB.FRIEND_LIST)"
+       class="tab__item"
+       [class.active] = 'currentTab === TAB.FRIEND_LIST'>
+    <fa-icon [icon]="faAddressBook"></fa-icon>
+    <span class="tab__item__text">Danh sach ban be</span>
+  </div>
+
+  <div (click)="setActive(TAB.GROUP_LIST)" class="tab__item" [class.active] = 'currentTab === TAB.GROUP_LIST'>
+    <fa-icon [icon]="faUserGroup"></fa-icon>
+    <span class="tab__item__text">Danh sach nhom</span>
+  </div>
+
+  <div (click)="setActive(TAB.FRIEND_REQUEST)" class="tab__item" [class.active] = 'currentTab === TAB.FRIEND_REQUEST'>
+    <fa-icon [icon]="faEnvelope"></fa-icon>
+    <span class="tab__item__text">Loi moi ket ban</span>
+  </div>
+
+</div>

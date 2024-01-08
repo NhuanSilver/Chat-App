@@ -9,7 +9,7 @@ import {ChatService} from "../../service/chat.service";
 import {forkJoin, of, switchMap, tap} from "rxjs";
 import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../BaseComponent";
-import {NavigationItemComponent} from "../../navigation/navigation-item/navigation-item.component";
+import {NavigationItemComponent} from "../navigation-item/navigation-item.component";
 import {faSearch, faPhone, faBars} from "@fortawesome/free-solid-svg-icons";
 import {NavItem} from "../../model/NavItem";
 import {User} from "../../model/User";
