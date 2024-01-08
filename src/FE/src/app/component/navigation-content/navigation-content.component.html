@@ -16,8 +16,11 @@
     <ng-container  *ngFor="let conversation of conversations">
       <app-room [conversation]="conversation"></app-room>
     </ng-container>
+    <ng-container  *ngIf="conversations.length == 0" >
+      <div style="font-size: 1.6rem; padding: 2rem;">Bạn chưa có đoạn chat nào</div>
+    </ng-container>
   </ng-container>
-  <ng-container *ngIf="(currentTab | async) === TAB.FRIEND">
+  <ng-container *ngIf="(currentTab | async) === TAB.CONTACT">
     <app-tabs-list></app-tabs-list>
   </ng-container>
 

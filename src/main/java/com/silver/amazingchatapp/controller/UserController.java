@@ -1,6 +1,5 @@
 package com.silver.amazingchatapp.controller;
 
-import com.silver.amazingchatapp.dto.AddFriendRequest;
 import com.silver.amazingchatapp.dto.LoginRequest;
 import com.silver.amazingchatapp.dto.RegistrationRequest;
 import com.silver.amazingchatapp.dto.UserDto;
@@ -33,10 +32,6 @@ public class UserController {
        return this.userService.disconnect(userDto);
     }
 
-    @MessageMapping("/user.AddFriend")
-    public void addFriend(@Payload AddFriendRequest request) {
-        this.userService.addFriend(request);
-    }
 
     @PostMapping("/login")
     public UserDto login(@RequestBody LoginRequest request) {
@@ -57,11 +52,5 @@ public class UserController {
     public List<UserDto> getUserByUsernameOrName(@PathVariable String value) {
         return this.userService.getUserByUsernameOrName(value);
     }
-
-    @GetMapping("/{username}/friends")
-    public List<UserDto> getAllFriendsByUsername(@PathVariable String username){
-        return this.userService.getAllFriends(username);
-    }
-
 
 }

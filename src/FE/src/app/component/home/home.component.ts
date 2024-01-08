@@ -7,6 +7,11 @@ import {TabService} from "../../service/tab.service";
 import {AsyncPipe, NgIf} from "@angular/common";
 import {TAB} from "../../model/TAB";
 import {ContactComponent} from "../contact/contact.component";
+import {FriendService} from "../../service/friend.service";
+import {ToastrService} from "ngx-toastr";
+import {STATUS} from "../../model/STATUS";
+import {User} from "../../model/User";
+import {UserService} from "../../service/user.service";
 
 @Component({
   selector: 'app-home',
@@ -26,6 +31,9 @@ export class HomeComponent implements OnInit, OnDestroy{
   protected readonly TAB = TAB;
   mainTab$ = this.tabService.getMainTab$();
   constructor(private websocketService: WebsocketService,
+              private friendService: FriendService,
+              private userService: UserService,
+              private toastService : ToastrService,
               private tabService: TabService) {
   }
 
@@ -34,6 +42,19 @@ export class HomeComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.websocketService.connect();
+
+    this.friendService.getFriend$().subscribe( friend => {
+      if (!friend) return;
+      if (friend.owner.username === this.userService.getCurrentUser().username && friend.status === STATUS.PENDING) {
+        this.toastService.success("Đã gửi lời mới kết bạn đến " + friend.requestTo.fullName)
+      }
+      if (friend.requestTo.username === this.userService.getCurrentUser().username && friend.status === STATUS.PENDING) {
+        this.toastService.info(friend.owner.fullName + " đã yêu cầu kết bạn với bạn ")
+      }
+      if (STATUS.ACTIVE === friend.status &&friend.requestTo.username === this.userService.getCurrentUser().username) {
+          this.toastService.success(friend.owner.fullName + " đã đồng ý kết bạn với bạn")
+      }
+    })
 
   }
 }

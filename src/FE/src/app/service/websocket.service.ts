@@ -34,8 +34,6 @@ export class WebsocketService {
         })
       },
       onStompError: (frame) => {
-        console.log('Broker reported error: ' + frame.headers['message']);
-        console.log('Additional details: ' + frame.body);
       }
     });
     this.stompClient.activate()
@@ -68,6 +66,10 @@ export class WebsocketService {
     )
   }
 
+  getFriend$() {
+    return this.friendSubject.asObservable();
+  }
+
   subscribe(): void {
     if (this.stompClient && this.stompClient.connected) {
       this.stompClient.subscribe(`/topic/public`, (resp) => {
@@ -96,7 +98,6 @@ export class WebsocketService {
   }
 
   addFriend(username: string) {
-
     this.stompClient.publish({
       destination: '/app/user.AddFriend',
       body: JSON.stringify({

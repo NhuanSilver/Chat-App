@@ -34,6 +34,7 @@ export class NavigationBarComponent implements AfterViewInit{
   protected readonly faArrowRightFromBracket = faArrowRightFromBracket;
   isMenuOpen: boolean = false;
   user = this.userService.getCurrentUser()
+  currentTab: string = TAB.CHAT;
   constructor(private userService: UserService,
               private webSocketService: WebsocketService,
               private tabService: TabService,
@@ -48,13 +49,9 @@ export class NavigationBarComponent implements AfterViewInit{
       icon : faMessage,
     },
     {
-      name: TAB.FRIEND,
+      name: TAB.CONTACT,
       icon: faUserGroup,
-    },
-    {
-      name: "contact",
-      icon: faAddressBook,
-    },
+    }
   ]
 
   private userNavItems: NavItem[] =  [
@@ -90,6 +87,7 @@ export class NavigationBarComponent implements AfterViewInit{
   }
 
   changeTab(item: NavItem) {
+    this.currentTab = item.name;
     this.tabService.setTab(item.name)
     this.tabService.setMainTabSubject(item.name)
   }

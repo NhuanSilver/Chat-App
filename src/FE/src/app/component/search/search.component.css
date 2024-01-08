@@ -8,6 +8,8 @@
 }
 .search-container table {
   display: block;
+  max-width: 100%;
+  overflow-y: scroll;
 }
 .search-container table .user {
   display: flex;

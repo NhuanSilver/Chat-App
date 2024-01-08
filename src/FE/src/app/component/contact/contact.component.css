@@ -24,14 +24,14 @@
   font-weight: 500;
 }
 .contact__container .contact__content .contact__content__main__container {
-  background-color: #fff;
   height: calc(100% - 7.3rem);
+  background-color: #f5f7fb;
   padding: 2rem 2rem 0 2rem;
 }
 .contact__container .contact__content .contact__content__main__container form {
   height: 100%;
   width: 100%;
-  background-color: #f5f7fb;
+  background-color: #fff;
 }
 .contact__container .friend__request__container {
   height: calc(100% - 7.3rem);
@@ -40,14 +40,15 @@
   padding: 2rem 2rem 2rem 2rem;
   height: 100%;
   border-radius: 0.4rem;
-  background-color: #ffffff;
+  background-color: #f5f7fb;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1.2rem;
 }
 .contact__container .friend__request__container .friend__request__grid .request {
-  background-color: #f5f7fb;
   font-size: 1.6rem;
+  height: fit-content;
+  background-color: white;
   box-shadow: 0 2px 4px rgba(19, 116, 238, 0.12);
   border-radius: 0.4rem;
 }
@@ -69,18 +70,23 @@
   background-color: white;
   border: 1px solid #cec0c0;
   outline: none;
-  padding: 0.4rem 0.8rem;
+  padding: 1rem 1.8rem;
+  cursor: pointer;
   border-radius: 0.4rem;
   min-width: 5rem;
 }
 .contact__container .friend__request__container .friend__request__grid .request .btn-group .btn-add {
   background-color: #7269ef;
+  cursor: pointer;
   outline: none;
   border: 1px solid #7269ef;
   color: white;
-  padding: 0.4rem 0.8rem;
+  padding: 1rem 1.8rem;
   border-radius: 0.4rem;
   margin-left: 1rem;
+}
+.contact__container .friend__request__container .friend__request__grid .request .btn-group span {
+  font-size: 1.6rem;
 }
 
 /*# sourceMappingURL=contact.component.css.map */

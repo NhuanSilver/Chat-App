@@ -1,39 +1,46 @@
 <div class="contact__container" *ngIf="contactTab$ | async as tab">
   <div *ngIf="tab === TAB.FRIEND_LIST" class="contact__header">
     <fa-icon [icon]="faAddressBook"></fa-icon>
-    <span>Danh sach ban be</span>
+    <span>Danh sách bạn bè</span>
   </div>
   <div *ngIf="tab === TAB.GROUP_LIST" class="contact__header">
     <fa-icon [icon]="faUserGroup"></fa-icon>
-    <span>Danh sach nhom</span>
+    <span>Danh sách nhóm</span>
   </div>
   <div *ngIf="tab === TAB.FRIEND_REQUEST" class="contact__header">
     <fa-icon [icon]="faEnvelope"></fa-icon>
-    <span>Loi moi ket ban</span>
+    <span>Lời mới kết bạn</span>
   </div>
-  <div class="contact__content" *ngIf="tab === TAB.CONTACT ">
+  <div class="contact__content" *ngIf="tab === TAB.FRIEND_LIST || tab === TAB.GROUP_LIST ">
     <div class="contact__content__header">
-      Ban be
+      Bạn bè
     </div>
     <div class="contact__content__main__container">
       <form>
 
+        <table *ngIf="tab === TAB.FRIEND_LIST">
+          <tr *ngFor="let friend of (friendList$ | async)">
+            {{friend.requestTo.fullName}}
+          </tr>
+        </table>
       </form>
+
     </div>
 
   </div>
 
   <div class="friend__request__container" *ngIf="tab === TAB.FRIEND_REQUEST" >
     <div class="friend__request__grid">
-      <div *ngFor="let i of Array(20).fill(5)"  class="request">
+      <div *ngFor="let friend of friendRequests"  class="request">
           <div class="user">
-            <img src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/4_avatar-512.png" alt="">
-            <span>Plz add me</span>
+            <img [src]="friend.owner.avatarUrl" alt="">
+            <span>{{friend.owner.fullName}}</span>
           </div>
-          <div class="btn-group">
-            <button class="btn-delete">Xoa</button>
-            <button class="btn-add">Them ban</button>
+          <div class="btn-group" *ngIf="friend.status !== STATUS.ACTIVE">
+            <button class="btn-delete" (click)="deleteFriend(friend)">Xóa</button>
+            <button class="btn-add" (click)="addFriend(friend)" >Xác nhận</button>
           </div>
+          <div class="btn-group" *ngIf="friend.status === STATUS.ACTIVE">Các bạn đã trở thành bạn bè</div>
       </div>
 
     </div>

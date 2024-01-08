@@ -3,17 +3,19 @@
        class="tab__item"
        [class.active] = 'currentTab === TAB.FRIEND_LIST'>
     <fa-icon [icon]="faAddressBook"></fa-icon>
-    <span class="tab__item__text">Danh sach ban be</span>
+    <span class="tab__item__text">Danh sách bạn bè</span>
   </div>
 
   <div (click)="setActive(TAB.GROUP_LIST)" class="tab__item" [class.active] = 'currentTab === TAB.GROUP_LIST'>
     <fa-icon [icon]="faUserGroup"></fa-icon>
-    <span class="tab__item__text">Danh sach nhom</span>
+    <span class="tab__item__text">Danh sách nhóm</span>
   </div>
 
   <div (click)="setActive(TAB.FRIEND_REQUEST)" class="tab__item" [class.active] = 'currentTab === TAB.FRIEND_REQUEST'>
     <fa-icon [icon]="faEnvelope"></fa-icon>
-    <span class="tab__item__text">Loi moi ket ban</span>
+    <div class="tab__item__text">Lời mời kết bạn
+      <span *ngIf="friendRequests.length > 0" >{{friendRequests.length}}</span>
+    </div>
   </div>
 
 </div>

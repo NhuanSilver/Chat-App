@@ -27,12 +27,13 @@ export class UserService {
   searchUserByUsernameOrName(value : string) {
     return this.http.get<User[]>(`http://localhost:8080/api/users/search/${value}`)
   }
-  getAllFriend() {
-    return this.http.get<User[]>(`http://localhost:8080/api/users/${this.getCurrentUser().username}/friends`)
-  }
 
   logOut() {
     this.getCurrentUser().status
     this.storageService.removeUser();
+  }
+
+  register(fullName: string, username: string, password: string) {
+    return  this.http.post<User>('http://localhost:8080/api/users/register', {fullName, username, password} )
   }
 }

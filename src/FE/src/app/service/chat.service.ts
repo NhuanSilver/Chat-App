@@ -64,7 +64,4 @@ export class ChatService {
     this.activeConversationSubject.next(conversation);
   }
 
-  addFriend(username: string) {
-    this.websocketService.addFriend(username);
-  }
 }

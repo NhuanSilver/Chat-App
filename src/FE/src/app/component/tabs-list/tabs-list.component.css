@@ -22,5 +22,17 @@
 .tab__list__container .tab__item:hover {
   background-color: #e6e8ea;
 }
+.tab__list__container .tab__item__text {
+  font-weight: 500;
+}
+.tab__list__container .tab__item__text span {
+  display: inline-block;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  height: 2rem;
+  width: 2rem;
+}
 
 /*# sourceMappingURL=tabs-list.component.css.map */

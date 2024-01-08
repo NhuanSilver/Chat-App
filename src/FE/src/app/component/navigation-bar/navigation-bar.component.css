@@ -15,6 +15,9 @@
   width: 40%;
   object-fit: cover;
 }
+.nav-bar .nav-link .active {
+  background-color: #e6ebf5;
+}
 .nav-bar .user-nav {
   display: flex;
   justify-content: center;

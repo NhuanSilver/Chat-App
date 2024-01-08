@@ -4,6 +4,13 @@
     <p class="login-text">Đăng nhập tài khoản Amazing Chat
       để kết nối với ứng dụng Amazing Chat</p>
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+      <div class="form-group" *ngIf="actionType === 'dang-ky'">
+        <app-user-form-group [type]="'text'"
+                             [placeholder]="'Họ và tên'"
+                             [icon]="faLock"
+                             [control]="getControl(FORM_CONTROL.FULL_NAME)"></app-user-form-group>
+      </div>
+
       <div class="form-group">
         <app-user-form-group [type]="'text'"
                              [placeholder]="'Tài khoản'"
@@ -17,12 +24,6 @@
                              [control]="getControl(FORM_CONTROL.PASSWORD)"></app-user-form-group>
       </div>
 
-      <div class="form-group" *ngIf="actionType === 'dang-ky'">
-        <app-user-form-group [type]="'text'"
-                             [placeholder]="'Họ và tên'"
-                             [icon]="faLock"
-                             [control]="getControl(FORM_CONTROL.FULL_NAME)"></app-user-form-group>
-      </div>
 
       <button class="btn-submit" type="submit">{{actionType === USER_ACTION.LOGIN? 'Đăng nhập' : 'Đăng ký'}}</button>
     </form>

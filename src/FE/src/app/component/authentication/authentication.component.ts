@@ -9,6 +9,7 @@ import {UserFormGroupComponent} from "../user-form-group/user-form-group.compone
 import {faLock, faUser} from "@fortawesome/free-solid-svg-icons";
 import {NgIf} from "@angular/common";
 import {environment} from "../../../environments/environment.development";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-authentication',
@@ -33,6 +34,7 @@ export class AuthenticationComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private userService: UserService,
+              private toastService : ToastrService,
               private router: Router,
               private storageService: StorageService,
               private activatedRoute: ActivatedRoute) {
@@ -61,7 +63,8 @@ export class AuthenticationComponent implements OnInit {
   }
 
   private doLogin() {
-    this.userService.login(this.formGroup.get(this.FORM_CONTROL.USERNAME)?.value, this.formGroup.get(this.FORM_CONTROL.PASSWORD)?.value)
+    this.userService.login(this.formGroup.get(this.FORM_CONTROL.USERNAME)?.value,
+      this.formGroup.get(this.FORM_CONTROL.PASSWORD)?.value)
       .subscribe({
         next: user => {
           user.status = STATUS.ONLINE
@@ -69,12 +72,27 @@ export class AuthenticationComponent implements OnInit {
           this.router.navigate(['/home'])
         },
         error: err => {
+          this.toastService.error("Sai tài khoản hoặc mật khẩu")
           console.log(err)
         }
       })
   }
 
   private doRegister() {
+    this.userService.register(
+      this.formGroup.get(this.FORM_CONTROL.FULL_NAME)?.value,
+      this.formGroup.get(this.FORM_CONTROL.USERNAME)?.value,
+      this.formGroup.get(this.FORM_CONTROL.PASSWORD)?.value)
+      .subscribe(
+        {
+          next : _ => {
+              this.router.navigate(['/tai-khoan/dang-nhap'])
+          },
+          error: _=> {
+            this.toastService.error("Có lỗi xảy ra, vui lòng thử lại sau")
+          }
+        }
+      )
 
   }
 

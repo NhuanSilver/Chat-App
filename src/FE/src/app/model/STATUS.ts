@@ -2,5 +2,5 @@ export enum STATUS {
   ONLINE = 'ONLINE',
   OFFLINE = 'OFFLINE',
   PENDING = 'PENDING',
-  ACCEPTED = 'ACCEPTED'
+  ACTIVE = 'ACTIVE'
 }
