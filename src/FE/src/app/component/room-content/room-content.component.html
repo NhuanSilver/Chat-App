@@ -27,6 +27,12 @@
     <form class="message-form" [formGroup]="messageForm" (ngSubmit)="onSubmit(recipients)">
       <input class="input-message" placeholder="Nhập tin nhắn..." type="text" formControlName="messageControl" >
       <div class="form-group-options">
+        <button #emojiToggle type="button" class="btn-emoij" (click)="isEmojiPicker = !isEmojiPicker">
+          <fa-icon [icon]="faFaceSmile"></fa-icon>
+        </button>
+        <emoji-mart #emojiPicker [darkMode]="false"
+                    (emojiClick)="onEmojiSelect($event)"
+                    class="emoij-picker" [class.show]="isEmojiPicker"></emoji-mart>
         <button type="submit" class="btn btn-submit">
           <fa-icon [icon]= "faPaperPlane"></fa-icon>
         </button>

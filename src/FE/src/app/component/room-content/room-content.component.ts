@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {ChatMessage} from "../../model/ChatMessage";
 import {CommonModule} from "@angular/common";
 import {MessageComponent} from "../message/message.component";
@@ -10,23 +10,27 @@ import {forkJoin, of, switchMap, tap} from "rxjs";
 import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../BaseComponent";
 import {NavigationItemComponent} from "../navigation-item/navigation-item.component";
-import {faSearch, faPhone, faBars} from "@fortawesome/free-solid-svg-icons";
+import {faSearch, faPhone, faBars, faFaceSmile} from "@fortawesome/free-solid-svg-icons";
 import {NavItem} from "../../model/NavItem";
 import {User} from "../../model/User";
 import {UserService} from "../../service/user.service";
 import {STATUS} from "../../model/STATUS";
+import {PickerComponent} from "@ctrl/ngx-emoji-mart";
 
 @Component({
   selector: 'app-room-content',
   standalone: true,
-  imports: [CommonModule, MessageComponent, ReactiveFormsModule, FaIconComponent, NavigationItemComponent],
+  imports: [CommonModule, MessageComponent, ReactiveFormsModule, FaIconComponent, NavigationItemComponent, PickerComponent],
   templateUrl: './room-content.component.html',
   styleUrl: './room-content.component.scss'
 })
-export class RoomContentComponent extends BaseComponent implements OnInit{
+export class RoomContentComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChild('chatBox') chatBox !: ElementRef;
+  @ViewChild('emojiPicker') picker !: ElementRef<any>;
+  @ViewChild('emojiToggle') togglePicker !: ElementRef<HTMLButtonElement>;
   protected readonly faPaperPlane = faPaperPlane;
   protected readonly STATUS = STATUS;
+  protected readonly faFaceSmile = faFaceSmile;
   protected readonly roomNavItems: NavItem[] = [
     {
       name: 'search',
@@ -41,12 +45,13 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
       icon: faBars
     }
   ]
+  isEmojiPicker = false;
   currentUser = this.userService.getCurrentUser();
 
   messageForm !: FormGroup;
   chatMessages: ChatMessage[] = [];
   recipients: User[] = [];
-  conversation : Conversation| undefined;
+  conversation: Conversation | undefined;
 
   chatMessagesSub = this.chatService.getConversation$().pipe(
     switchMap(conversation => {
@@ -72,6 +77,7 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
       this.recipients = (value as User[]).filter(member => member.username !== this.currentUser.username);
     } else {
       this.chatMessages = value as ChatMessage[];
+
     }
   })
 
@@ -92,13 +98,6 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
         newMessage: of(value),
         conversation: conversationObservable
       });
-    }),
-    tap(value => {
-
-      if (value?.newMessage && value.conversation) {
-
-        this.scrollToBottom();
-      }
     })
   ).subscribe(value => {
     if (!value) return;
@@ -106,6 +105,7 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
     // Add message to active conversion
     if (value.newMessage && this.conversation?.id === value.newMessage.conversationId) {
       this.chatMessages.push(value.newMessage)
+      this.scrollToBottom();
     }
 
     //Add new message to new conversation
@@ -116,7 +116,10 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
 
   })
 
-  constructor(private fb: FormBuilder, private chatService: ChatService, private userService: UserService) {
+  constructor(private fb: FormBuilder,
+              private chatService: ChatService,
+              private userService: UserService,
+              private renderer: Renderer2) {
     super();
 
     this.messageForm = this.fb.group(
@@ -129,12 +132,17 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
     this.subscriptions.push(this.newMessageSub)
   }
 
+  ngAfterViewInit(): void {
+
+  }
+
   ngOnInit(): void {
-    }
+  }
 
   onSubmit(recipients: User[]) {
 
     const recipientsClone = [...recipients]
+    this.isEmojiPicker = false;
 
     this.chatService.sendMessage({
 
@@ -158,4 +166,9 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
     }
   }
 
+  onEmojiSelect($event: any) {
+    const inputValue = this.messageForm.controls['messageControl']?.value;
+    this.messageForm.controls['messageControl']?.setValue(inputValue + $event.emoji.native);
+
+  }
 }

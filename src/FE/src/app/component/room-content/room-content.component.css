@@ -37,9 +37,8 @@
 }
 .room-content .room-header-container .room-user-area .room-user-img img {
   border-radius: 50%;
-  width: 3rem;
-  height: 3rem;
-  object-fit: cover;
+  width: 5rem;
+  height: 5rem;
 }
 .room-content .room-header-container .room-user-actions {
   display: flex;
@@ -69,6 +68,31 @@
   outline: none;
   border: 1px solid #e6ebf5;
   background-color: #e6ebf5;
+}
+.room-content .message-form .form-group-options {
+  display: flex;
+  gap: 1rem;
+  position: relative;
+}
+.room-content .message-form .form-group-options .emoij-picker {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  display: none;
+}
+.room-content .message-form .form-group-options .emoij-picker.show {
+  display: block;
+}
+.room-content .message-form .form-group-options .btn-emoij {
+  padding: 1rem 1.6rem;
+  border-radius: 0.6rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+.room-content .message-form .form-group-options .btn-emoij:hover {
+  background-color: #e6e8ea;
 }
 .room-content .message-form .form-group-options .btn-submit {
   padding: 1rem 1.6rem;

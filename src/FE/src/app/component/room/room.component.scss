@@ -4,15 +4,15 @@
   align-items: center;
   gap: 2rem;
   font-size: 1.6rem;
-  padding: 2rem;
+  padding: 1.4rem 2rem;
   &.isActive {
     background-color: #e6ebf5;
     border-radius: 0.6rem;
   }
   .user {
     position: relative;
-    width: 4rem;
-    height: 4rem;
+    width: 5rem;
+    height: 5rem;
     .user-img {
       border-radius: 50%;
       width: 100%;

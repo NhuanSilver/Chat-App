@@ -34,9 +34,8 @@
         width: fit-content;
         img {
           border-radius: 50%;
-          width: 3rem;
-          height: 3rem;
-          object-fit: cover;
+          width: 5rem;
+          height: 5rem;
         }
       }
     }
@@ -70,6 +69,29 @@
       background-color: #e6ebf5;
     }
     .form-group-options {
+      display: flex;
+      gap: 1rem;
+      position: relative;
+      .emoij-picker{
+        position: absolute;
+        bottom: 100%;
+        right: 0;
+        display: none;
+        &.show {
+          display: block;
+        }
+      }
+      .btn-emoij {
+        padding: 1rem 1.6rem;
+        border-radius: 0.6rem;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        position: relative;
+        &:hover {
+          background-color: #e6e8ea;
+        }
+      }
       .btn-submit {
         padding: 1rem 1.6rem;
         font-size: 1.6rem;

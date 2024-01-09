@@ -13,17 +13,51 @@
   </div>
   <div class="contact__content" *ngIf="tab === TAB.FRIEND_LIST || tab === TAB.GROUP_LIST ">
     <div class="contact__content__header">
-      Bạn bè
+      <p>{{tab === TAB.FRIEND_LIST ? 'Bạn bè' : 'Nhóm'}}</p>
     </div>
     <div class="contact__content__main__container">
-      <form>
+      <div class="main__area">
+        <form class="form">
+          <div class="form-group search-group">
+            <fa-icon [icon]="faSearch"></fa-icon>
+            <input [placeholder]="TAB.FRIEND_LIST === tab ? 'Tìm bạn' : 'Tìm nhóm'" />
+          </div>
 
-        <table *ngIf="tab === TAB.FRIEND_LIST">
-          <tr *ngFor="let friend of (friendList$ | async)">
-            {{friend.requestTo.fullName}}
-          </tr>
-        </table>
-      </form>
+          <div (click)="isSortMenu = !isSortMenu" class="form-group condition-group">
+            <fa-icon [icon]="faArrowUpAZ" ></fa-icon>
+            <div>Tên (A-Z)</div>
+            <fa-icon class="arrow-down" [icon]="faAngleDown"></fa-icon>
+            <ul class="filter-menu" [class.show] ="isSortMenu">
+              <li>
+                <fa-icon [icon]="faCheck"></fa-icon>
+                Tên (A-Z)
+              </li>
+              <li>
+                <fa-icon [icon]="faCheck"></fa-icon>
+                Tên (Z-A)
+              </li>
+            </ul>
+          </div>
+
+
+
+        </form>
+
+
+        <div class="friend-list" *ngIf="tab === TAB.FRIEND_LIST">
+          <div class="friend-item"  *ngFor="let friendEntry of friendMap | keyvalue">
+            <div class="friend-letter">
+              {{friendEntry.key}}
+            </div>
+            <div class="friend-info" (click)="setMember(friend.requestTo)"  *ngFor="let friend of friendEntry.value">
+              <img class="friend-img" [src]="friend.requestTo.avatarUrl" alt="">
+              <div class="friend-name">{{friend.requestTo.fullName}}
+                <fa-icon [icon]="faEllipsis"></fa-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
 

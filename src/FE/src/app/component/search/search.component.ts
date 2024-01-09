@@ -15,7 +15,6 @@ import {BaseComponent} from "../../BaseComponent";
 import {Friend} from "../../model/Friend";
 import {FriendService} from "../../service/friend.service";
 import {TabService} from "../../service/tab.service";
-import {TAB} from "../../model/TAB";
 import {ToastrService} from "ngx-toastr";
 import {STATUS} from "../../model/STATUS";
 
@@ -34,19 +33,13 @@ import {STATUS} from "../../model/STATUS";
 })
 export class SearchComponent extends BaseComponent implements OnInit {
 
-  protected readonly faSearch = faSearch;
   protected readonly environment = environment;
-  protected readonly faPaperPlane = faPaperPlane;
-  protected readonly faUserFriends = faUserFriends;
   @Input() users$ ?: Observable<User[]>;
   users: User[] = [];
   friends: Friend[] = []
 
   constructor(private friendService: FriendService,
-              private toastService: ToastrService,
-              private tabService: TabService,
-              private chatService: ChatService,
-              private userService: UserService) {
+              private chatService: ChatService) {
     super();
   }
 
@@ -73,27 +66,7 @@ export class SearchComponent extends BaseComponent implements OnInit {
   }
 
   setMember(user: User) {
-    const cvsSub = this.chatService.getConversationByUsernames(this.userService.getCurrentUser().username, user.username)
-      .subscribe({
-        next:
-          cvs => {
-            if (cvs) {
-              this.chatService.setConversation(cvs)
-              this.chatService.setActiveConversation(cvs)
-            } else {
-              this.chatService.setRecipients([user])
-              this.chatService.setConversation(undefined)
-            }
-            this.tabService.setMainTabSubject(TAB.CHAT)
-          },
-
-        error: _ => {
-          this.chatService.setRecipients([user])
-          this.chatService.setConversation(undefined)
-        }
-      })
-
-    this.subscriptions.push(cvsSub);
+   this.subscriptions.push(this.chatService.setMember(user))
   }
 
   isNotFriend(user: User): boolean {

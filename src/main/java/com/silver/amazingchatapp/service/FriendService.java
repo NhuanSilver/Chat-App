@@ -11,6 +11,7 @@ import com.silver.amazingchatapp.repository.FriendRepository;
 import com.silver.amazingchatapp.repository.UserRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import java.util.Set;
 @Service
 @Data
 @RequiredArgsConstructor
+@Slf4j
 public class FriendService {
     private final FriendRepository friendRepository;
     private final UserRepository userRepository;
@@ -72,18 +74,19 @@ public class FriendService {
             // User already had requested
             if (existedFriend.getOwner().getUsername().equals(request.getOwner())) return;
 
-
             // Accept friend
             if (existedFriend.getRequest().getUsername().equals(request.getOwner())) {
-
                 Friend acceptFriend = Friend.builder()
                         .owner(owner)
                         .request(requestTo)
                         .status(FRIEND_STATUS.ACTIVE)
                         .build();
+
                 existedFriend.setStatus(FRIEND_STATUS.ACTIVE);
                 friendRepository.save(existedFriend);
-                
+
+
+
                 Friend friendAccepted = friendRepository.save(acceptFriend);
 
                 FriendDTO friendAcceptedDTO = FriendDTO.builder()

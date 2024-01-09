@@ -18,7 +18,7 @@ spring:
     username: root
     password: Nhuan123
 
-    url: jdbc:mysql://localhost:3306/chatapp
+    url: jdbc:mysql://localhost:3306/chatapp?createDatabaseIfNotExist=true&useUnicode=true&character_set_server=utf8mb4
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:

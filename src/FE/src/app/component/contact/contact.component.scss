@@ -19,18 +19,109 @@
   .contact__content {
     height: calc(100% - 7.3rem);
     .contact__content__header {
-      padding: 2rem;
-      height: 7.3rem;
+      padding: 3rem 2rem;
       font-weight: 500;
+      p {
+        margin: 0;
+      }
     }
     .contact__content__main__container {
       height: calc(100% - 7.3rem);
       background-color: #f5f7fb;
       padding: 2rem 2rem 0 2rem;
-      form {
+      .main__area {
         height: 100%;
         width: 100%;
         background-color: #fff;
+        .form {
+          display: flex;
+          padding: 2rem;
+          gap: 1rem;
+          .form-group {
+            width: 45%;
+            border-radius: 0.4rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            padding: 0.6rem 1rem;
+            &.search-group {
+              border: 1px solid #e6e8ea;
+              input {
+                border: none;
+                outline: none;
+
+              }
+            }
+            &.condition-group {
+              background-color: #e6e8ea;
+              position: relative;
+              .arrow-down {
+                margin-left: auto;
+              }
+              .filter-menu {
+                display: none;
+                border-radius: 0.4rem;
+                position: absolute;
+                list-style: none;
+                top: 100%;
+                width: 100%;
+                z-index: 1;
+                box-shadow: 0 0 10px 0 #3333;
+                left: 0;
+                right: 0;
+                &.show {
+                  display: block;
+                }
+                li {
+                  padding: 1rem;
+                  fa-icon {
+                    margin-right: 2rem;
+                  }
+                }
+              }
+            }
+          }
+        }
+        .friend-list {
+          .friend-item {
+
+            .friend-letter {
+              font-size: 1.8rem;
+              padding-left: 2rem;
+              margin: 1rem 0;
+              font-weight: 500;
+            }
+            .friend-info {
+              display: flex;
+              gap: 1rem;
+              padding-left: 3rem;
+              align-items: center;
+              cursor: pointer;
+              &:hover {
+                background-color: #e6e8ea;
+              }
+              .friend-img {
+                width: 5rem;
+                height: 5rem;
+              }
+              .friend-name {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                padding: 3rem 3rem 3rem 0;
+                border-bottom: 1px solid #e6e8ea;
+
+              }
+              &:last-child {
+                .friend-name {
+                  border-bottom: 0;
+                }
+              }
+            }
+
+          }
+
+        }
       }
     }
   }

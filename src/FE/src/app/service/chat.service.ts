@@ -6,6 +6,8 @@ import {BehaviorSubject} from "rxjs";
 import {UserService} from "./user.service";
 import {Conversation} from "../model/Conversation";
 import {User} from "../model/User";
+import {TabService} from "./tab.service";
+import {TAB} from "../model/TAB";
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +17,7 @@ export class ChatService {
   private recipientsSubject : BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
   private activeConversationSubject : BehaviorSubject<Conversation | undefined> = new BehaviorSubject<Conversation | undefined>(undefined);
   constructor(private websocketService : WebsocketService,
+              private tabService : TabService,
               private http: HttpClient,
               private userService : UserService) { }
 
@@ -62,6 +65,28 @@ export class ChatService {
 
   setActiveConversation(conversation : Conversation | undefined) {
     this.activeConversationSubject.next(conversation);
+  }
+
+  setMember(user : User) {
+    return  this.getConversationByUsernames(this.userService.getCurrentUser().username, user.username)
+      .subscribe({
+        next:
+          cvs => {
+            if (cvs) {
+              this.setConversation(cvs)
+              this.setActiveConversation(cvs)
+            } else {
+              this.setRecipients([user])
+              this.setConversation(undefined)
+            }
+            this.tabService.setMainTabSubject(TAB.CHAT)
+          },
+
+        error: _ => {
+          this.setRecipients([user])
+          this.setConversation(undefined)
+        }
+      })
   }
 
 }
