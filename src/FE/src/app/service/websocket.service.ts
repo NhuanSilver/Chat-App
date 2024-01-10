@@ -5,13 +5,14 @@ import {Client} from "@stomp/stompjs";
 import {User} from "../model/User";
 import {UserService} from "./user.service";
 import {Friend} from "../model/Friend";
+import {MessageRequest} from "../model/MessageRequest";
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
-  private stompClient !: Client;
+  public stompClient !: Client;
   private currentUser = this.userService.getCurrentUser();
   private messageSubject: BehaviorSubject<ChatMessage | undefined> = new BehaviorSubject<ChatMessage | undefined>(undefined);
   private userSubject : BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
@@ -34,8 +35,10 @@ export class WebsocketService {
         })
       },
       onStompError: (frame) => {
-      }
+      },
+      maxWebSocketChunkSize : 1024 * 1024 * 10,
     });
+
     this.stompClient.activate()
   }
 
@@ -46,13 +49,13 @@ export class WebsocketService {
     return this.userSubject.asObservable();
   }
 
-  sendMessage(message: { conversationId: string, recipientIds: string[], content: string }) {
+  sendMessage(message: MessageRequest) {
     if (this.stompClient && this.stompClient.connected) {
       this.publishMessage(message);
     }
   }
 
-  publishMessage(message: { conversationId: string, recipientIds: string[], content: string }): void {
+  publishMessage(message: MessageRequest): void {
     this.stompClient.publish(
       {
         destination: '/app/chat',
@@ -60,8 +63,9 @@ export class WebsocketService {
           conversationId: message.conversationId,
           senderId: this.userService.getCurrentUser().username,
           recipientIds: message.recipientIds,
-          content: message.content
-        })
+          content: message.content,
+          type: message.type
+        }),
       }
     )
   }

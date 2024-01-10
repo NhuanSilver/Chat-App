@@ -8,11 +8,13 @@ import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../BaseComponent";
 import {TabService} from "../../service/tab.service";
 import {TAB} from "../../model/TAB";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {faImage} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   selector: 'app-room',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FaIconComponent],
   templateUrl: './room.component.html',
   styleUrl: './room.component.scss'
 })
@@ -54,4 +56,5 @@ export class RoomComponent extends BaseComponent implements OnInit {
     return this.chatService.getActiveConversation$()
   }
 
+  protected readonly faImage = faImage;
 }

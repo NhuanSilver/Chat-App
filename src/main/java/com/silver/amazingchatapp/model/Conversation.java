@@ -1,6 +1,5 @@
 package com.silver.amazingchatapp.model;
 
-import com.silver.amazingchatapp.dto.ChatMessageDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

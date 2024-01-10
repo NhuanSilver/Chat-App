@@ -1,6 +1,9 @@
 <div #messageElement class="message-wrapper" [ngClass]="message.senderId ===  getCurrentUser().username ? 'sender' : '' " >
   <div class="message-container">
     <img class="user-img" src="{{getAvatarUrl() }}" alt="">
-    <p class="message-content">{{message.content}}</p>
+    <p *ngIf="message.type == 'TEXT'" class="message-content">{{message.content}}</p>
+    <div class="message-img" *ngIf="message.type == 'IMG'">
+      <img *ngFor="let imgSrc of imgToDisplay" [src]="imgSrc" alt="">
+    </div>
   </div>
 </div>

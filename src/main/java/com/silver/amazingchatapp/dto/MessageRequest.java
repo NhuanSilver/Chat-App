@@ -1,17 +1,18 @@
 package com.silver.amazingchatapp.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class ChatMessageRequest {
+public class MessageRequest {
     private Long conversationId;
     private String senderId;
     private List<String> recipientIds;
     private String content;
+    private String type;
 }

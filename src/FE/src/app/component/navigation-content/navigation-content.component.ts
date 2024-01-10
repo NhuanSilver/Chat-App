@@ -35,8 +35,11 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
   @ViewChild('searchInput') searchInput !: ElementRef<HTMLDivElement>;
   @ViewChild('form') formElement !: ElementRef<HTMLFormElement>;
 
-  conversations: Conversation[] = []
+  protected readonly faUserGroup = faUserGroup;
+  protected readonly environment = environment;
+  protected readonly TAB = TAB;
   protected readonly faSearch = faSearch;
+  conversations: Conversation[] = []
   formGroup !: FormGroup;
   users$ ?: Observable<User[]>;
   currentTab = this.tabService.getTab$()
@@ -146,9 +149,4 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
       }))
   }
 
-
-  protected readonly faAdd = faAdd;
-  protected readonly faUserGroup = faUserGroup;
-  protected readonly environment = environment;
-  protected readonly TAB = TAB;
 }

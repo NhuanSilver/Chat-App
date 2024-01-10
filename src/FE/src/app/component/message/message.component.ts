@@ -1,6 +1,6 @@
-import {Component,  Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ChatMessage} from "../../model/ChatMessage";
-import {NgClass} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {UserService} from "../../service/user.service";
 import {User} from "../../model/User";
 import {Conversation} from "../../model/Conversation";
@@ -9,20 +9,36 @@ import {Conversation} from "../../model/Conversation";
   selector: 'app-message',
   standalone: true,
   imports: [
-    NgClass
+    NgClass,
+    NgIf,
+    NgForOf
   ],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss'
 })
-export class MessageComponent {
+export class MessageComponent implements OnInit {
   @Input() message !: ChatMessage
-  @Input() conversation :Conversation | undefined
-  constructor(private userService : UserService) {
+  @Input() conversation: Conversation | undefined
+  imgToDisplay: string [] = [];
+
+  constructor(private userService: UserService) {
+
   }
-  getCurrentUser() : User {
-   return this.userService.getCurrentUser()
+
+  ngOnInit(): void {
+    if (this.message.type === "IMG") {
+      this.imgToDisplay = this.JSON.parse(this.message.content)
+    }
   }
+
+  getCurrentUser(): User {
+
+    return this.userService.getCurrentUser()
+  }
+
   getAvatarUrl() {
-   return  this.conversation?.members.find(member => member.username === this.message.senderId)?.avatarUrl
+    return this.conversation?.members.find(member => member.username === this.message.senderId)?.avatarUrl
   }
+
+  protected readonly JSON = JSON;
 }

@@ -21,6 +21,18 @@
   font-size: 1.4rem;
   background-color: hsla(0, 5%, 78%, 0.5);
 }
+.message-wrapper .message-container .message-img {
+  padding: 1.6rem;
+  border-radius: 0.4rem;
+  margin-right: 1rem;
+  background-color: hsla(0, 5%, 78%, 0.5);
+  display: flex;
+  gap: 1rem;
+}
+.message-wrapper .message-container .message-img img {
+  width: 5rem;
+  object-fit: cover;
+}
 
 .message-wrapper.sender {
   justify-content: flex-end;
@@ -32,6 +44,18 @@
 .message-wrapper.sender .message-container .message-content {
   color: #fff;
   background-color: #7269ef;
+}
+.message-wrapper.sender .message-container .message-img {
+  padding: 1.6rem;
+  border-radius: 0.4rem;
+  margin-right: 1rem;
+  background-color: #7269ef;
+  display: flex;
+  gap: 1rem;
+}
+.message-wrapper.sender .message-container .message-img img {
+  width: 5rem;
+  object-fit: cover;
 }
 
 /*# sourceMappingURL=message.component.css.map */

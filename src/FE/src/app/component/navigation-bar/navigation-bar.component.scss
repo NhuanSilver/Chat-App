@@ -15,8 +15,13 @@
     }
   }
   .nav-link {
-    .active {
-      background-color: #e6ebf5;
+    li {
+      &.active {
+        background-color: #e6ebf5;
+        &:hover {
+          background-color: #e6ebf5;
+        }
+      }
     }
   }
   .user-nav {

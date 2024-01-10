@@ -15,7 +15,10 @@
   width: 40%;
   object-fit: cover;
 }
-.nav-bar .nav-link .active {
+.nav-bar .nav-link li.active {
+  background-color: #e6ebf5;
+}
+.nav-bar .nav-link li.active:hover {
   background-color: #e6ebf5;
 }
 .nav-bar .user-nav {

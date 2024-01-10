@@ -8,6 +8,7 @@ import {Conversation} from "../model/Conversation";
 import {User} from "../model/User";
 import {TabService} from "./tab.service";
 import {TAB} from "../model/TAB";
+import {MessageRequest} from "../model/MessageRequest";
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class ChatService {
               private http: HttpClient,
               private userService : UserService) { }
 
-  sendMessage(message: {conversationId : string, recipientIds: string[], content: string }){
+  sendMessage(message: MessageRequest){
     this.websocketService.sendMessage(message)
   }
   getConversationMessages(conversationId : string, usernames : Set<string>) {
@@ -38,6 +39,17 @@ export class ChatService {
   getAllConversations() {
     return  this.http.get<Conversation[]>(`http://localhost:8080/api/conversations/users/${this.userService.getCurrentUser().username}`)
   }
+
+  createPrivateChat(name: string, recipient: string) {
+    const request = {
+      name : name,
+      usernames : [this.userService.getCurrentUser().username, recipient],
+      isGroup: false
+    }
+
+    return this.http.post<Conversation>('http://localhost:8080/api/conversations/private', request )
+  }
+
   getMessage$() {
     return this.websocketService.getMessage$();
   }

@@ -1,5 +1,4 @@
-<ng-container *ngIf="recipients.length > 0">
-  <div class="room-content"  >
+  <div class="room-content" [class.show] = "recipients.length > 0" >
     <div class="room-header-container">
       <div class="room-user-area">
         <div class="room-user-img">
@@ -25,19 +24,34 @@
     </div>
 
     <form class="message-form" [formGroup]="messageForm" (ngSubmit)="onSubmit(recipients)">
-      <input class="input-message" placeholder="Nhập tin nhắn..." type="text" formControlName="messageControl" >
-      <div class="form-group-options">
-        <button #emojiToggle type="button" class="btn-emoij" (click)="isEmojiPicker = !isEmojiPicker">
-          <fa-icon [icon]="faFaceSmile"></fa-icon>
-        </button>
-        <emoji-mart #emojiPicker [darkMode]="false"
-                    (emojiClick)="onEmojiSelect($event)"
-                    class="emoij-picker" [class.show]="isEmojiPicker"></emoji-mart>
-        <button type="submit" class="btn btn-submit">
-          <fa-icon [icon]= "faPaperPlane"></fa-icon>
-        </button>
+
+      <div class="message-img">
+        <div class="img-preview-list" *ngIf="imgSrcArr.length > 0">
+          <div class="img-preview-item" (click)="deleteImg(imgSrc)" *ngFor="let imgSrc of imgSrcArr">
+            <img  [src]="imgSrc" alt="">
+          </div>
+        </div>
       </div>
+     <div class="message-content">
+       <input class="input-message" placeholder="Nhập tin nhắn..." type="text" formControlName="messageControl" >
+       <div class="form-group-options">
+
+         <button  type="button" class="btn-img" (click)="openFileInput()">
+           <fa-icon [icon]="faImage"></fa-icon>
+           <input #inputFile multiple (change)="readImg($event)" type="file" [hidden]="true"/>
+         </button>
+
+         <button #emojiToggle type="button" class="btn-emoji" (click)="isEmojiPicker = !isEmojiPicker">
+           <fa-icon [icon]="faFaceSmile"></fa-icon>
+         </button>
+         <div #emojiPicker class="emoji-picker" [class.show]="isEmojiPicker">
+           <emoji-mart  [darkMode]="false"
+                        (emojiClick)="onEmojiSelect($event)"></emoji-mart>
+         </div>
+         <button type="submit" class="btn btn-submit">
+           <fa-icon [icon]= "faPaperPlane"></fa-icon>
+         </button>
+       </div>
+     </div>
     </form>
   </div>
-
-</ng-container>

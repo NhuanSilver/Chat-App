@@ -1,14 +1,12 @@
 package com.silver.amazingchatapp.controller;
 
-import com.silver.amazingchatapp.dto.ChatMessageDTO;
 import com.silver.amazingchatapp.dto.ConversationDTO;
+import com.silver.amazingchatapp.dto.ConversationRequest;
 import com.silver.amazingchatapp.service.ConversationService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +29,12 @@ public class ConversationController {
 
     @GetMapping("/private/{sender}/{recipient}")
     public ConversationDTO getPrivateConversation(@PathVariable String sender, @PathVariable String recipient) {
+        log.info(sender + " re " + recipient);
         return this.conversationService.getPrivateConversation(sender, recipient);
+    }
+
+    @PostMapping("/private")
+    public ConversationDTO createPrivateConversation(@RequestBody @NonNull ConversationRequest request) {
+       return this.conversationService.createPrivateConversation(request);
     }
 }

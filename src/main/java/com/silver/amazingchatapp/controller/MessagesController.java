@@ -1,6 +1,6 @@
 package com.silver.amazingchatapp.controller;
 
-import com.silver.amazingchatapp.dto.ChatMessageDTO;
+import com.silver.amazingchatapp.dto.MessageDTO;
 import com.silver.amazingchatapp.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,7 @@ public class MessagesController {
     private final ChatMessageService messageService;
 
     @GetMapping("/conversations/{id}/{usernames}")
-    public List<ChatMessageDTO> getChatMessagesByConversationId(@PathVariable Long id, @PathVariable Set<String> usernames) {
+    public List<MessageDTO> getChatMessagesByConversationId(@PathVariable Long id, @PathVariable Set<String> usernames) {
         return messageService.getChatMessagesByConversationId(id, usernames);
     }
 }

@@ -20,7 +20,18 @@
       font-size: 1.4rem;
       background-color: hsla(0, 5%, 78%, 0.5);
     }
-
+    .message-img {
+      padding: 1.6rem;
+      border-radius: 0.4rem;
+      margin-right: 1rem;
+      background-color: hsla(0, 5%, 78%, 0.5);
+      display: flex;
+      gap: 1rem;
+      img {
+        width: 5rem;
+        object-fit: cover;
+      }
+    }
   }
 
 }
@@ -33,5 +44,18 @@
       color: #fff;
       background-color: $primary-color;
     }
+    .message-img {
+      padding: 1.6rem;
+      border-radius: 0.4rem;
+      margin-right: 1rem;
+      background-color: #7269ef;
+      display: flex;
+      gap: 1rem;
+      img {
+        width: 5rem;
+        object-fit: cover;
+      }
+    }
   }
+
 }

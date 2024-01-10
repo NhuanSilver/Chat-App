@@ -10,12 +10,14 @@ import {forkJoin, of, switchMap, tap} from "rxjs";
 import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../BaseComponent";
 import {NavigationItemComponent} from "../navigation-item/navigation-item.component";
-import {faSearch, faPhone, faBars, faFaceSmile} from "@fortawesome/free-solid-svg-icons";
+import {faSearch, faPhone, faBars, faFaceSmile, faImage} from "@fortawesome/free-solid-svg-icons";
 import {NavItem} from "../../model/NavItem";
 import {User} from "../../model/User";
 import {UserService} from "../../service/user.service";
 import {STATUS} from "../../model/STATUS";
 import {PickerComponent} from "@ctrl/ngx-emoji-mart";
+import {WebsocketService} from "../../service/websocket.service";
+import {MessageRequest} from "../../model/MessageRequest";
 
 @Component({
   selector: 'app-room-content',
@@ -26,11 +28,13 @@ import {PickerComponent} from "@ctrl/ngx-emoji-mart";
 })
 export class RoomContentComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChild('chatBox') chatBox !: ElementRef;
-  @ViewChild('emojiPicker') picker !: ElementRef<any>;
+  @ViewChild('emojiPicker') picker !: ElementRef;
   @ViewChild('emojiToggle') togglePicker !: ElementRef<HTMLButtonElement>;
+  @ViewChild("inputFile") inputFile !: ElementRef;
   protected readonly faPaperPlane = faPaperPlane;
   protected readonly STATUS = STATUS;
   protected readonly faFaceSmile = faFaceSmile;
+  protected readonly faImage = faImage;
   protected readonly roomNavItems: NavItem[] = [
     {
       name: 'search',
@@ -52,8 +56,9 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
   chatMessages: ChatMessage[] = [];
   recipients: User[] = [];
   conversation: Conversation | undefined;
+  imgSrcArr: string[] = []
 
-  chatMessagesSub = this.chatService.getConversation$().pipe(
+  conversationSub = this.chatService.getConversation$().pipe(
     switchMap(conversation => {
       this.conversation = conversation;
       if (this.conversation) {
@@ -81,37 +86,14 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
     }
   })
 
-  newMessageSub = this.chatService.getMessage$().pipe(
-    switchMap(value => {
-      if (!value) {
-        return of(undefined);
-      }
-      if (this.conversation) {
-        return forkJoin({
-          newMessage: of(value),
-          conversation: of(undefined)
-        });
-      }
-
-      const conversationObservable = this.chatService.getConversationById(value.conversationId);
-      return forkJoin({
-        newMessage: of(value),
-        conversation: conversationObservable
-      });
-    })
-  ).subscribe(value => {
-    if (!value) return;
+  newMessageSub = this.chatService.getMessage$()
+    .subscribe(newMessage => {
+    if (!newMessage) return;
 
     // Add message to active conversion
-    if (value.newMessage && this.conversation?.id === value.newMessage.conversationId) {
-      this.chatMessages.push(value.newMessage)
+    if (this.conversation?.id === newMessage.conversationId) {
+      this.chatMessages.push(newMessage)
       this.scrollToBottom();
-    }
-
-    //Add new message to new conversation
-    if (value.conversation) {
-      this.conversation = value.conversation
-      this.chatMessages.push(value.newMessage)
     }
 
   })
@@ -128,31 +110,55 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
       }
     )
 
-    this.subscriptions.push(this.chatMessagesSub)
+    this.subscriptions.push(this.conversationSub)
     this.subscriptions.push(this.newMessageSub)
   }
 
   ngAfterViewInit(): void {
+    this.renderer.listen('window', 'click', event => {
+      if (!this.togglePicker.nativeElement.contains(event.target) && !this.picker.nativeElement.contains(event.target)) {
+        this.isEmojiPicker = false;
+      }
+    })
 
   }
 
   ngOnInit(): void {
   }
 
+  readImg(event: Event) {
+
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.files) {
+      for (let i = 0; i < inputElement.files.length; i++) {
+        const fileReader = new FileReader();
+        fileReader.onload = e => {
+          this.imgSrcArr.push(fileReader.result as string)
+        }
+        fileReader.readAsDataURL(inputElement.files[i]);
+      }
+    }
+  }
+
   onSubmit(recipients: User[]) {
 
     const recipientsClone = [...recipients]
-    this.isEmojiPicker = false;
 
-    this.chatService.sendMessage({
+    const message = this.messageForm.get('messageControl')?.value as string
 
-      conversationId: this.conversation != undefined ? this.conversation.id : '',
-      recipientIds: recipientsClone.map(re => re.username),
-      content: this.messageForm.get('messageControl')?.value
+    if (!this.conversation) {
+      this.chatService.createPrivateChat(this.currentUser.username + "_" + recipientsClone[0].username, recipientsClone[0].username)
+        .subscribe(cvs => {
+          if (cvs) {
+            this.conversation = cvs;
+            this.sendMessageWithCondition(recipientsClone, cvs, message)
+          }
 
-    })
+        })
+    } else {
+      this.sendMessageWithCondition(recipientsClone, this.conversation, message)
+    }
 
-    this.messageForm.get('messageControl')?.setValue('')
   }
 
   private scrollToBottom() {
@@ -170,5 +176,44 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
     const inputValue = this.messageForm.controls['messageControl']?.value;
     this.messageForm.controls['messageControl']?.setValue(inputValue + $event.emoji.native);
 
+  }
+
+
+  openFileInput() {
+    this.inputFile.nativeElement.click()
+  }
+
+
+  deleteImg(imgSrc: string) {
+    this.imgSrcArr.forEach((img, index) => {
+      if (img === imgSrc) this.imgSrcArr.splice(index, 1);
+    })
+  }
+
+  private sendMessage(message: MessageRequest) {
+    this.chatService.sendMessage(message)
+  }
+  private sendMessageWithCondition( recipientsClone : User [], cvs : Conversation, message: string) {
+    if (this.imgSrcArr.length > 0) {
+      console.log("senđing img")
+      this.sendMessage({
+        conversationId: cvs.id,
+        content: JSON.stringify(this.imgSrcArr),
+        type: "IMG",
+        recipientIds: recipientsClone.map(re => re.username),
+      });
+    }
+    if (message.trim().length > 0) {
+      console.log("sending medssaga")
+      this.sendMessage({
+        conversationId: cvs.id,
+        content: message,
+        type: "TEXT",
+        recipientIds: recipientsClone.map(re => re.username),
+      });
+    }
+    this.imgSrcArr = []
+    this.inputFile.nativeElement.value = ""
+    this.messageForm.get('messageControl')?.setValue('')
   }
 }
