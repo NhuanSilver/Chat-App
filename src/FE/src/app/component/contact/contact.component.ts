@@ -15,7 +15,7 @@ import {CommonModule} from "@angular/common";
 import {Friend} from "../../model/Friend";
 import {FriendService} from "../../service/friend.service";
 import {STATUS} from "../../model/STATUS";
-import {BaseComponent} from "../../BaseComponent";
+import {BaseComponent} from "../../shared/BaseComponent";
 import {UserService} from "../../service/user.service";
 import {User} from "../../model/User";
 import {ChatService} from "../../service/chat.service";

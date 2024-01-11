@@ -11,5 +11,5 @@ import java.util.Set;
 @Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, String> {
 
-    List<ChatMessage> findByConversationIdAndUsersIn(Long conversation_id, Set<String> users);
+    List<ChatMessage> findByConversationIdAndUsersInOrderBySentAt(Long conversation_id, Set<String> users);
 }

@@ -1,8 +1,21 @@
-<div #messageElement class="message-wrapper" [ngClass]="message.senderId ===  getCurrentUser().username ? 'sender' : '' " >
+<div *ngIf="displaySentAt"  style="width: 100%; text-align: center">{{message.sentAt | date}}</div>
+<div class="message-wrapper" [ngClass]="message.senderId ===  getCurrentUser().username ? 'sender' : '' " >
   <div class="message-container">
-    <img class="user-img" src="{{getAvatarUrl() }}" alt="">
-    <p *ngIf="message.type == 'TEXT'" class="message-content">{{message.content}}</p>
-    <div class="message-img" *ngIf="message.type == 'IMG'">
+   <div *ngIf="message.senderId !==  getCurrentUser().username" class="message-image-container">
+     <img *ngIf="(position === 'l' || position ==='fl')"
+          class="user-img" src="{{getAvatarUrl() }}"
+          alt="">
+   </div>
+    <p *ngIf="message.type == 'TEXT'"
+       [class.first] ="position === 'f'"
+       [class.last] = "position === 'l'"
+       [class.firstLast]="position === 'fl'"
+         class="message-content">
+      {{message.content}}</p>
+    <div class="message-img"
+         [class.first] ="position === 'f'"
+         [class.last] = "position === 'l'"
+         *ngIf="message.type == 'IMG'">
       <img *ngFor="let imgSrc of imgToDisplay" [src]="imgSrc" alt="">
     </div>
   </div>

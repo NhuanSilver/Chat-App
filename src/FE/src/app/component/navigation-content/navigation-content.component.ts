@@ -3,7 +3,7 @@ import {RoomComponent} from "../../component/room/room.component";
 import {CommonModule} from "@angular/common";
 import {ChatService} from "../../service/chat.service";
 import {Conversation} from "../../model/Conversation";
-import {BaseComponent} from "../../BaseComponent";
+import {BaseComponent} from "../../shared/BaseComponent";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faAdd, faSearch, faUserGroup} from "@fortawesome/free-solid-svg-icons";
 import {SearchComponent} from "../search/search.component";

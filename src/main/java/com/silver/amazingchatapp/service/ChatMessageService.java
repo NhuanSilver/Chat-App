@@ -97,7 +97,7 @@ public class ChatMessageService {
 
     public List<MessageDTO> getChatMessagesByConversationId(Long id, Set<String> usernames) {
 
-        List<ChatMessage> messages = this.chatMessageRepository.findByConversationIdAndUsersIn(id, usernames);
+        List<ChatMessage> messages = this.chatMessageRepository.findByConversationIdAndUsersInOrderBySentAt(id, usernames);
         return messages.stream()
                 .map(m -> MessageDTO.builder()
                         .id(m.getId())

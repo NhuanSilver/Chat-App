@@ -8,11 +8,12 @@
   <div class="room">
     <div class="message-info">
       <span class="user-fullName" *ngFor="let member of members">{{member.fullName}}</span>
-      <span class="time" *ngIf="conversation && conversation.latestMessage" >{{conversation.latestMessage.sentAt | date}}</span>
+      <span class="time" *ngIf="conversation && conversation.latestMessage" >{{conversation.latestMessage.sentAt | myDate}}</span>
     </div>
     <span class="latest-message" *ngIf="conversation && conversation.latestMessage as message">
-      <span *ngIf="message.type === 'TEXT'"> {{message.content}}</span>
+      <span *ngIf="message.type === 'TEXT'"> {{getCurrentUser().username === message.senderId ? 'Bạn: ' +  message.content :  message.content}}</span>
       <span *ngIf="message.type ==='IMG'">
+        {{getCurrentUser().username === message.senderId ? 'Bạn: ': ''}}
         <fa-icon [icon]="faImage" > </fa-icon>
         Ảnh
       </span>

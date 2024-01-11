@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ChatMessage} from "../../model/ChatMessage";
-import {NgClass, NgForOf, NgIf} from "@angular/common";
+import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {UserService} from "../../service/user.service";
 import {User} from "../../model/User";
 import {Conversation} from "../../model/Conversation";
@@ -11,13 +11,16 @@ import {Conversation} from "../../model/Conversation";
   imports: [
     NgClass,
     NgIf,
-    NgForOf
+    NgForOf,
+    DatePipe
   ],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss'
 })
 export class MessageComponent implements OnInit {
   @Input() message !: ChatMessage
+  @Input() displaySentAt !: boolean
+  @Input() position !: string
   @Input() conversation: Conversation | undefined
   imgToDisplay: string [] = [];
 
@@ -26,6 +29,7 @@ export class MessageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.position)
     if (this.message.type === "IMG") {
       this.imgToDisplay = this.JSON.parse(this.message.content)
     }

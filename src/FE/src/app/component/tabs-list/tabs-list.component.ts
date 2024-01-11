@@ -3,7 +3,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faAddressBook, faEnvelope, faUserGroup} from "@fortawesome/free-solid-svg-icons";
 import {TAB} from "../../model/TAB";
 import {TabService} from "../../service/tab.service";
-import {BaseComponent} from "../../BaseComponent";
+import {BaseComponent} from "../../shared/BaseComponent";
 import {Friend} from "../../model/Friend";
 import {FriendService} from "../../service/friend.service";
 import {STATUS} from "../../model/STATUS";

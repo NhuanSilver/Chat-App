@@ -18,7 +18,11 @@
     </div>
     <div  class="message-area">
       <ng-container *ngFor="let message of chatMessages">
-        <app-message *ngIf="message" [conversation]="conversation" [message]="message" ></app-message>
+        <app-message *ngIf="message"
+                     [displaySentAt] ="greaterThan5Minutes(message)"
+                     [position]="getPositionOfMessage(message)"
+                     [conversation]="conversation"
+                     [message]="message" ></app-message>
       </ng-container>
       <div #chatBox></div>
     </div>

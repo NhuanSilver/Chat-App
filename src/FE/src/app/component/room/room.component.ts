@@ -5,21 +5,23 @@ import {CommonModule} from "@angular/common";
 import {ChatService} from "../../service/chat.service";
 import {UserService} from "../../service/user.service";
 import {Conversation} from "../../model/Conversation";
-import {BaseComponent} from "../../BaseComponent";
+import {BaseComponent} from "../../shared/BaseComponent";
 import {TabService} from "../../service/tab.service";
 import {TAB} from "../../model/TAB";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faImage} from "@fortawesome/free-solid-svg-icons";
+import {MyDatePipe} from "../../shared/my-date.pipe";
 
 @Component({
   selector: 'app-room',
   standalone: true,
-  imports: [CommonModule, FaIconComponent],
+  imports: [CommonModule, FaIconComponent, MyDatePipe],
   templateUrl: './room.component.html',
   styleUrl: './room.component.scss'
 })
 export class RoomComponent extends BaseComponent implements OnInit {
   @Input() conversation !: Conversation
+  protected readonly faImage = faImage;
   protected readonly STATUS = STATUS;
   members: User[] = [];
 
@@ -44,6 +46,9 @@ export class RoomComponent extends BaseComponent implements OnInit {
 
     this.subscriptions.push(userSub);
   }
+  getCurrentUser() {
+    return this.userService.getCurrentUser();
+  }
 
   setConversation() {
     this.chatService.setConversation(this.conversation);
@@ -56,5 +61,4 @@ export class RoomComponent extends BaseComponent implements OnInit {
     return this.chatService.getActiveConversation$()
   }
 
-  protected readonly faImage = faImage;
 }

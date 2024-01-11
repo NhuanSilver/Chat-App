@@ -8,7 +8,7 @@ import {faPaperPlane} from "@fortawesome/free-regular-svg-icons";
 import {ChatService} from "../../service/chat.service";
 import {forkJoin, of, switchMap, tap} from "rxjs";
 import {Conversation} from "../../model/Conversation";
-import {BaseComponent} from "../../BaseComponent";
+import {BaseComponent} from "../../shared/BaseComponent";
 import {NavigationItemComponent} from "../navigation-item/navigation-item.component";
 import {faSearch, faPhone, faBars, faFaceSmile, faImage} from "@fortawesome/free-solid-svg-icons";
 import {NavItem} from "../../model/NavItem";
@@ -82,7 +82,6 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
       this.recipients = (value as User[]).filter(member => member.username !== this.currentUser.username);
     } else {
       this.chatMessages = value as ChatMessage[];
-
     }
   })
 
@@ -126,6 +125,31 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
   ngOnInit(): void {
   }
 
+  getPositionOfMessage(message : ChatMessage) : string {
+    const index = this.chatMessages.indexOf(message);
+    const samePrevSender = message.senderId === this.chatMessages[index - 1]?.senderId;
+    const sameNextSender = message.senderId === this.chatMessages[index + 1]?.senderId;
+
+
+    if (index === 0 && !sameNextSender) return  'fl';
+    if (index === 0) return 'f'
+    if (index > 0) {
+
+       if (!sameNextSender && !samePrevSender
+          || !samePrevSender && new Date(this.chatMessages[index +1 ].sentAt).getMinutes() - new Date(message.sentAt).getMinutes() >=5
+         || !sameNextSender && this.greaterThan5Minutes(message)
+       ) return "fl";
+       if (!sameNextSender) return 'l';
+       if (!samePrevSender && sameNextSender || this.greaterThan5Minutes(message)) return 'f'
+    }
+    return 'middle';
+
+  }
+  greaterThan5Minutes(message : ChatMessage) {
+    const index = this.chatMessages.indexOf(message);
+    if (index === 0) return true;
+    return new Date(message.sentAt).getMinutes() - new Date(this.chatMessages[index -1].sentAt).getMinutes() >= 5;
+  }
   readImg(event: Event) {
 
     const inputElement = event.target as HTMLInputElement;
@@ -161,16 +185,6 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
 
   }
 
-  private scrollToBottom() {
-
-    if (this.conversation) {
-
-      setTimeout(() => {
-        this.chatBox.nativeElement.scrollIntoView()
-      }, 50)
-
-    }
-  }
 
   onEmojiSelect($event: any) {
     const inputValue = this.messageForm.controls['messageControl']?.value;
@@ -195,7 +209,6 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
   }
   private sendMessageWithCondition( recipientsClone : User [], cvs : Conversation, message: string) {
     if (this.imgSrcArr.length > 0) {
-      console.log("senđing img")
       this.sendMessage({
         conversationId: cvs.id,
         content: JSON.stringify(this.imgSrcArr),
@@ -204,7 +217,6 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
       });
     }
     if (message.trim().length > 0) {
-      console.log("sending medssaga")
       this.sendMessage({
         conversationId: cvs.id,
         content: message,
@@ -215,5 +227,15 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
     this.imgSrcArr = []
     this.inputFile.nativeElement.value = ""
     this.messageForm.get('messageControl')?.setValue('')
+  }
+  private scrollToBottom() {
+
+    if (this.conversation) {
+
+      setTimeout(() => {
+        this.chatBox.nativeElement.scrollIntoView()
+      }, 50)
+
+    }
   }
 }

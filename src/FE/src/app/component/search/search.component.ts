@@ -11,7 +11,7 @@ import {UserService} from "../../service/user.service";
 import {Observable} from "rxjs";
 import {User} from "../../model/User";
 import {ChatService} from "../../service/chat.service";
-import {BaseComponent} from "../../BaseComponent";
+import {BaseComponent} from "../../shared/BaseComponent";
 import {Friend} from "../../model/Friend";
 import {FriendService} from "../../service/friend.service";
 import {TabService} from "../../service/tab.service";
