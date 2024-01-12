@@ -7,5 +7,5 @@ export interface Conversation {
   latestMessage : ChatMessage,
   members : User[],
   isActive: boolean,
-  isGroup: boolean
+  group: boolean
 }

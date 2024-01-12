@@ -1,14 +1,24 @@
 <div class="room-user" (click)="setConversation()" [class.isActive]="conversation.id === (getActivatedCvs() | async)?.id">
-  <div class="user" *ngFor="let member of members">
-    <img class="user-img" [src]="member.avatarUrl" alt="">
-    <span class="user-status" *ngIf="member.status === STATUS.ONLINE">
+  <div class="user-container" [class.group]="conversation.group">
+    <div class="user" *ngFor="let member of members">
+      <img class="user-img" [src]="member.avatarUrl" alt="">
+      <span class="user-status" *ngIf="member.status === STATUS.ONLINE && !this.conversation.group">
     </span>
+    </div>
+    <div class="user" *ngIf="conversation.group" >
+      <img class="user-img" [src]="getCurrentUser().avatarUrl" alt="">
+    </div>
   </div>
 
   <div class="room">
     <div class="message-info">
-      <span class="user-fullName" *ngFor="let member of members">{{member.fullName}}</span>
-      <span class="time" *ngIf="conversation && conversation.latestMessage" >{{conversation.latestMessage.sentAt | myDate}}</span>
+      <span class="user-fullName"  *ngIf="!conversation.group">
+        <ng-container  *ngFor="let member of members">{{member.fullName}}</ng-container>
+      </span>
+      <span class="user-fullName"  *ngIf="conversation.group">
+        {{conversation.name}}
+      </span>
+      <span class="time" *ngIf="conversation && conversation.latestMessage" >{{conversation.latestMessage.sentAt | myDate : 'detail'}}</span>
     </div>
     <span class="latest-message" *ngIf="conversation && conversation.latestMessage as message">
       <span *ngIf="message.type === 'TEXT'"> {{getCurrentUser().username === message.senderId ? 'Bạn: ' +  message.content :  message.content}}</span>

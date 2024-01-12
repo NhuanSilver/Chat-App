@@ -1,4 +1,4 @@
-<div *ngIf="displaySentAt"  style="width: 100%; text-align: center">{{message.sentAt | date}}</div>
+<div *ngIf="displaySentAt"  style="width: 100%; text-align: center">{{message.sentAt | myDate}}</div>
 <div class="message-wrapper" [ngClass]="message.senderId ===  getCurrentUser().username ? 'sender' : '' "
      [class.first] ="position === 'f'"
      [class.last] = "position === 'l'"

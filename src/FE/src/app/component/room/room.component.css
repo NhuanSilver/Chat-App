@@ -15,18 +15,27 @@
 .room-user:hover {
   background-color: #e6e8ea;
 }
-.room-user .user {
+.room-user .user-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.room-user .user-container.group .user {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.room-user .user-container .user {
   position: relative;
   width: 5rem;
   height: 5rem;
 }
-.room-user .user .user-img {
+.room-user .user-container .user .user-img {
   border-radius: 50%;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.room-user .user .user-status {
+.room-user .user-container .user .user-status {
   position: absolute;
   bottom: 0.3rem;
   right: 0.2rem;

@@ -36,10 +36,18 @@
 .room-content .room-header-container .room-user-area .room-user-img {
   display: flex;
   align-items: center;
-}
-.room-content .room-header-container .room-user-area .room-user-img .img-container img {
+  flex-wrap: wrap;
   width: 5rem;
   height: 5rem;
+}
+.room-content .room-header-container .room-user-area .room-user-img.group img {
+  width: 50%;
+  height: 50%;
+}
+.room-content .room-header-container .room-user-area .room-user-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   border-radius: 50%;
 }
 .room-content .room-header-container .room-user-actions {

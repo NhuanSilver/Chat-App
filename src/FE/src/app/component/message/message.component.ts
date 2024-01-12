@@ -4,6 +4,7 @@ import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {UserService} from "../../service/user.service";
 import {User} from "../../model/User";
 import {Conversation} from "../../model/Conversation";
+import {MyDatePipe} from "../../shared/my-date.pipe";
 
 @Component({
   selector: 'app-message',
@@ -12,7 +13,8 @@ import {Conversation} from "../../model/Conversation";
     NgClass,
     NgIf,
     NgForOf,
-    DatePipe
+    DatePipe,
+    MyDatePipe
   ],
   templateUrl: './message.component.html',
   styleUrl: './message.component.scss'

@@ -1,16 +1,20 @@
   <div class="room-content" [class.show] = "recipients.length > 0" >
     <div class="room-header-container">
       <div class="room-user-area">
-        <div class="room-user-img">
-          <div class="img-container">
+        <div class="room-user-img" [class.group] ="conversation?.group">
             <img [src]="recipient.avatarUrl" alt="" *ngFor="let recipient of recipients">
-          </div>
+            <img *ngIf="conversation?.group" [src]="currentUser.avatarUrl">
         </div>
-        <div *ngIf="!conversation?.isGroup || !conversation" class="room-user-name">
+        <div *ngIf="!conversation?.group" class="room-user-name">
           <span class="room-user-name-content" *ngFor="let recipient of recipients; let isLast = last">
             {{recipient.fullName}}{{isLast ? '' : ','}}
           </span>
           <div class="room-user-online" *ngIf="recipients.length === 1 && recipients[0].status === STATUS.ONLINE"></div>
+        </div>
+        <div *ngIf="conversation?.group" class="room-user-name">
+          <span class="room-user-name-content">
+            {{conversation?.name}}
+          </span>
         </div>
       </div>
       <ul class="room-user-actions">
