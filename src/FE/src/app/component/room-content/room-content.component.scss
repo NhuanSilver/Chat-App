@@ -32,13 +32,15 @@
         }
       }
       .room-user-img {
-        flex-wrap: wrap;
         display: flex;
-        width: fit-content;
-        img {
-          border-radius: 50%;
-          width: 5rem;
-          height: 5rem;
+        align-items: center;
+
+        .img-container {
+          img {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 50%;
+          }
         }
       }
     }

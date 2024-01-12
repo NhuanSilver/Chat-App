@@ -5,7 +5,11 @@
       <input [formControlName]="environment.FORM_CONTROL.SEARCH" class="search-input" placeholder="Tìm kiếm"/>
     </div>
     <div class="user-action" *ngIf="!isSearchMenu">
-      <fa-icon title="Tạo nhóm" [icon]="faUserGroup"></fa-icon>
+      <fa-icon (click)="openUserAction('Thêm bạn')" title="Thêm bạn" [icon]="faAdd"></fa-icon>
+    </div>
+
+    <div class="user-action" *ngIf="!isSearchMenu">
+      <fa-icon (click)="openUserAction('Tạo nhóm')" title="Tạo nhóm" [icon]="faUserGroup"></fa-icon>
     </div>
     <div class="user-action" *ngIf="isSearchMenu">
       <button (click)="isSearchMenu = !isSearchMenu" class="btn-close">Đóng</button>
@@ -25,6 +29,6 @@
   </ng-container>
 
   <div #searchMenu class="search-menu" [class.show]="isSearchMenu">
-    <app-search [users$]="users$"></app-search>
+    <app-user-list [users$]="users$"></app-user-list>
   </div>
 </div>

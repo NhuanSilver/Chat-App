@@ -1,0 +1,60 @@
+@import "../../../assets/variables";
+.pop-up-container {
+  padding: 2rem;
+  width: 500px;
+  .pop-up-name {
+    font-size: 1.8rem;
+    padding-bottom: 2rem;
+    font-weight: 500;
+    border-bottom: 1px solid #e6e8ea;
+
+  }
+  .form {
+
+    .form-group--name {
+      margin: 2rem 0;
+
+      .group-name {
+        padding: 1rem 0;
+        width: 100%;
+        font-size: 1.4rem;
+        border: none;
+        border-bottom: 1px solid #e6e8ea;
+        outline: none;
+        &:focus {
+          border-bottom: 1px solid $primary-color;
+        }
+      }
+    }
+
+    .form-group--search {
+      padding: 1rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      border-radius: 5rem;
+      border: 1px solid #e6e8ea;
+      &:focus-within {
+        border: 1px solid $primary-color;
+      }
+
+      fa-icon {
+        margin-right: 1rem;
+        font-size: 1rem;
+        color: #333333;
+      }
+
+      .search-value {
+        flex: 1;
+        font-size: 1.4rem;
+        border: none;
+        outline: none;
+      }
+
+    }
+
+
+  }
+
+}

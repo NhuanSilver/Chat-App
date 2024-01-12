@@ -98,10 +98,16 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserDto> getUserByUsernameOrName(String value) {
-        return this.userRepository.findByUsernameContainingOrFullNameContaining(value, value)
+    public List<UserDto> getUserFriendsByUsernameOrName(String id, String value) {
+        return this.userRepository.findUserFriendsByUsername(id, value)
                 .stream()
                 .map(this.userDTOMapper::toDTO).toList();
     }
 
+    public List<UserDto> getNotFriends(String id, String valueSearch) {
+        log.info(id);
+        log.info(valueSearch);
+        return this.userRepository.findNotFriendsByUsername(id, valueSearch)
+                .stream().map(this.userDTOMapper::toDTO).toList();
+    }
 }

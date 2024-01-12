@@ -24,8 +24,12 @@ export class UserService {
   getCurrentUser() : User {
     return this.storageService.getCurrentUser()
   }
-  searchUserByUsernameOrName(value : string) {
-    return this.http.get<User[]>(`http://localhost:8080/api/users/search/${value}`)
+  searchUserFriendByUsernameOrName(value : string) : Observable<User[]>  {
+    return this.http.get<User[]>(`http://localhost:8080/api/users/${this.getCurrentUser().username}/friends/search/${value}`)
+  }
+
+  searchUserNotFriendByUsernameOrFullName(value : string) : Observable<User[]> {
+    return this.http.get<User[]>(`http://localhost:8080/api/users/${this.getCurrentUser().username}/notFriends/search/${value}`)
   }
 
   logOut() {

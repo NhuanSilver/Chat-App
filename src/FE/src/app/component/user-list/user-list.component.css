@@ -1,17 +1,14 @@
-.search-container {
+.user-list {
   width: 100%;
   height: 100%;
   background-color: #f5f7fb;
 }
-.search-container .search-header {
-  font-size: 2rem;
-}
-.search-container table {
+.user-list table {
   display: block;
   max-width: 100%;
   overflow-y: scroll;
 }
-.search-container table .user {
+.user-list table .user {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,26 +16,26 @@
   height: 6rem;
   cursor: pointer;
 }
-.search-container table .user:hover {
+.user-list table .user:hover {
   background-color: #e6e8ea;
 }
-.search-container table .user .info {
+.user-list table .user .info {
   display: flex;
   align-items: center;
   font-size: 1.6rem;
   gap: 2rem;
 }
-.search-container table .user .info img {
+.user-list table .user .info img {
   width: 4rem;
   height: 4rem;
   object-fit: cover;
   border-radius: 50%;
 }
-.search-container table .user .action {
+.user-list table .user .action {
   display: flex;
   align-items: center;
 }
-.search-container table .user .action button {
+.user-list table .user .action button {
   cursor: pointer;
   padding: 0.6rem 2rem;
   background-color: #7269ef;
@@ -46,8 +43,8 @@
   border: 1px solid #7269ef;
   border-radius: 0.4rem;
 }
-.search-container table .user .action button:hover {
+.user-list table .user .action button:hover {
   opacity: 0.9;
 }
 
-/*# sourceMappingURL=search.component.css.map */
+/*# sourceMappingURL=user-list.component.css.map */

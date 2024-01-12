@@ -2,9 +2,11 @@
     <div class="room-header-container">
       <div class="room-user-area">
         <div class="room-user-img">
-          <img [src]="recipient.avatarUrl" alt="" *ngFor="let recipient of recipients">
+          <div class="img-container">
+            <img [src]="recipient.avatarUrl" alt="" *ngFor="let recipient of recipients">
+          </div>
         </div>
-        <div class="room-user-name">
+        <div *ngIf="!conversation?.isGroup || !conversation" class="room-user-name">
           <span class="room-user-name-content" *ngFor="let recipient of recipients; let isLast = last">
             {{recipient.fullName}}{{isLast ? '' : ','}}
           </span>

@@ -4,7 +4,8 @@ import {ChatMessage} from "./ChatMessage";
 export interface Conversation {
   id: string,
   name: string,
-  latestMessage : ChatMessage
-  members : User[]
-  isActive: boolean
+  latestMessage : ChatMessage,
+  members : User[],
+  isActive: boolean,
+  isGroup: boolean
 }

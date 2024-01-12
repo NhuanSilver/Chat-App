@@ -14,12 +14,10 @@ import {ChatService} from "../../service/chat.service";
 import {BaseComponent} from "../../shared/BaseComponent";
 import {Friend} from "../../model/Friend";
 import {FriendService} from "../../service/friend.service";
-import {TabService} from "../../service/tab.service";
-import {ToastrService} from "ngx-toastr";
 import {STATUS} from "../../model/STATUS";
 
 @Component({
-  selector: 'app-search',
+  selector: 'app-user-list',
   standalone: true,
   imports: [
     MatDialogClose,
@@ -28,13 +26,14 @@ import {STATUS} from "../../model/STATUS";
     FaIconComponent,
     CommonModule
   ],
-  templateUrl: './search.component.html',
-  styleUrl: './search.component.scss'
+  templateUrl: './user-list.component.html',
+  styleUrl: './user-list.component.scss'
 })
-export class SearchComponent extends BaseComponent implements OnInit {
+export class UserListComponent extends BaseComponent implements OnInit {
 
   protected readonly environment = environment;
   @Input() users$ ?: Observable<User[]>;
+  @Input() parent !: string
   users: User[] = [];
   friends: Friend[] = []
 
@@ -66,10 +65,28 @@ export class SearchComponent extends BaseComponent implements OnInit {
   }
 
   setMember(user: User) {
-   this.subscriptions.push(this.chatService.setMember(user))
+    switch (this.parent) {
+      case 'Thêm bạn' : {
+        break;
+      }
+      case 'Tạo nhóm' : {
+        break;
+      }
+      default : {
+        console.log(3)
+        this.subscriptions.push(this.chatService.setMember(user))
+      }
+    }
+
   }
 
   isNotFriend(user: User): boolean {
     return !this.friends.some(f => f.requestTo.username === user.username);
+  }
+
+  getParentClassName() {
+    if (this.parent === 'Thêm bạn' ) return "add-friend";
+    if (this.parent === 'Tạo nhóm') return "create-group"
+    return "";
   }
 }

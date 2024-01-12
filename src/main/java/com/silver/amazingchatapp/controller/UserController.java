@@ -48,9 +48,14 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/search/{value}")
-    public List<UserDto> getUserByUsernameOrName(@PathVariable String value) {
-        return this.userService.getUserByUsernameOrName(value);
+    @GetMapping("/{id}/friends/search/{value}")
+    public List<UserDto> getUserFriendsByUsernameOrName(@PathVariable String id, @PathVariable String value) {
+        return this.userService.getUserFriendsByUsernameOrName(id, value);
+    }
+
+    @GetMapping("/{id}/notFriends/search/{value}")
+    public List<UserDto> getNotFriends(@PathVariable String id, @PathVariable String value) {
+        return this.userService.getNotFriends(id, value);
     }
 
 }

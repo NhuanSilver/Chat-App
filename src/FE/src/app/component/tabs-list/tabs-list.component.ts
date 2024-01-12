@@ -8,6 +8,7 @@ import {Friend} from "../../model/Friend";
 import {FriendService} from "../../service/friend.service";
 import {STATUS} from "../../model/STATUS";
 import {NgIf} from "@angular/common";
+import {UserService} from "../../service/user.service";
 
 @Component({
   selector: 'app-tabs-list',
@@ -32,6 +33,7 @@ export class TabsListComponent extends BaseComponent implements OnInit{
   friendRequests: Friend[] = [];
 
   constructor(private tabService : TabService,
+              private userService : UserService,
               private friendService: FriendService) {
     super();
   }
@@ -51,8 +53,7 @@ export class TabsListComponent extends BaseComponent implements OnInit{
 
       if (!request) return;
 
-      if (request.status === STATUS.PENDING
-        && this.friendRequests.every(f => f.owner.username != request.owner.username)) {
+      if (request.status === STATUS.PENDING && request.requestTo.username == this.userService.getCurrentUser().username) {
         this.friendRequests.push(request)
       }
 

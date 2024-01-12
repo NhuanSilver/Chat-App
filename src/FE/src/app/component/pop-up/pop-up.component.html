@@ -1,0 +1,16 @@
+<div class="pop-up-container">
+  <h3 class="pop-up-name">{{data.name}}</h3>
+  <form [formGroup]="form" class="form">
+    <div *ngIf="data.name === 'Tạo nhóm'" class ="form-group--name">
+      <input class="group-name" type="text" placeholder="Nhập tên nhóm">
+    </div>
+    <div class="form-group--search">
+      <fa-icon [icon]="faSearch"></fa-icon>
+      <input class="search-value"  placeholder="Nhập tên hoặc ID" [formControlName]="controlProps.SEARCH">
+    </div>
+    <app-user-list [users$]="users$" [parent]="data.name"></app-user-list>
+
+  </form>
+
+
+</div>

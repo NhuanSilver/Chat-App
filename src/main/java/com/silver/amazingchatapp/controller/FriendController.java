@@ -29,6 +29,7 @@ public class FriendController {
         return this.friendService.getFriendsByUser(id);
     }
 
+
     @GetMapping("/requests/users/{id}")
     public List<FriendDTO> getFriendRequests(@PathVariable String id) {
         return this.friendService.getFriendsRequestByUser(id);

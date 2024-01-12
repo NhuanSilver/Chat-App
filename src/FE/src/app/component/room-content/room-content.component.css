@@ -34,14 +34,13 @@
   background-color: #fff;
 }
 .room-content .room-header-container .room-user-area .room-user-img {
-  flex-wrap: wrap;
   display: flex;
-  width: fit-content;
+  align-items: center;
 }
-.room-content .room-header-container .room-user-area .room-user-img img {
-  border-radius: 50%;
+.room-content .room-header-container .room-user-area .room-user-img .img-container img {
   width: 5rem;
   height: 5rem;
+  border-radius: 50%;
 }
 .room-content .room-header-container .room-user-actions {
   display: flex;

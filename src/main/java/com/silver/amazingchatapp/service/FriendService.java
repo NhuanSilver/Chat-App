@@ -130,4 +130,5 @@ public class FriendService {
     public void deleteFriend(Long id) {
         if (this.friendRepository.existsById(id)) this.friendRepository.deleteById(id);
     }
+
 }

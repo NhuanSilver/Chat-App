@@ -3,6 +3,12 @@
   display: flex;
   margin: 0.1rem 0 0 4.5rem;
   flex-direction: row;
+  &.last {
+    margin-bottom: 2rem;
+  }
+  &.firstLast {
+    margin-bottom: 2rem;
+  }
   .message-container {
     display: flex;
     position: relative;

@@ -9,6 +9,7 @@ export const environment = {
     USERNAME: 'username',
     PASSWORD: 'password',
     FULL_NAME: 'fullName',
+    GROUP_NAME: 'groupName',
     SEARCH : 'search'
   },
 

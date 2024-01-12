@@ -1,11 +1,11 @@
-<div class="search-container">
+<div class="user-list {{getParentClassName()}}">
   <table>
     <tr class="user" (click)="setMember(user)" *ngFor="let user of (users$ | async)">
       <div class="info">
         <img [src]="user.avatarUrl" alt="">
         <span>{{user.fullName}}</span>
       </div>
-      <div class="action" *ngIf="isNotFriend(user)" >
+      <div class="action" *ngIf="isNotFriend(user) && parent ===  'Thêm bạn'" >
         <button (click)="addFriend(user.username, $event)">Kết bạn</button>
       </div>
     </tr>

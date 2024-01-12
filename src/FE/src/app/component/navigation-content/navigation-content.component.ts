@@ -5,8 +5,8 @@ import {ChatService} from "../../service/chat.service";
 import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../shared/BaseComponent";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faAdd, faSearch, faUserGroup} from "@fortawesome/free-solid-svg-icons";
-import {SearchComponent} from "../search/search.component";
+import {faAdd, faSearch, faUserFriends, faUserGroup} from "@fortawesome/free-solid-svg-icons";
+import {UserListComponent} from "../user-list/user-list.component";
 import {catchError, debounceTime, distinctUntilChanged, map, Observable, of, switchMap} from "rxjs";
 import {UserService} from "../../service/user.service";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
@@ -15,6 +15,8 @@ import {User} from "../../model/User";
 import {TAB} from "../../model/TAB";
 import {TabService} from "../../service/tab.service";
 import {TabsListComponent} from "../tabs-list/tabs-list.component";
+import {MatDialog} from "@angular/material/dialog";
+import {PopUpComponent} from "../pop-up/pop-up.component";
 
 @Component({
   selector: 'app-navigation-content',
@@ -23,7 +25,7 @@ import {TabsListComponent} from "../tabs-list/tabs-list.component";
     CommonModule,
     RoomComponent,
     FaIconComponent,
-    SearchComponent,
+    UserListComponent,
     ReactiveFormsModule,
     TabsListComponent
   ],
@@ -50,7 +52,8 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
               private userService: UserService,
               private fb: FormBuilder,
               private tabService : TabService,
-              private renderer: Renderer2) {
+              private renderer: Renderer2,
+              public diaglog: MatDialog) {
     super();
 
     this.formGroup = this.fb.group({
@@ -62,8 +65,7 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
       distinctUntilChanged(),
       switchMap(value => {
           if (value.length === 0) return of([])
-          return this.userService.searchUserByUsernameOrName(value).pipe(
-            map(users => users.filter(user => user.username !== this.userService.getCurrentUser().username)),
+          return this.userService.searchUserFriendByUsernameOrName(value).pipe(
             catchError(_ => {
               return of([])
             })
@@ -149,4 +151,12 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
       }))
   }
 
+  openUserAction(name : string) {
+    this.diaglog.open(PopUpComponent, {
+      data : {name : name}
+    })
+  }
+
+  protected readonly faUserFriends = faUserFriends;
+  protected readonly faAdd = faAdd;
 }
