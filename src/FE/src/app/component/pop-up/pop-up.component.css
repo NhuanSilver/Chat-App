@@ -45,5 +45,29 @@
   border: none;
   outline: none;
 }
+.pop-up-container .form .btn-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2rem;
+}
+.pop-up-container .form .btn-group .btn-close {
+  border: 1px solid #e6e8ea;
+  cursor: pointer;
+  padding: 0.8rem 1.6rem;
+  border-radius: 0.4rem;
+}
+.pop-up-container .form .btn-group .btn-close:hover {
+  opacity: 0.8;
+}
+.pop-up-container .form .btn-group .btn-create {
+  cursor: pointer;
+  padding: 0.8rem 1.6rem;
+  border-radius: 0.4rem;
+  border: 1px solid #7269ef;
+  background-color: #7269ef;
+}
+.pop-up-container .form .btn-group .btn-create:hover {
+  opacity: 0.8;
+}
 
 /*# sourceMappingURL=pop-up.component.css.map */

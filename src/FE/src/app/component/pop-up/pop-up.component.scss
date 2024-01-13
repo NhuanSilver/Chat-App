@@ -53,6 +53,31 @@
       }
 
     }
+    .btn-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 2rem;
+
+      .btn-close {
+        border: 1px solid #e6e8ea;
+        cursor: pointer;
+        padding: 0.8rem 1.6rem;
+        border-radius: 0.4rem;
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+      .btn-create {
+        cursor: pointer;
+        padding: 0.8rem 1.6rem;
+        border-radius: 0.4rem;
+        border: 1px solid $primary-color;
+        background-color: $primary-color;
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
 
 
   }

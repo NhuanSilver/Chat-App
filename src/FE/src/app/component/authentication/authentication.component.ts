@@ -67,6 +67,7 @@ export class AuthenticationComponent implements OnInit {
       this.formGroup.get(this.FORM_CONTROL.PASSWORD)?.value)
       .subscribe({
         next: user => {
+          console.log(user)
           user.status = STATUS.ONLINE
           this.storageService.saveUser(user)
           this.router.navigate(['/home'])

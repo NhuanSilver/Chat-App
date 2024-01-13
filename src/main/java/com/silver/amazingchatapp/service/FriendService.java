@@ -57,13 +57,14 @@ public class FriendService {
     public void addFriend(AddFriendRequest request) {
 
         User owner = userRepository.findById(request.getOwner())
-                .orElseThrow(() -> new ApiRequestException("User not found"));
+                .orElseThrow();
         User requestTo = userRepository.findById(request.getRequestTo())
-                .orElseThrow(() -> new ApiRequestException("Request to user not found"));
+                .orElseThrow();
 
         Set<Friend> friends = this.friendRepository
                 .findByOwnerAndRequestOrRequestAndOwner(owner, requestTo, owner, requestTo);
 
+        log.info("Adding ...");
         // Already in friendship
         if (friends.size() > 1) return;
 

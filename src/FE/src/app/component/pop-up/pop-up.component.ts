@@ -48,6 +48,7 @@ export class PopUpComponent implements OnInit {
 
     if (this.data.name === 'Tạo nhóm') {
       this.form.addControl(this.controlProps.GROUP_NAME, new FormControl(''))
+      this.form.addControl(this.controlProps.USERNAME, new FormControl(''));
     }
     this.users$ = this.form.controls[this.controlProps.SEARCH]?.valueChanges.pipe(
       debounceTime(100),
@@ -68,5 +69,11 @@ export class PopUpComponent implements OnInit {
         return of([])
       }))
 
+  }
+
+  protected readonly FormControl = FormControl;
+
+  getControl(controlName: string) : FormControl {
+    return this.form.controls[controlName] as FormControl;
   }
 }

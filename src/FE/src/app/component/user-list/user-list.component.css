@@ -12,6 +12,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
   padding: 2rem;
   height: 6rem;
   cursor: pointer;
@@ -22,6 +23,7 @@
 .user-list table .user .info {
   display: flex;
   align-items: center;
+  flex: 1;
   font-size: 1.6rem;
   gap: 2rem;
 }

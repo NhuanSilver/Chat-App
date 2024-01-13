@@ -1,6 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {MatDialogClose} from "@angular/material/dialog";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment.development";
 import {UserFormGroupComponent} from "../user-form-group/user-form-group.component";
 import {faSearch, faUserFriends} from "@fortawesome/free-solid-svg-icons";
@@ -32,8 +32,10 @@ import {STATUS} from "../../model/STATUS";
 export class UserListComponent extends BaseComponent implements OnInit {
 
   protected readonly environment = environment;
+  @ViewChild('checkbox') checkbox !: ElementRef;
   @Input() users$ ?: Observable<User[]>;
   @Input() parent !: string
+  @Input() checkBoxControl ?: FormControl
   users: User[] = [];
   friends: Friend[] = []
 
@@ -67,13 +69,14 @@ export class UserListComponent extends BaseComponent implements OnInit {
   setMember(user: User) {
     switch (this.parent) {
       case 'Thêm bạn' : {
+        this.subscriptions.push(this.chatService.setMember(user))
         break;
       }
       case 'Tạo nhóm' : {
+        this.checkbox.nativeElement.checked = !this.checkbox.nativeElement.checked
         break;
       }
       default : {
-        console.log(3)
         this.subscriptions.push(this.chatService.setMember(user))
       }
     }

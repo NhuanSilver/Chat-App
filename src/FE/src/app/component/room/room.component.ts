@@ -34,7 +34,7 @@ export class RoomComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.members = this.conversation.members.filter(
       member => {
-        return this.userService.getCurrentUser().username !== member.username
+        return !this.userService.isCurrentUser(member.username)
       }
     )
     const userSub = this.chatService.getUser$().subscribe(user => {

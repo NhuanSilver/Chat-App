@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class UserDTOMapper {
     public UserDto toDTO(User user) {
         return UserDto.builder()
-                .username(user.getUsername())
+                .username(user.getUsername().toLowerCase())
                 .fullName(user.getFullName())
                 .status(user.getStatus())
                 .avatarUrl(user.getAvatarUrl())

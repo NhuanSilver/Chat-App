@@ -62,7 +62,7 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
     switchMap(conversation => {
       this.conversation = conversation;
       if (this.conversation) {
-        this.recipients = this.conversation.members.filter(member => member.username !== this.currentUser.username);
+        this.recipients = this.conversation.members.filter(member => !this.userService.isCurrentUser(member.username));
         return this.chatService.getConversationMessages(this.conversation.id,
           new Set([...this.conversation.members.map(r => r.username)]))
       }

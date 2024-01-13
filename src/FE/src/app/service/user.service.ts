@@ -21,6 +21,9 @@ export class UserService {
   public getAllUsers() {
     return this.http.get<User[]>('http://localhost:8080/api/users')
   }
+  isCurrentUser(username : string) : boolean {
+    return username.toUpperCase() === this.getCurrentUser().username.toUpperCase();
+  }
   getCurrentUser() : User {
     return this.storageService.getCurrentUser()
   }
