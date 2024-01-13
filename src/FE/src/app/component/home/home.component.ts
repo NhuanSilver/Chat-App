@@ -12,6 +12,7 @@ import {ToastrService} from "ngx-toastr";
 import {STATUS} from "../../model/STATUS";
 import {User} from "../../model/User";
 import {UserService} from "../../service/user.service";
+import {distinctUntilChanged} from "rxjs";
 
 @Component({
   selector: 'app-home',
@@ -29,7 +30,7 @@ import {UserService} from "../../service/user.service";
 })
 export class HomeComponent implements OnInit, OnDestroy{
   protected readonly TAB = TAB;
-  mainTab$ = this.tabService.getMainTab$();
+  mainTab$ = this.tabService.getMainTab$().pipe(distinctUntilChanged());
   constructor(private websocketService: WebsocketService,
               private friendService: FriendService,
               private userService: UserService,

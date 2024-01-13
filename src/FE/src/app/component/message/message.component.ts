@@ -31,7 +31,6 @@ export class MessageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.position)
     if (this.message.type === "IMG") {
       this.imgToDisplay = this.JSON.parse(this.message.content)
     }

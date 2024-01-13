@@ -3,5 +3,17 @@
   height: 100%;
   width: 100%;
 }
+.main .main-tab {
+  display: none;
+}
+.main .main-tab.show {
+  display: block;
+}
+.main .contact-tab {
+  display: none;
+}
+.main .contact-tab.show {
+  display: block;
+}
 
 /*# sourceMappingURL=home.component.css.map */

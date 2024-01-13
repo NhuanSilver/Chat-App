@@ -6,7 +6,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faPaperPlane} from "@fortawesome/free-regular-svg-icons";
 import {ChatService} from "../../service/chat.service";
-import {forkJoin, of, switchMap, tap} from "rxjs";
+import {distinctUntilChanged, filter, map, merge, Observable, switchMap, tap} from "rxjs";
 import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../shared/BaseComponent";
 import {NavigationItemComponent} from "../navigation-item/navigation-item.component";
@@ -54,48 +54,10 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
 
   messageForm !: FormGroup;
   chatMessages: ChatMessage[] = [];
+  chatMess$ !: Observable<ChatMessage[]>
   recipients: User[] = [];
   conversation: Conversation | undefined;
   imgSrcArr: string[] = []
-
-  conversationSub = this.chatService.getConversation$().pipe(
-    switchMap(conversation => {
-      this.conversation = conversation;
-      if (this.conversation) {
-        this.recipients = this.conversation.members.filter(member => !this.userService.isCurrentUser(member.username));
-        return this.chatService.getConversationMessages(this.conversation.id,
-          new Set([...this.conversation.members.map(r => r.username)]))
-      }
-      this.chatMessages = []
-      return this.chatService.getRecipients$()
-
-    }),
-    tap(value => {
-      if (Array.isArray(value) && value.length > 0 && 'conversationId' in value[0]) {
-        this.scrollToBottom();
-
-      }
-    })
-  ).subscribe(value => {
-
-    if (Array.isArray(value) && value.length > 0 && 'username' in value[0]) {
-      this.recipients = (value as User[]).filter(member => member.username !== this.currentUser.username);
-    } else {
-      this.chatMessages = value as ChatMessage[];
-    }
-  })
-
-  newMessageSub = this.chatService.getMessage$()
-    .subscribe(newMessage => {
-    if (!newMessage) return;
-
-    // Add message to active conversion
-    if (this.conversation?.id === newMessage.conversationId) {
-      this.chatMessages.push(newMessage)
-      this.scrollToBottom();
-    }
-
-  })
 
   constructor(private fb: FormBuilder,
               private chatService: ChatService,
@@ -109,8 +71,6 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
       }
     )
 
-    this.subscriptions.push(this.conversationSub)
-    this.subscriptions.push(this.newMessageSub)
   }
 
   ngAfterViewInit(): void {
@@ -123,33 +83,38 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
   }
 
   ngOnInit(): void {
+
+    this.initConversation();
   }
 
-  getPositionOfMessage(message : ChatMessage) : string {
+  getPositionOfMessage(message: ChatMessage): string {
     const index = this.chatMessages.indexOf(message);
     const samePrevSender = message.senderId === this.chatMessages[index - 1]?.senderId;
     const sameNextSender = message.senderId === this.chatMessages[index + 1]?.senderId;
 
 
-    if (index === 0 && !sameNextSender) return  'fl';
+    if (index === 0 && !sameNextSender) return 'fl';
     if (index === 0) return 'f'
     if (index > 0) {
 
-       if (!sameNextSender && !samePrevSender
-          || !samePrevSender && new Date(this.chatMessages[index +1 ].sentAt).getMinutes() - new Date(message.sentAt).getMinutes() >=5
-         || !sameNextSender && this.greaterThan5Minutes(message)
-       ) return "fl";
-       if (!sameNextSender) return 'l';
-       if (!samePrevSender && sameNextSender || this.greaterThan5Minutes(message)) return 'f'
+      if (!sameNextSender && !samePrevSender
+        || !samePrevSender && new Date(this.chatMessages[index + 1].sentAt).getMinutes() - new Date(message.sentAt).getMinutes() >= 5
+        || !sameNextSender && this.greaterThan5Minutes(message)
+      ) return "fl";
+
+      if (!sameNextSender || new Date(this.chatMessages[index + 1].sentAt).getMinutes() - new Date(message.sentAt).getMinutes() >= 5) return 'l';
+      if (!samePrevSender && sameNextSender || this.greaterThan5Minutes(message)) return 'f'
     }
     return 'middle';
 
   }
-  greaterThan5Minutes(message : ChatMessage) {
+
+  greaterThan5Minutes(message: ChatMessage) {
     const index = this.chatMessages.indexOf(message);
     if (index === 0) return true;
-    return new Date(message.sentAt).getMinutes() - new Date(this.chatMessages[index -1].sentAt).getMinutes() >= 5;
+    return new Date(message.sentAt).getMinutes() - new Date(this.chatMessages[index - 1].sentAt).getMinutes() >= 5;
   }
+
   readImg(event: Event) {
 
     const inputElement = event.target as HTMLInputElement;
@@ -171,14 +136,14 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
     const message = this.messageForm.get('messageControl')?.value as string
 
     if (!this.conversation) {
-      this.chatService.createPrivateChat(this.currentUser.username + "_" + recipientsClone[0].username, recipientsClone[0].username)
+      this.subscriptions.push(this.chatService.createPrivateChat(this.currentUser.username + "_" + recipientsClone[0].username, recipientsClone[0].username)
         .subscribe(cvs => {
           if (cvs) {
             this.conversation = cvs;
             this.sendMessageWithCondition(recipientsClone, cvs, message)
           }
 
-        })
+        }))
     } else {
       this.sendMessageWithCondition(recipientsClone, this.conversation, message)
     }
@@ -207,7 +172,8 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
   private sendMessage(message: MessageRequest) {
     this.chatService.sendMessage(message)
   }
-  private sendMessageWithCondition( recipientsClone : User [], cvs : Conversation, message: string) {
+
+  private sendMessageWithCondition(recipientsClone: User [], cvs: Conversation, message: string) {
     if (this.imgSrcArr.length > 0) {
       this.sendMessage({
         conversationId: cvs.id,
@@ -228,14 +194,51 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
     this.inputFile.nativeElement.value = ""
     this.messageForm.get('messageControl')?.setValue('')
   }
+
   private scrollToBottom() {
 
     if (this.conversation) {
 
       setTimeout(() => {
         this.chatBox.nativeElement.scrollIntoView()
-      }, 50)
+      }, 100)
 
     }
+  }
+
+  private initConversation() {
+    const conversationOsb = this.chatService.getConversation$().pipe(
+      switchMap(conversation => {
+        this.conversation = conversation;
+        if (this.conversation) {
+          this.recipients = this.conversation.members.filter(member => !this.userService.isCurrentUser(member.username));
+          return this.chatService.getConversationMessages(this.conversation.id,
+            new Set([...this.conversation.members.map(r => r.username)])).pipe(distinctUntilChanged())
+        }
+        this.chatMessages = []
+        return this.chatService.getRecipients$()
+
+      })
+    )
+    this.chatMess$ = merge(
+      conversationOsb,
+      this.chatService.getMessage$().pipe(
+        filter(newMessage => newMessage != undefined && this.conversation?.id === newMessage.conversationId),
+      )
+    ).pipe(
+      tap( _ => {
+        this.scrollToBottom();
+      }),
+      map(value => {
+        if (Array.isArray(value) && value.length > 0 && 'username' in value[0]) {
+          this.recipients = (value as User[]).filter(member => member.username !== this.currentUser.username);
+        } else if (Array.isArray(value)) {
+          this.chatMessages = value as ChatMessage[];
+        } else {
+          this.chatMessages.push(value as ChatMessage);
+        }
+        return this.chatMessages;
+      })
+    );
   }
 }

@@ -139,6 +139,8 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
 
   sortConversation(conversationsToSort: Conversation[]) {
     return conversationsToSort.sort((a, b) => {
+      if (!a.latestMessage) return 1
+      if (!b.latestMessage) return -1
       return new Date(b?.latestMessage?.sentAt)?.getTime() - new Date(a?.latestMessage?.sentAt)?.getTime();
     })
   }

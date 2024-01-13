@@ -29,7 +29,6 @@ public class ConversationController {
 
     @GetMapping("/private/{sender}/{recipient}")
     public ConversationDTO getPrivateConversation(@PathVariable String sender, @PathVariable String recipient) {
-        log.info(sender + " re " + recipient);
         return this.conversationService.getPrivateConversation(sender, recipient);
     }
 

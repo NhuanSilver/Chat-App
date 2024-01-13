@@ -23,7 +23,7 @@
       </ul>
     </div>
     <div  class="message-area">
-      <ng-container *ngFor="let message of chatMessages">
+      <ng-container *ngFor="let message of (chatMess$ | async)">
         <app-message *ngIf="message"
                      [displaySentAt] ="greaterThan5Minutes(message)"
                      [position]="getPositionOfMessage(message)"

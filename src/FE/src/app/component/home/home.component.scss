@@ -3,4 +3,16 @@
   display: flex;
   height: 100%;
   width: 100%;
+  .main-tab {
+    display: none;
+    &.show {
+      display: block;
+    }
+  }
+  .contact-tab {
+    display: none;
+    &.show {
+      display: block;
+    }
+  }
 }
