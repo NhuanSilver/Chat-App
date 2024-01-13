@@ -70,7 +70,7 @@ export class AuthenticationComponent implements OnInit {
           console.log(user)
           user.status = STATUS.ONLINE
           this.storageService.saveUser(user)
-          this.router.navigate(['/home'])
+          this.router.navigate(['/'])
         },
         error: err => {
           this.toastService.error("Sai tài khoản hoặc mật khẩu")

@@ -22,15 +22,14 @@
         </li>
       </ul>
     </div>
-    <div  class="message-area">
-      <ng-container *ngFor="let message of (chatMess$ | async)">
+    <div #scrollMe [scrollTop]="scrollMe.scrollHeight" class="message-area">
+      <ng-container *ngFor="let message of chatMessages">
         <app-message *ngIf="message"
                      [displaySentAt] ="greaterThan5Minutes(message)"
                      [position]="getPositionOfMessage(message)"
                      [conversation]="conversation"
                      [message]="message" ></app-message>
       </ng-container>
-      <div #chatBox></div>
     </div>
 
     <form class="message-form" [formGroup]="messageForm" (ngSubmit)="onSubmit(recipients)">

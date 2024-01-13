@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {ChatMessage} from "../../model/ChatMessage";
 import {CommonModule} from "@angular/common";
 import {MessageComponent} from "../message/message.component";
@@ -54,7 +54,6 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
 
   messageForm !: FormGroup;
   chatMessages: ChatMessage[] = [];
-  chatMess$ !: Observable<ChatMessage[]>
   recipients: User[] = [];
   conversation: Conversation | undefined;
   imgSrcArr: string[] = []
@@ -62,7 +61,8 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
   constructor(private fb: FormBuilder,
               private chatService: ChatService,
               private userService: UserService,
-              private renderer: Renderer2) {
+              private renderer: Renderer2,
+              private cdf: ChangeDetectorRef) {
     super();
 
     this.messageForm = this.fb.group(
@@ -201,7 +201,7 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
 
       setTimeout(() => {
         this.chatBox.nativeElement.scrollIntoView()
-      }, 100)
+      }, 0)
 
     }
   }
@@ -220,25 +220,22 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
 
       })
     )
-    this.chatMess$ = merge(
+    const chatMssSub = merge(
       conversationOsb,
       this.chatService.getMessage$().pipe(
         filter(newMessage => newMessage != undefined && this.conversation?.id === newMessage.conversationId),
       )
-    ).pipe(
-      tap( _ => {
-        this.scrollToBottom();
-      }),
-      map(value => {
-        if (Array.isArray(value) && value.length > 0 && 'username' in value[0]) {
-          this.recipients = (value as User[]).filter(member => member.username !== this.currentUser.username);
-        } else if (Array.isArray(value)) {
-          this.chatMessages = value as ChatMessage[];
-        } else {
-          this.chatMessages.push(value as ChatMessage);
-        }
-        return this.chatMessages;
-      })
-    );
+    ).subscribe(value => {
+      if (Array.isArray(value) && value.length > 0 && 'username' in value[0]) {
+        this.recipients = (value as User[]).filter(member => member.username !== this.currentUser.username);
+      } else if (Array.isArray(value)) {
+        this.chatMessages = value as ChatMessage[];
+        this.cdf.detectChanges()
+      } else {
+        this.chatMessages.push(value as ChatMessage);
+        this.cdf.detectChanges()
+      }
+    })
+    this.subscriptions.push(chatMssSub)
   }
 }
