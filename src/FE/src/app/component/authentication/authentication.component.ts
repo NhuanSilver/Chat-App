@@ -29,6 +29,8 @@ export class AuthenticationComponent implements OnInit {
   protected readonly faLock = faLock;
   actionType !: string;
   formGroup !: FormGroup;
+  invalidUsernameOrPassword !: string;
+
   USER_ACTION = environment.USER_ACTION;
   FORM_CONTROL = environment.FORM_CONTROL;
 
@@ -55,6 +57,7 @@ export class AuthenticationComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
       const actionType = params['action'];
+      this.invalidUsernameOrPassword = ''
       if ([this.USER_ACTION.LOGIN, this.USER_ACTION.REGISTER].includes(actionType)) {
         this.actionType = actionType;
         this.createForm()
@@ -72,8 +75,7 @@ export class AuthenticationComponent implements OnInit {
           this.router.navigate(['/'])
         },
         error: err => {
-          this.toastService.error("Sai tài khoản hoặc mật khẩu")
-          console.log(err)
+          this.invalidUsernameOrPassword = "Sai tài khoản hoặc mật khẩu"
         }
       })
   }
@@ -89,7 +91,7 @@ export class AuthenticationComponent implements OnInit {
               this.router.navigate(['/tai-khoan/dang-nhap'])
           },
           error: _=> {
-            this.toastService.error("Có lỗi xảy ra, vui lòng thử lại sau")
+            this.invalidUsernameOrPassword = "Tài khoản đã tồn tại"
           }
         }
       )
@@ -107,5 +109,15 @@ export class AuthenticationComponent implements OnInit {
     if (this.actionType === this.USER_ACTION.REGISTER) {
       this.formGroup.addControl(this.FORM_CONTROL.FULL_NAME, new FormControl('', Validators.required));
     }
+  }
+
+  getUsernameControl() {
+    return this.formGroup.controls[this.FORM_CONTROL.USERNAME] as FormControl;
+  }
+  getFullName() {
+    return this.formGroup.controls[this.FORM_CONTROL.FULL_NAME] as FormControl;
+  }
+  getPassword() {
+    return this.formGroup.controls[this.FORM_CONTROL.PASSWORD] as FormControl;
   }
 }

@@ -5,27 +5,46 @@
       để kết nối với ứng dụng Amazing Chat</p>
     <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
       <div class="form-group" *ngIf="actionType === 'dang-ky'">
-        <app-user-form-group [type]="'text'"
+        <div><label for="fullName">Họ và tên</label>
+          <span *ngIf="getFullName().touched && getFullName().invalid">Vui lòng nhập họ và tên</span>
+          <span *ngIf="invalidUsernameOrPassword" >{{invalidUsernameOrPassword}}</span>
+        </div>
+        <app-user-form-group id="fullName"
+                             [type]="'text'"
                              [placeholder]="'Họ và tên'"
                              [icon]="faLock"
                              [control]="getControl(FORM_CONTROL.FULL_NAME)"></app-user-form-group>
       </div>
 
       <div class="form-group">
-        <app-user-form-group [type]="'text'"
+        <div>
+          <label for="username">Tài khoản</label>
+          <span *ngIf="getUsernameControl().touched && getUsernameControl().invalid">Vui lòng nhập tài khoản</span>
+          <span *ngIf="invalidUsernameOrPassword" >{{invalidUsernameOrPassword}}</span>
+        </div>
+        <app-user-form-group id="username"
+                             [type]="'text'"
                              [placeholder]="'Tài khoản'"
                              [icon]="faUser"
                              [control]="getControl(FORM_CONTROL.USERNAME)"></app-user-form-group>
       </div>
       <div class="form-group">
-        <app-user-form-group [type]="'password'"
+        <div>
+          <label for="password" >Mật khẩu</label>
+          <span *ngIf="getPassword().touched && getPassword().invalid">Vui lòng nhập mật khẩu</span>
+          <span *ngIf="invalidUsernameOrPassword" >{{invalidUsernameOrPassword}}</span>
+        </div>
+        <app-user-form-group id="password"
+                             [type]="'password'"
                              [placeholder]="'Mật khẩu'"
                              [icon]="faLock"
                              [control]="getControl(FORM_CONTROL.PASSWORD)"></app-user-form-group>
       </div>
 
 
-      <button class="btn-submit" type="submit">{{actionType === USER_ACTION.LOGIN? 'Đăng nhập' : 'Đăng ký'}}</button>
+      <button [disabled]="formGroup.invalid"
+
+        class="btn-submit" type="submit">{{actionType === USER_ACTION.LOGIN? 'Đăng nhập' : 'Đăng ký'}}</button>
     </form>
 
     <div class="register-container">
