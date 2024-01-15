@@ -25,16 +25,12 @@
 
           <div (click)="isSortMenu = !isSortMenu" class="form-group condition-group">
             <fa-icon [icon]="faArrowUpAZ" ></fa-icon>
-            <div>Tên (A-Z)</div>
+            <div>{{currentSortItem}}</div>
             <fa-icon class="arrow-down" [icon]="faAngleDown"></fa-icon>
             <ul class="filter-menu" [class.show] ="isSortMenu">
-              <li>
+              <li *ngFor="let item of sortItems" (click)="setSortItem(item)">
                 <fa-icon [icon]="faCheck"></fa-icon>
-                Tên (A-Z)
-              </li>
-              <li>
-                <fa-icon [icon]="faCheck"></fa-icon>
-                Tên (Z-A)
+                {{item}}
               </li>
             </ul>
           </div>

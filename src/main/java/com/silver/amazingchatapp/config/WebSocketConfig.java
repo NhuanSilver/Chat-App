@@ -92,8 +92,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
                 StompHeaderAccessor accessor =
                         MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-                log.info(String.valueOf(accessor.getCommand()));
-                log.info(String.valueOf(accessor.getContentLength()));
 
                 if (StompCommand.CONNECT.equals(accessor.getCommand())) {
 

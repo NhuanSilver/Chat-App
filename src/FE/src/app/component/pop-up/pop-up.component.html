@@ -1,17 +1,17 @@
 <div class="pop-up-container">
   <h3 class="pop-up-name">{{data.name}}</h3>
   <form [formGroup]="form" class="form">
-    <div *ngIf="data.name === 'Tạo nhóm'" class ="form-group--name">
-      <input class="group-name" type="text" placeholder="Nhập tên nhóm">
+    <div *ngIf="data.name === 'Tạo nhóm'"  class ="form-group--name">
+      <input class="group-name" type="text"  [formControlName]="controlProps.GROUP_NAME" placeholder="Nhập tên nhóm">
     </div>
     <div class="form-group--search">
       <fa-icon [icon]="faSearch"></fa-icon>
       <input class="search-value"  placeholder="Nhập tên hoặc ID" [formControlName]="controlProps.SEARCH">
     </div>
-    <app-user-list [users$]="users$" [parent]="data.name" [checkBoxControl]="getControl(controlProps.USERNAME)" ></app-user-list>
+    <app-user-list [users$]="users$" [parent]="data.name" (eventEmitter)="handleCheckbox($event)"></app-user-list>
     <div class="btn-group" *ngIf="data.name === 'Tạo nhóm'">
       <button type="button" class="btn-close" (click)="dialogRef.close()">Đóng</button>
-      <button class="btn-create" >Tạo nhóm</button>
+      <button class="btn-create" (click)="createGroup()" >Tạo nhóm</button>
     </div>
   </form>
 </div>

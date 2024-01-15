@@ -16,7 +16,6 @@ import {User} from "../../model/User";
 import {UserService} from "../../service/user.service";
 import {STATUS} from "../../model/STATUS";
 import {PickerComponent} from "@ctrl/ngx-emoji-mart";
-import {WebsocketService} from "../../service/websocket.service";
 import {MessageRequest} from "../../model/MessageRequest";
 
 @Component({
@@ -35,6 +34,7 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
   protected readonly STATUS = STATUS;
   protected readonly faFaceSmile = faFaceSmile;
   protected readonly faImage = faImage;
+
   protected readonly roomNavItems: NavItem[] = [
     {
       name: 'search',
@@ -138,14 +138,19 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
     if (!this.conversation) {
       this.subscriptions.push(this.chatService.createPrivateChat(this.currentUser.username + "_" + recipientsClone[0].username, recipientsClone[0].username)
         .subscribe(cvs => {
+
           if (cvs) {
             this.conversation = cvs;
+            this.chatService.setNewConversation(this.conversation)
             this.sendMessageWithCondition(recipientsClone, cvs, message)
           }
 
         }))
+
     } else {
-      this.sendMessageWithCondition(recipientsClone, this.conversation, message)
+
+      this.sendMessageWithCondition(recipientsClone, this.conversation, message);
+
     }
 
   }
@@ -195,16 +200,6 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
     this.messageForm.get('messageControl')?.setValue('')
   }
 
-  private scrollToBottom() {
-
-    if (this.conversation) {
-
-      setTimeout(() => {
-        this.chatBox.nativeElement.scrollIntoView()
-      }, 0)
-
-    }
-  }
 
   private initConversation() {
     const conversationOsb = this.chatService.getConversation$().pipe(
@@ -215,7 +210,8 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
           return this.chatService.getConversationMessages(this.conversation.id,
             new Set([...this.conversation.members.map(r => r.username)])).pipe(distinctUntilChanged())
         }
-        this.chatMessages = []
+        this.chatMessages = [];
+        this.cdf.detectChanges();
         return this.chatService.getRecipients$()
 
       })
@@ -229,11 +225,15 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
       if (Array.isArray(value) && value.length > 0 && 'username' in value[0]) {
         this.recipients = (value as User[]).filter(member => member.username !== this.currentUser.username);
       } else if (Array.isArray(value)) {
+
         this.chatMessages = value as ChatMessage[];
         this.cdf.detectChanges()
+
       } else {
+
         this.chatMessages.push(value as ChatMessage);
         this.cdf.detectChanges()
+
       }
     })
     this.subscriptions.push(chatMssSub)

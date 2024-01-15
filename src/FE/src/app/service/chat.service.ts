@@ -17,6 +17,7 @@ export class ChatService {
   private conversationSubject: BehaviorSubject<Conversation | undefined> =  new BehaviorSubject<Conversation | undefined>(undefined);
   private recipientsSubject : BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
   private activeConversationSubject : BehaviorSubject<Conversation | undefined> = new BehaviorSubject<Conversation | undefined>(undefined);
+  private newConversation : BehaviorSubject<Conversation | undefined> = new BehaviorSubject<Conversation | undefined>(undefined);
   constructor(private websocketService : WebsocketService,
               private tabService : TabService,
               private http: HttpClient,
@@ -44,10 +45,19 @@ export class ChatService {
     const request = {
       name : name,
       usernames : [this.userService.getCurrentUser().username, recipient],
-      isGroup: false
+      group: false
     }
 
     return this.http.post<Conversation>('http://localhost:8080/api/conversations/private', request )
+  }
+
+  createGroupChat(name: string, recipients : string[]) {
+    const request = {
+      name: name,
+      usernames: recipients,
+      group: true
+    }
+    return this.http.post<Conversation>('http://localhost:8080/api/conversations/group', request )
   }
 
   getMessage$() {
@@ -77,6 +87,12 @@ export class ChatService {
 
   setActiveConversation(conversation : Conversation | undefined) {
     this.activeConversationSubject.next(conversation);
+  }
+  getNewConversation$() {
+    return this.newConversation.asObservable();
+  }
+  setNewConversation(conversation : Conversation) {
+    this.newConversation.next(conversation);
   }
 
   setMember(user : User) {

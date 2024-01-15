@@ -34,6 +34,10 @@ public class ConversationController {
 
     @PostMapping("/private")
     public ConversationDTO createPrivateConversation(@RequestBody @NonNull ConversationRequest request) {
-       return this.conversationService.createPrivateConversation(request);
+       return this.conversationService.createConversation(request);
+    }
+    @PostMapping("/group")
+    public ConversationDTO createGroupConversation(@RequestBody @NonNull ConversationRequest request) {
+        return this.conversationService.createConversation(request);
     }
 }

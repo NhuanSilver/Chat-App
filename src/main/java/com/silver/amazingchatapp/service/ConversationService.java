@@ -9,6 +9,7 @@ import com.silver.amazingchatapp.model.User;
 import com.silver.amazingchatapp.repository.ConversationRepository;
 import com.silver.amazingchatapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,15 +18,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ConversationService {
     private final ConversationRepository conversationRepository;
     private final UserRepository userRepository;
     private final ConversationDTOMapper conversationDtoMapper;
-
-//    public List<ConversationDTO> getAll() {
-//        return null;
-//    }
 
     public List<ConversationDTO> getConversationByUserId(String userId) {
         return this.conversationRepository.findByUsersUsername(userId).stream()
@@ -46,18 +44,18 @@ public class ConversationService {
         return this.conversationDtoMapper.conversationDto(conversation);
     }
 
-    public ConversationDTO createPrivateConversation(ConversationRequest request) {
+    public ConversationDTO  createConversation(ConversationRequest request) {
         Set<User> users = request.getUsernames().stream().map(u -> this.userRepository.findById(u)
                 .orElseThrow(() -> new ApiRequestException("User not found"))).collect(Collectors.toSet());
         Conversation conversation = Conversation.builder()
                 .name(request.getName())
                 .users(users)
-                .isGroup(false)
+                .isGroup(request.isGroup())
                 .messages(new ArrayList<>())
                 .build();
         users.forEach(user -> user.getConversations().add(conversation));
         Conversation savedConversation = this.conversationRepository.save(conversation);
         this.conversationRepository.flush();
-       return this.conversationDtoMapper.conversationDto(savedConversation);
+        return this.conversationDtoMapper.conversationDto(savedConversation);
     }
 }

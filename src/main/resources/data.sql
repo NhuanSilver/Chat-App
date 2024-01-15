@@ -18,7 +18,7 @@ values ('lam',
         '$2a$10$yRzl/a4cKos2Gu731mpRJueuA5TPogOOZpcq.PqJO6Z7aUxadZhae',
         1,'USER');
 
-insert into conversation(is_group, id, name) values (1, 1 ,'Nhóm 1');
-insert into users_conversations(conversations_id, users_username) values (1, 'nhuan');
-insert into users_conversations(conversations_id, users_username) values (1, 'buon');
-insert into users_conversations(conversations_id, users_username) values (1, 'lam');
+-- insert into conversation(is_group, id, name) values (1, 1 ,'Nhóm 1');
+-- insert into users_conversations(conversations_id, users_username) values (1, 'nhuan');
+-- insert into users_conversations(conversations_id, users_username) values (1, 'buon');
+-- insert into users_conversations(conversations_id, users_username) values (1, 'lam');

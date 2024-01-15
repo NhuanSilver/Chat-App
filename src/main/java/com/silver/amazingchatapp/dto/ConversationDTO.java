@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -17,4 +18,6 @@ public class ConversationDTO  {
     private MessageDTO latestMessage;
     private List<UserDto> members;
     private boolean isGroup;
+    private Timestamp createAt;
+    private Timestamp updateAt;
 }

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {
   faAddressBook,
@@ -39,7 +39,16 @@ export class ContactComponent extends BaseComponent implements OnInit, AfterView
   protected readonly faCheck = faCheck;
   protected readonly faAngleDown = faAngleDown;
   protected readonly faAddressBook = faAddressBook;
+  protected readonly faEllipsis = faEllipsis;
+  protected readonly STATUS = STATUS;
+
   isSortMenu = false;
+  sortItems : string [] = [
+    'Từ A-Z',
+    'Từ Z-A'
+  ]
+
+  currentSortItem : string = this.sortItems[0];
   contactTab$ = this.tabService.getContactTab$();
   currentUser = this.userService.getCurrentUser();
   friendRequests: Friend[] = [];
@@ -61,7 +70,6 @@ export class ContactComponent extends BaseComponent implements OnInit, AfterView
     this.initFriendsRequestData();
   }
 
-  protected readonly STATUS = STATUS;
 
   addFriend(friend: Friend) {
     this.friendService.addFriend(friend.owner.username)
@@ -116,5 +124,12 @@ export class ContactComponent extends BaseComponent implements OnInit, AfterView
     this.subscriptions.push(this.chatService.setMember(user));
   }
 
-  protected readonly faEllipsis = faEllipsis;
+  setSortItem(item: string) {
+    this.currentSortItem = item;
+    if (this.currentSortItem === this.sortItems[0]) {
+      this.friendMap = new Map([...this.friendMap.entries()].sort((a,b) => a[0] > b[0] ? 1 : -1))
+    } else {
+      this.friendMap = new Map([...this.friendMap.entries()].sort((a,b) => a[0] > b[0] ? -1 : 1))
+    }
+  }
 }

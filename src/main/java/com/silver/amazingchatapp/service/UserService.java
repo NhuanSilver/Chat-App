@@ -3,22 +3,17 @@ package com.silver.amazingchatapp.service;
 import com.silver.amazingchatapp.dto.*;
 import com.silver.amazingchatapp.exception.ApiRequestException;
 import com.silver.amazingchatapp.mapper.UserDTOMapper;
-import com.silver.amazingchatapp.model.FRIEND_STATUS;
-import com.silver.amazingchatapp.model.Friend;
 import com.silver.amazingchatapp.model.USER_STATUS;
 import com.silver.amazingchatapp.model.User;
-import com.silver.amazingchatapp.repository.FriendRepository;
 import com.silver.amazingchatapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,8 +25,6 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final FriendRepository friendRepository;
-    private final SimpMessagingTemplate simpMessagingTemplate;
 
     public UserDto login(LoginRequest loginRequest) {
 
@@ -81,7 +74,6 @@ public class UserService {
                 .orElseThrow(() -> new ApiRequestException("User not found"));
         user.setStatus(USER_STATUS.OFFLINE);
         userDto.setStatus(userRepository.save(user).getStatus());
-        log.info(userDto.toString());
         return userDto;
     }
 
@@ -105,8 +97,6 @@ public class UserService {
     }
 
     public List<UserDto> getNotFriends(String id, String valueSearch) {
-        log.info(id);
-        log.info(valueSearch);
         return this.userRepository.findNotFriendsByUsername(id, valueSearch)
                 .stream().map(this.userDTOMapper::toDTO).toList();
     }

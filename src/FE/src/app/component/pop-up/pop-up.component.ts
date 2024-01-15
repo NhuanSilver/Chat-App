@@ -3,12 +3,14 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
 import {UserListComponent} from "../user-list/user-list.component";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment.development";
 import {CommonModule} from "@angular/common";
-import {catchError, debounceTime, distinctUntilChanged, map, Observable, of, switchMap} from "rxjs";
+import {catchError, debounceTime, distinctUntilChanged, Observable, of, switchMap} from "rxjs";
 import {UserService} from "../../service/user.service";
 import {User} from "../../model/User";
+import {ChatService} from "../../service/chat.service";
+import {BaseComponent} from "../../shared/BaseComponent";
 
 @Component({
   selector: 'app-pop-up',
@@ -22,17 +24,20 @@ import {User} from "../../model/User";
   templateUrl: './pop-up.component.html',
   styleUrl: './pop-up.component.scss'
 })
-export class PopUpComponent implements OnInit {
+export class PopUpComponent extends BaseComponent implements OnInit {
 
   protected readonly faSearch = faSearch;
+
   controlProps = environment.FORM_CONTROL;
   form !: FormGroup;
   users$ !: Observable<User[]>
 
   constructor(private fb: FormBuilder,
               private userService: UserService,
+              private chatService : ChatService,
               public dialogRef: MatDialogRef<PopUpComponent>,
               @Inject(MAT_DIALOG_DATA) public data: { name: string }) {
+    super();
   }
 
   ngOnInit(): void {
@@ -48,7 +53,7 @@ export class PopUpComponent implements OnInit {
 
     if (this.data.name === 'Tạo nhóm') {
       this.form.addControl(this.controlProps.GROUP_NAME, new FormControl(''))
-      this.form.addControl(this.controlProps.USERNAME, new FormControl(''));
+      this.form.addControl(this.controlProps.USERNAME, new FormArray ([]));
     }
     this.users$ = this.form.controls[this.controlProps.SEARCH]?.valueChanges.pipe(
       debounceTime(100),
@@ -71,9 +76,30 @@ export class PopUpComponent implements OnInit {
 
   }
 
-  protected readonly FormControl = FormControl;
 
-  getControl(controlName: string) : FormControl {
-    return this.form.controls[controlName] as FormControl;
+  createGroup() {
+    const groupName = this.form.get(this.controlProps.GROUP_NAME)?.value
+    const recipients = this.form.get(this.controlProps.USERNAME)?.value
+    this.subscriptions.push(this.chatService.createGroupChat(groupName, [...recipients, this.userService.getCurrentUser().username]).subscribe(cvs => {
+      this.chatService.setNewConversation(cvs)
+      this.dialogRef.close();
+    }))
+  }
+
+  handleCheckbox(event: any) {
+    const checkboxes = this.form.get(this.controlProps.USERNAME) as FormArray;
+    if (event.target.checked) {
+
+        checkboxes.push(new FormControl(event.target.value))
+
+    } else {
+      checkboxes.controls.forEach( (c, index) => {
+        if (c.value === event.target.value) {
+          checkboxes.removeAt(index)
+          return;
+        }
+      })
+
+    }
   }
 }

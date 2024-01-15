@@ -1,6 +1,6 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatDialogClose} from "@angular/material/dialog";
-import {FormControl, ReactiveFormsModule} from "@angular/forms";
+import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment.development";
 import {UserFormGroupComponent} from "../user-form-group/user-form-group.component";
 import {faSearch, faUserFriends} from "@fortawesome/free-solid-svg-icons";
@@ -35,7 +35,8 @@ export class UserListComponent extends BaseComponent implements OnInit {
   @ViewChild('checkbox') checkbox !: ElementRef;
   @Input() users$ ?: Observable<User[]>;
   @Input() parent !: string
-  @Input() checkBoxControl ?: FormControl
+  @Output()  eventEmitter  = new EventEmitter<Event>;
+
   users: User[] = [];
   friends: Friend[] = []
 
@@ -73,7 +74,7 @@ export class UserListComponent extends BaseComponent implements OnInit {
         break;
       }
       case 'Tạo nhóm' : {
-        this.checkbox.nativeElement.checked = !this.checkbox.nativeElement.checked
+
         break;
       }
       default : {
@@ -91,5 +92,10 @@ export class UserListComponent extends BaseComponent implements OnInit {
     if (this.parent === 'Thêm bạn' ) return "add-friend";
     if (this.parent === 'Tạo nhóm') return "create-group"
     return "";
+  }
+
+
+  sendUsernameToParent($event: Event) {
+    this.eventEmitter.emit($event)
   }
 }

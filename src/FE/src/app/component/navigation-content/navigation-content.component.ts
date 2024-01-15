@@ -7,7 +7,7 @@ import {BaseComponent} from "../../shared/BaseComponent";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faAdd, faSearch, faUserFriends, faUserGroup} from "@fortawesome/free-solid-svg-icons";
 import {UserListComponent} from "../user-list/user-list.component";
-import {catchError, debounceTime, distinctUntilChanged, map, Observable, of, switchMap} from "rxjs";
+import {catchError, combineLatest, debounceTime, distinctUntilChanged, map, Observable, of, switchMap, tap} from "rxjs";
 import {UserService} from "../../service/user.service";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment.development";
@@ -41,6 +41,8 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
   protected readonly environment = environment;
   protected readonly TAB = TAB;
   protected readonly faSearch = faSearch;
+  protected readonly faAdd = faAdd;
+
   conversations: Conversation[] = []
   formGroup !: FormGroup;
   users$ ?: Observable<User[]>;
@@ -100,48 +102,37 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
 
   ngOnInit(): void {
     this.loadConversation();
-    this.chatService.getMessage$()
-      .pipe(
-        switchMap(newMessage => {
-          if (!newMessage) {
-            return of(undefined);
-          }
-
-          const existingConversation = this.conversations.find(cvs => cvs.id === newMessage.conversationId);
-
+    combineLatest([
+      this.chatService.getNewConversation$().pipe(distinctUntilChanged()),
+      this.chatService.getMessage$()
+    ]).pipe(
+      map(([cvs, message]) => ({cvs, message})),
+      switchMap ( value =>  {
+        if (value.cvs && !this.conversations.includes(value.cvs)) return of(value.cvs);
+        if (value.message) {
+          const existingConversation = this.conversations.find(cvs => cvs.id === value.message?.conversationId);
           if (existingConversation) {
-
-            existingConversation.latestMessage = newMessage;
-            this.conversations = this.sortConversation(this.conversations);
+            existingConversation.latestMessage = value.message
             return of(undefined);
-
-          } else {
-
-            return this.chatService.getConversationById(newMessage.conversationId);
           }
-
-        })
-      )
-      .subscribe(conversion => {
-
-        if (conversion && !this.conversations.some(c => c.id === conversion.id)) {
-          this.conversations.push(conversion)
-          this.conversations = this.sortConversation(this.conversations)
-          if (this.conversations.length > 0 && conversion.latestMessage.senderId === this.userService.getCurrentUser().username) {
-            this.chatService.setActiveConversation(conversion)
-          }
+          return this.chatService.getConversationById(value.message.conversationId)
         }
-
+        return of(undefined);
       })
+    )
+      .subscribe(conversation => {
+        if (conversation) {
+          this.conversations = this.sortConversation([...this.conversations, conversation]);
+        }
+      })
+
 
   }
 
 
   sortConversation(conversationsToSort: Conversation[]) {
     return conversationsToSort.sort((a, b) => {
-      if (!a.latestMessage) return 1
-      if (!b.latestMessage) return -1
-      return new Date(b?.latestMessage?.sentAt)?.getTime() - new Date(a?.latestMessage?.sentAt)?.getTime();
+      return new Date(b.updateAt)?.getTime() - new Date(a.updateAt)?.getTime();
     })
   }
 
@@ -158,7 +149,4 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
       data : {name : name}
     })
   }
-
-  protected readonly faUserFriends = faUserFriends;
-  protected readonly faAdd = faAdd;
 }

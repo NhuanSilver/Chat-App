@@ -79,7 +79,7 @@ public class ChatMessageService {
                 .build();
 
         sender.getMessages().add(chatMessage);
-
+        conversation.setUpdateAt(chatMessage.getSentAt());
         chatMessageRepository.save(chatMessage);
         userRepository.save(sender);
 

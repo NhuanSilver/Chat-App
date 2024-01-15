@@ -37,6 +37,8 @@ public class ConversationDTOMapper {
                         .collect(Collectors.toList())
                 )
                 .isGroup(conversation.isGroup())
+                .createAt(conversation.getCreateAt())
+                .updateAt(conversation.getUpdateAt())
                 .build();
     }
 }
