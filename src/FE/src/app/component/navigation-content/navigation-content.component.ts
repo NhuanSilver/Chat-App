@@ -1,13 +1,13 @@
 import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {RoomComponent} from "../../component/room/room.component";
+import {RoomComponent} from "../room/room.component";
 import {CommonModule} from "@angular/common";
 import {ChatService} from "../../service/chat.service";
 import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../shared/BaseComponent";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faAdd, faSearch, faUserFriends, faUserGroup} from "@fortawesome/free-solid-svg-icons";
+import {faAdd, faSearch, faUserGroup} from "@fortawesome/free-solid-svg-icons";
 import {UserListComponent} from "../user-list/user-list.component";
-import {catchError, combineLatest, debounceTime, distinctUntilChanged, map, Observable, of, switchMap, tap} from "rxjs";
+import {catchError, debounceTime, distinctUntilChanged, map, Observable, of, switchMap, merge} from "rxjs";
 import {UserService} from "../../service/user.service";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment.development";
@@ -102,30 +102,33 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
 
   ngOnInit(): void {
     this.loadConversation();
-    combineLatest([
+    merge(
       this.chatService.getNewConversation$().pipe(distinctUntilChanged()),
       this.chatService.getMessage$()
-    ]).pipe(
-      map(([cvs, message]) => ({cvs, message})),
+    ).pipe(
       switchMap ( value =>  {
-        if (value.cvs && !this.conversations.includes(value.cvs)) return of(value.cvs);
-        if (value.message) {
-          const existingConversation = this.conversations.find(cvs => cvs.id === value.message?.conversationId);
+        if (value && 'group' in value && !this.conversations.includes(value)) return of(value as Conversation);
+
+        if (value && 'conversationId' in value) {
+          const existingConversation = this.conversations.find(cvs => cvs.id === value.conversationId);
           if (existingConversation) {
-            existingConversation.latestMessage = value.message
+            existingConversation.latestMessage = value
+            existingConversation.updateAt = value.sentAt
+            if (this.userService.isCurrentUser(value.senderId)) this.chatService.setActiveConversation(existingConversation)
             return of(undefined);
           }
-          return this.chatService.getConversationById(value.message.conversationId)
+          return this.chatService.getConversationById(value.conversationId)
         }
         return of(undefined);
       })
     )
       .subscribe(conversation => {
         if (conversation) {
+          if(!conversation.group && this.userService.isCurrentUser(conversation.latestMessage?.senderId)) this.chatService.setActiveConversation(conversation)
           this.conversations = this.sortConversation([...this.conversations, conversation]);
         }
+        this.conversations = this.sortConversation(this.conversations)
       })
-
 
   }
 

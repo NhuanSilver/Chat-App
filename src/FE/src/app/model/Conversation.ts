@@ -8,6 +8,6 @@ export interface Conversation {
   members : User[],
   isActive: boolean,
   group: boolean
-  createAt : string,
-  updateAt : string
+  createAt : Date,
+  updateAt : Date
 }

@@ -228,12 +228,10 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
 
         this.chatMessages = value as ChatMessage[];
         this.cdf.detectChanges()
-
       } else {
 
         this.chatMessages.push(value as ChatMessage);
         this.cdf.detectChanges()
-
       }
     })
     this.subscriptions.push(chatMssSub)
