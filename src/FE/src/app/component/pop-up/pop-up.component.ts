@@ -3,7 +3,7 @@ import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
 import {UserListComponent} from "../user-list/user-list.component";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {environment} from "../../../environments/environment.development";
 import {CommonModule} from "@angular/common";
 import {catchError, debounceTime, distinctUntilChanged, Observable, of, switchMap} from "rxjs";
@@ -45,14 +45,12 @@ export class PopUpComponent extends BaseComponent implements OnInit {
   }
 
   private initFormControls() {
-
     this.form = this.fb.group({
         [this.controlProps.SEARCH]: [''],
       }
     )
-
     if (this.data.name === 'Tạo nhóm') {
-      this.form.addControl(this.controlProps.GROUP_NAME, new FormControl(''))
+      this.form.addControl(this.controlProps.GROUP_NAME, new FormControl('', Validators.required))
       this.form.addControl(this.controlProps.USERNAME, new FormArray ([]));
     }
     this.users$ = this.form.controls[this.controlProps.SEARCH]?.valueChanges.pipe(

@@ -74,8 +74,9 @@
                 }
                 li {
                   padding: 1rem;
-                  fa-icon {
-                    margin-right: 2rem;
+                  span {
+                    display: inline-block;
+                    min-width: 2rem;
                   }
                 }
               }

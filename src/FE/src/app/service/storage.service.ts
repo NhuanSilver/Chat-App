@@ -12,7 +12,7 @@ export class StorageService {
 
   getCurrentUser(): User {
     const userJson = this.sessionStorage.getItem(this.userKey) || '';
-    return JSON.parse(userJson) || undefined;
+    return userJson != '' ? JSON.parse(userJson) : undefined;
   }
   saveUser(user : User) {
     this.sessionStorage.setItem(this.userKey, JSON.stringify(user));

@@ -6,7 +6,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faPaperPlane} from "@fortawesome/free-regular-svg-icons";
 import {ChatService} from "../../service/chat.service";
-import {distinctUntilChanged, filter, map, merge, Observable, switchMap, tap} from "rxjs";
+import {distinctUntilChanged, filter, merge, switchMap, tap} from "rxjs";
 import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../shared/BaseComponent";
 import {NavigationItemComponent} from "../navigation-item/navigation-item.component";
@@ -94,11 +94,11 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
 
 
     if (index === 0 && !sameNextSender) return 'fl';
-    if (index === 0) return 'f'
+    if (index === 0) return 'f';
     if (index > 0) {
 
       if (!sameNextSender && !samePrevSender
-        || !samePrevSender && new Date(this.chatMessages[index + 1].sentAt).getMinutes() - new Date(message.sentAt).getMinutes() >= 5
+        || !samePrevSender && new Date(this.chatMessages[index + 1].sentAt).getMinutes()- new Date(message.sentAt).getMinutes() >= 5
         || !sameNextSender && this.greaterThan5Minutes(message)
       ) return "fl";
 
@@ -121,7 +121,7 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
     if (inputElement.files) {
       for (let i = 0; i < inputElement.files.length; i++) {
         const fileReader = new FileReader();
-        fileReader.onload = e => {
+        fileReader.onload = _ => {
           this.imgSrcArr.push(fileReader.result as string)
         }
         fileReader.readAsDataURL(inputElement.files[i]);
@@ -212,14 +212,14 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
         }
         this.chatMessages = [];
         this.cdf.detectChanges();
-        return this.chatService.getRecipients$()
+        return this.chatService.getRecipients$();
 
       })
     )
     const chatMssSub = merge(
       conversationOsb,
       this.chatService.getMessage$().pipe(
-        filter(newMessage => newMessage != undefined && this.conversation?.id === newMessage.conversationId),
+        filter(newMessage => this.conversation?.id === newMessage.conversationId),
       )
     ).subscribe(value => {
       if (Array.isArray(value) && value.length > 0 && 'username' in value[0]) {

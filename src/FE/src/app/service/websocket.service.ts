@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {ChatMessage} from "../model/ChatMessage";
 import {Client} from "@stomp/stompjs";
 import {User} from "../model/User";
@@ -14,9 +14,9 @@ import {MessageRequest} from "../model/MessageRequest";
 export class WebsocketService {
   public stompClient !: Client;
   private currentUser = this.userService.getCurrentUser();
-  private messageSubject: BehaviorSubject<ChatMessage | undefined> = new BehaviorSubject<ChatMessage | undefined>(undefined);
-  private userSubject : BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
-  private friendSubject: BehaviorSubject<Friend | undefined> = new BehaviorSubject<Friend | undefined>(undefined);
+  private messageSubject = new Subject<ChatMessage>();
+  private userSubject = new Subject<User>();
+  private friendSubject = new Subject<Friend>()
 
   constructor(private userService: UserService) {
   }
@@ -42,7 +42,7 @@ export class WebsocketService {
     this.stompClient.activate()
   }
 
-  getMessage$(): Observable<ChatMessage | undefined> {
+  getMessage$(): Observable<ChatMessage> {
     return this.messageSubject.asObservable();
   }
   getUser$(): Observable< User | undefined> {

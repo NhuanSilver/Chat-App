@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {WebsocketService} from "./websocket.service";
 import {HttpClient} from "@angular/common/http";
 import {ChatMessage} from "../model/ChatMessage";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {UserService} from "./user.service";
 import {Conversation} from "../model/Conversation";
 import {User} from "../model/User";
@@ -14,10 +14,10 @@ import {MessageRequest} from "../model/MessageRequest";
   providedIn: 'root'
 })
 export class ChatService {
-  private conversationSubject: BehaviorSubject<Conversation | undefined> =  new BehaviorSubject<Conversation | undefined>(undefined);
-  private recipientsSubject : BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
+  private conversationSubject = new Subject<Conversation | undefined>();
+  private recipientsSubject = new BehaviorSubject<User[]>([]);
   private activeConversationSubject : BehaviorSubject<Conversation | undefined> = new BehaviorSubject<Conversation | undefined>(undefined);
-  private newConversation : BehaviorSubject<Conversation | undefined> = new BehaviorSubject<Conversation | undefined>(undefined);
+  private newConversation = new Subject<Conversation>();
   constructor(private websocketService : WebsocketService,
               private tabService : TabService,
               private http: HttpClient,
@@ -101,9 +101,11 @@ export class ChatService {
         next:
           cvs => {
             if (cvs) {
+
               this.setConversation(cvs)
               this.setActiveConversation(cvs)
             } else {
+
               this.setRecipients([user])
               this.setConversation(undefined)
             }

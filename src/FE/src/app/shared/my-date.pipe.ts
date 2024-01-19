@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'myDate',
@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class MyDatePipe implements PipeTransform {
 
-  transform(value : Date, type ?: string): string {
+  transform(value: Date, type ?: string): string {
     if (!value) return '';
 
     const currentDate = new Date();
@@ -51,11 +51,12 @@ export class MyDatePipe implements PipeTransform {
         return `Hôm qua ${messageDate.getHours()}:${messageDate.getMinutes()}`;
       } else {
         // Hiện mốc thời gian cộng định dạng dd/mm/yyyy
-        return  this.formatDate(messageDate);
+        return this.formatDate(messageDate);
       }
     }
 
   }
+
   private formatDate(date: Date): string {
     const day = date.getDate();
     const month = date.getMonth() + 1;

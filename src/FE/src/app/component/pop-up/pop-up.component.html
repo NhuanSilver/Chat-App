@@ -11,7 +11,7 @@
     <app-user-list [users$]="users$" [parent]="data.name" (eventEmitter)="handleCheckbox($event)"></app-user-list>
     <div class="btn-group" *ngIf="data.name === 'Tạo nhóm'">
       <button type="button" class="btn-close" (click)="dialogRef.close()">Đóng</button>
-      <button class="btn-create" (click)="createGroup()" >Tạo nhóm</button>
+      <button [disabled]="form.invalid" class="btn-create" (click)="createGroup()" >Tạo nhóm</button>
     </div>
   </form>
 </div>

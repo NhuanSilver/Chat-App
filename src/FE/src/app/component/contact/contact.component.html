@@ -17,10 +17,10 @@
     </div>
     <div class="contact__content__main__container">
       <div class="main__area">
-        <form class="form">
+        <form class="form" [formGroup]="searchForm">
           <div class="form-group search-group">
             <fa-icon [icon]="faSearch"></fa-icon>
-            <input [placeholder]="TAB.FRIEND_LIST === tab ? 'Tìm bạn' : 'Tìm nhóm'" />
+            <input formControlName ='fullName' [placeholder]="TAB.FRIEND_LIST === tab ? 'Tìm bạn' : 'Tìm nhóm'" />
           </div>
 
           <div (click)="isSortMenu = !isSortMenu" class="form-group condition-group">
@@ -29,19 +29,18 @@
             <fa-icon class="arrow-down" [icon]="faAngleDown"></fa-icon>
             <ul class="filter-menu" [class.show] ="isSortMenu">
               <li *ngFor="let item of sortItems" (click)="setSortItem(item)">
-                <fa-icon [icon]="faCheck"></fa-icon>
+                <span>
+                  <fa-icon [hidden]="currentSortItem !== item" [icon]="faCheck"></fa-icon>
+                </span>
                 {{item}}
               </li>
             </ul>
           </div>
-
-
-
         </form>
 
 
         <div class="friend-list" *ngIf="tab === TAB.FRIEND_LIST">
-          <div class="friend-item"  *ngFor="let friendEntry of friendMap | keyvalue">
+          <div class="friend-item" [hidden]="currentSortItem !== 'Từ A-Z'"  *ngFor="let friendEntry of friendMap | keyvalue : keyAscOrder">
             <div class="friend-letter">
               {{friendEntry.key}}
             </div>
@@ -52,6 +51,20 @@
               </div>
             </div>
           </div>
+
+          <div class="friend-item" [hidden]="currentSortItem !== 'Từ Z-A'"    *ngFor="let friendEntry of friendMap | keyvalue : keyDescOrder">
+            <div class="friend-letter">
+              {{friendEntry.key}}
+            </div>
+            <div class="friend-info" (click)="setMember(friend.requestTo)"  *ngFor="let friend of friendEntry.value">
+              <img class="friend-img" [src]="friend.requestTo.avatarUrl" alt="">
+              <div class="friend-name">{{friend.requestTo.fullName}}
+                <fa-icon [icon]="faEllipsis"></fa-icon>
+              </div>
+            </div>
+          </div>
+
+
         </div>
       </div>
 
