@@ -1,12 +1,12 @@
 package com.silver.amazingchatapp.controller;
 
+import com.silver.amazingchatapp.dto.DeleteMessageRequest;
 import com.silver.amazingchatapp.dto.MessageDTO;
 import com.silver.amazingchatapp.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
@@ -17,8 +17,13 @@ import java.util.Set;
 public class MessagesController {
     private final ChatMessageService messageService;
 
-    @GetMapping("/conversations/{id}/{usernames}")
-    public List<MessageDTO> getChatMessagesByConversationId(@PathVariable Long id, @PathVariable Set<String> usernames) {
-        return messageService.getChatMessagesByConversationId(id, usernames);
+    @GetMapping("/conversations/{id}/{username}")
+    public List<MessageDTO> getChatMessagesByConversationId(@PathVariable Long id, @PathVariable String username) {
+        return messageService.getChatMessagesByConversationId(id, username);
+    }
+
+    @MessageMapping("/user.DeleteMessage")
+    public void deleteMessage (@Payload DeleteMessageRequest request) {
+        messageService.deleteMessage(request);
     }
 }

@@ -2,6 +2,7 @@ package com.silver.amazingchatapp.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.silver.amazingchatapp.dto.DeleteMessageRequest;
 import com.silver.amazingchatapp.dto.MessageDTO;
 import com.silver.amazingchatapp.dto.MessageRequest;
 import com.silver.amazingchatapp.exception.ApiRequestException;
@@ -86,6 +87,7 @@ public class ChatMessageService {
 
         // Save and notify to recipients
         for (User recipient : recipients) {
+            recipient.getMessages().add(chatMessage);
             userRepository.save(recipient);
             this.notifyMessage(recipient.getUsername(), conversation.getId(), chatMessage);
         }
@@ -95,9 +97,9 @@ public class ChatMessageService {
     }
 
 
-    public List<MessageDTO> getChatMessagesByConversationId(Long id, Set<String> usernames) {
+    public List<MessageDTO> getChatMessagesByConversationId(Long id, String username) {
 
-        List<ChatMessage> messages = this.chatMessageRepository.findByConversationIdAndUsersInOrderBySentAt(id, usernames);
+        List<ChatMessage> messages = this.chatMessageRepository.findByConversationIdAndUsersInOrderBySentAt(id, Set.of(username));
         return messages.stream()
                 .map(m -> MessageDTO.builder()
                         .id(m.getId())
@@ -110,6 +112,21 @@ public class ChatMessageService {
                         .build())
                 .collect(Collectors.toList());
 
+    }
+
+
+    private void notifyMessage(String destinationUsername, Long conversationID, ChatMessage message) {
+        messagingTemplate.convertAndSendToUser(destinationUsername, "/queue/messages",
+                MessageDTO.builder()
+                        .id(conversationID)
+                        .conversationId(message.getConversation().getId())
+                        .senderId(message.getSender().getUsername())
+                        .content(message.getType().equals("IMG") ? getImageURI(message.getContent()) : message.getContent()
+                        )
+                        .sentAt(message.getSentAt())
+                        .type(message.getType())
+                        .build()
+        );
     }
 
     private String getImageURI(String content) {
@@ -126,20 +143,6 @@ public class ChatMessageService {
             return "";
         }
 
-    }
-
-    private void notifyMessage(String destinationUsername, Long conversationID, ChatMessage message) {
-        messagingTemplate.convertAndSendToUser(destinationUsername, "/queue/messages",
-                MessageDTO.builder()
-                        .id(conversationID)
-                        .conversationId(message.getConversation().getId())
-                        .senderId(message.getSender().getUsername())
-                        .content(message.getType().equals("IMG") ? getImageURI(message.getContent()) : message.getContent()
-                        )
-                        .sentAt(message.getSentAt())
-                        .type(message.getType())
-                        .build()
-        );
     }
 
     private byte[] getImagByte(String content) {
@@ -176,4 +179,15 @@ public class ChatMessageService {
         return this.saveImage(imgByte, imgExt);
     }
 
+    @Transactional
+    public void deleteMessage(DeleteMessageRequest request) {
+        User user = this.userRepository.findById(request.getUsername()).orElseThrow();
+        ChatMessage message = user.getMessages()
+                .stream()
+                .filter(chatMessage -> chatMessage.getId().equals(request.getMessageId()))
+                .findFirst().orElseThrow();
+        user.getMessages().remove(message);
+        userRepository.save(user);
+        notifyMessage(request.getUsername(), message.getConversation().getId(), message);
+    }
 }
