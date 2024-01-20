@@ -26,8 +26,8 @@ export class ChatService {
   sendMessage(message: MessageRequest){
     this.websocketService.sendMessage(message)
   }
-  getConversationMessages(conversationId : string, usernames : Set<string>) {
-    return this.http.get<ChatMessage[]>(`http://localhost:8080/api/messages/conversations/${conversationId}/${[...usernames]}`);
+  getConversationMessages(conversationId : string, username : string) {
+    return this.http.get<ChatMessage[]>(`http://localhost:8080/api/messages/conversations/${conversationId}/${username}`);
   }
   getConversationByUsernames(sender: string, recipient: string) {
     return this.http.get<Conversation>(`http://localhost:8080/api/conversations/private/${sender}/${recipient}`);
@@ -74,7 +74,7 @@ export class ChatService {
     return this.activeConversationSubject.asObservable()
   }
   getRecipients$() {
-    return this.recipientsSubject?.asObservable()
+    return this.recipientsSubject.asObservable()
   }
 
   setRecipients(members: User[]) {

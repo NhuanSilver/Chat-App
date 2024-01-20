@@ -14,6 +14,37 @@
     position: relative;
     width: 50%;
     align-items: center;
+    &:hover {
+      .options-container {
+        min-width: 2rem;
+        .option {
+          display: inline-block;
+        }
+      }
+    }
+    .options-container {
+      position: relative;
+      .option {
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+      }
+      .option-menu {
+        position: absolute;
+        width: 150px;
+        list-style: none;
+        top: -8rem;
+        left: 2rem;
+        box-shadow: 0 0 6px rgba(15,34,58,.12);
+        li {
+          font-size: 1.4rem;
+          cursor: pointer;
+          padding: 1rem;
+        }
+      }
+    }
+
     .message-image-container {
       left: -4.5rem;
       width: 4.5rem;
@@ -72,6 +103,13 @@
     .message-container {
       justify-content: flex-start;
       flex-direction: row-reverse;
+      .options-container {
+        position: relative;
+        .option-menu {
+          left: -15rem;
+        }
+      }
+
       .message-content {
         color: #fff;
         background-color: $primary-color;
@@ -106,6 +144,7 @@
           object-fit: cover;
         }
       }
+
     }
   }
 

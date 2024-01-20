@@ -1,39 +1,42 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {ChatMessage} from "../../model/ChatMessage";
 import {CommonModule} from "@angular/common";
 import {MessageComponent} from "../message/message.component";
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
-import {faPaperPlane} from "@fortawesome/free-regular-svg-icons";
 import {ChatService} from "../../service/chat.service";
-import {distinctUntilChanged, filter, merge, switchMap, tap} from "rxjs";
+import {distinctUntilChanged, filter, map, merge, switchMap} from "rxjs";
 import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../shared/BaseComponent";
 import {NavigationItemComponent} from "../navigation-item/navigation-item.component";
-import {faSearch, faPhone, faBars, faFaceSmile, faImage} from "@fortawesome/free-solid-svg-icons";
+import {faBars, faPhone, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {NavItem} from "../../model/NavItem";
 import {User} from "../../model/User";
 import {UserService} from "../../service/user.service";
 import {STATUS} from "../../model/STATUS";
 import {PickerComponent} from "@ctrl/ngx-emoji-mart";
-import {MessageRequest} from "../../model/MessageRequest";
+import {FormChatComponent} from "../form-chat/form-chat.component";
 
 @Component({
   selector: 'app-room-content',
   standalone: true,
-  imports: [CommonModule, MessageComponent, ReactiveFormsModule, FaIconComponent, NavigationItemComponent, PickerComponent],
+  imports: [CommonModule, MessageComponent, FaIconComponent, NavigationItemComponent, PickerComponent, FormChatComponent],
   templateUrl: './room-content.component.html',
+  changeDetection: ChangeDetectionStrategy.Default,
   styleUrl: './room-content.component.scss'
 })
-export class RoomContentComponent extends BaseComponent implements OnInit, AfterViewInit {
+export class RoomContentComponent extends BaseComponent implements OnInit{
   @ViewChild('chatBox') chatBox !: ElementRef;
   @ViewChild('emojiPicker') picker !: ElementRef;
   @ViewChild('emojiToggle') togglePicker !: ElementRef<HTMLButtonElement>;
   @ViewChild("inputFile") inputFile !: ElementRef;
-  protected readonly faPaperPlane = faPaperPlane;
   protected readonly STATUS = STATUS;
-  protected readonly faFaceSmile = faFaceSmile;
-  protected readonly faImage = faImage;
 
   protected readonly roomNavItems: NavItem[] = [
     {
@@ -49,42 +52,25 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
       icon: faBars
     }
   ]
-  isEmojiPicker = false;
+
   currentUser = this.userService.getCurrentUser();
 
-  messageForm !: FormGroup;
   chatMessages: ChatMessage[] = [];
   recipients: User[] = [];
   conversation: Conversation | undefined;
-  imgSrcArr: string[] = []
 
-  constructor(private fb: FormBuilder,
+  constructor(
               private chatService: ChatService,
               private userService: UserService,
-              private renderer: Renderer2,
               private cdf: ChangeDetectorRef) {
     super();
 
-    this.messageForm = this.fb.group(
-      {
-        messageControl: ['', [Validators.required, Validators.minLength(1)]]
-      }
-    )
-
   }
 
-  ngAfterViewInit(): void {
-    this.renderer.listen('window', 'click', event => {
-      if (!this.togglePicker.nativeElement.contains(event.target) && !this.picker.nativeElement.contains(event.target)) {
-        this.isEmojiPicker = false;
-      }
-    })
-
-  }
 
   ngOnInit(): void {
-
     this.initConversation();
+    this.chatService.getNewConversation$().subscribe(cvs => this.conversation = cvs)
   }
 
   getPositionOfMessage(message: ChatMessage): string {
@@ -93,113 +79,39 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
     const sameNextSender = message.senderId === this.chatMessages[index + 1]?.senderId;
 
 
-    if (index === 0 && !sameNextSender) return 'fl';
+    if (index === 0 && (!sameNextSender || this.greaterThanNext5Minutes(message)) ) return 'fl';
     if (index === 0) return 'f';
     if (index > 0) {
 
-      if (!sameNextSender && !samePrevSender
-        || !samePrevSender && new Date(this.chatMessages[index + 1].sentAt).getMinutes()- new Date(message.sentAt).getMinutes() >= 5
-        || !sameNextSender && this.greaterThan5Minutes(message)
+      if (
+        !sameNextSender && !samePrevSender
+        || !samePrevSender && this.greaterThanNext5Minutes(message)
+        || !sameNextSender && this.greaterThanPrevious5Minutes(message)
+        || this.greaterThanPrevious5Minutes(message) && this.greaterThanNext5Minutes(message)
+
       ) return "fl";
 
-      if (!sameNextSender || new Date(this.chatMessages[index + 1].sentAt).getMinutes() - new Date(message.sentAt).getMinutes() >= 5) return 'l';
-      if (!samePrevSender && sameNextSender || this.greaterThan5Minutes(message)) return 'f'
+      if (!sameNextSender || this.greaterThanNext5Minutes(message)) return 'l';
+      if (!samePrevSender && sameNextSender || this.greaterThanPrevious5Minutes(message)) return 'f'
     }
     return 'middle';
 
   }
 
-  greaterThan5Minutes(message: ChatMessage) {
+  greaterThanPrevious5Minutes(message: ChatMessage) {
     const index = this.chatMessages.indexOf(message);
     if (index === 0) return true;
-    return new Date(message.sentAt).getMinutes() - new Date(this.chatMessages[index - 1].sentAt).getMinutes() >= 5;
+    return this.minusMinutes(message.sentAt, this.chatMessages[index - 1].sentAt) >= 5;
   }
 
-  readImg(event: Event) {
-
-    const inputElement = event.target as HTMLInputElement;
-    if (inputElement.files) {
-      for (let i = 0; i < inputElement.files.length; i++) {
-        const fileReader = new FileReader();
-        fileReader.onload = _ => {
-          this.imgSrcArr.push(fileReader.result as string)
-        }
-        fileReader.readAsDataURL(inputElement.files[i]);
-      }
-    }
+  greaterThanNext5Minutes (message : ChatMessage) {
+    const index = this.chatMessages.indexOf(message);
+    return this.minusMinutes(this.chatMessages[index + 1].sentAt, message.sentAt) >= 5;
   }
 
-  onSubmit(recipients: User[]) {
-
-    const recipientsClone = [...recipients]
-
-    const message = this.messageForm.get('messageControl')?.value as string
-
-    if (!this.conversation) {
-      this.subscriptions.push(this.chatService.createPrivateChat(this.currentUser.username + "_" + recipientsClone[0].username, recipientsClone[0].username)
-        .subscribe(cvs => {
-
-          if (cvs) {
-            this.conversation = cvs;
-            this.chatService.setNewConversation(this.conversation)
-            this.sendMessageWithCondition(recipientsClone, cvs, message)
-          }
-
-        }))
-
-    } else {
-
-      this.sendMessageWithCondition(recipientsClone, this.conversation, message);
-
-    }
-
+  minusMinutes(a : Date, b : Date) {
+    return  Math.floor(((new Date(a).getTime() - new Date(b).getTime()) / 1000)/60)
   }
-
-
-  onEmojiSelect($event: any) {
-    const inputValue = this.messageForm.controls['messageControl']?.value;
-    this.messageForm.controls['messageControl']?.setValue(inputValue + $event.emoji.native);
-
-  }
-
-
-  openFileInput() {
-    this.inputFile.nativeElement.click()
-  }
-
-
-  deleteImg(imgSrc: string) {
-    this.imgSrcArr.forEach((img, index) => {
-      if (img === imgSrc) this.imgSrcArr.splice(index, 1);
-    })
-  }
-
-  private sendMessage(message: MessageRequest) {
-    this.chatService.sendMessage(message)
-  }
-
-  private sendMessageWithCondition(recipientsClone: User [], cvs: Conversation, message: string) {
-    if (this.imgSrcArr.length > 0) {
-      this.sendMessage({
-        conversationId: cvs.id,
-        content: JSON.stringify(this.imgSrcArr),
-        type: "IMG",
-        recipientIds: recipientsClone.map(re => re.username),
-      });
-    }
-    if (message.trim().length > 0) {
-      this.sendMessage({
-        conversationId: cvs.id,
-        content: message,
-        type: "TEXT",
-        recipientIds: recipientsClone.map(re => re.username),
-      });
-    }
-    this.imgSrcArr = []
-    this.inputFile.nativeElement.value = ""
-    this.messageForm.get('messageControl')?.setValue('')
-  }
-
 
   private initConversation() {
     const conversationOsb = this.chatService.getConversation$().pipe(
@@ -207,33 +119,36 @@ export class RoomContentComponent extends BaseComponent implements OnInit, After
         this.conversation = conversation;
         if (this.conversation) {
           this.recipients = this.conversation.members.filter(member => !this.userService.isCurrentUser(member.username));
-          return this.chatService.getConversationMessages(this.conversation.id,
-            new Set([...this.conversation.members.map(r => r.username)])).pipe(distinctUntilChanged())
+          return this.chatService.getConversationMessages(this.conversation.id, this.currentUser.username).pipe(distinctUntilChanged())
         }
-        this.chatMessages = [];
-        this.cdf.detectChanges();
-        return this.chatService.getRecipients$();
+        return this.chatService.getRecipients$().pipe(
+          map(users => users.filter(member => member.username !== this.currentUser.username))
+        );
 
       })
     )
+
     const chatMssSub = merge(
       conversationOsb,
       this.chatService.getMessage$().pipe(
-        filter(newMessage => this.conversation?.id === newMessage.conversationId),
+        filter(newMessage => this.conversation?.id === newMessage.conversationId)
       )
     ).subscribe(value => {
       if (Array.isArray(value) && value.length > 0 && 'username' in value[0]) {
-        this.recipients = (value as User[]).filter(member => member.username !== this.currentUser.username);
+        this.recipients = value as User[];
+        this.chatMessages = [];
+        this.cdf.detectChanges()
       } else if (Array.isArray(value)) {
 
         this.chatMessages = value as ChatMessage[];
-        this.cdf.detectChanges()
+        this.cdf.detectChanges();
       } else {
 
         this.chatMessages.push(value as ChatMessage);
-        this.cdf.detectChanges()
+        this.cdf.detectChanges();
       }
     })
     this.subscriptions.push(chatMssSub)
   }
+
 }

@@ -152,4 +152,5 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
       data : {name : name}
     })
   }
+
 }

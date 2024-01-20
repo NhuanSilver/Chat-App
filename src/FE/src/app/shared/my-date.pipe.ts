@@ -18,19 +18,19 @@ export class MyDatePipe implements PipeTransform {
           return 'Vài giây trước';
         case differenceInSeconds < 3600:
           const minutes = Math.floor(differenceInSeconds / 60);
-          return `${minutes} ${minutes === 1 ? 'phút' : 'phút'} trước`;
+          return `${minutes} phút trước`;
         case differenceInSeconds < 86400:
           const hours = Math.floor(differenceInSeconds / 3600);
-          return `${hours} ${hours === 1 ? 'giờ' : 'giờ'} trước`;
+          return `${hours} giờ trước`;
         case differenceInSeconds < 2592000:
           const days = Math.floor(differenceInSeconds / 86400);
-          return `${days} ${days === 1 ? 'ngày' : 'ngày'} trước`;
+          return `${days} ngày trước`;
         case differenceInSeconds < 31536000:
           const months = Math.floor(differenceInSeconds / 2592000);
-          return `${months} ${months === 1 ? 'tháng' : 'tháng'} trước`;
+          return `${months} tháng trước`;
         default:
           const years = Math.floor(differenceInSeconds / 31536000);
-          return `${years} ${years === 1 ? 'năm' : 'năm'} trước`;
+          return `${years} năm trước`;
       }
     } else {
       if (

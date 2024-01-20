@@ -1,11 +1,11 @@
 <div class="main">
   <app-navigation-bar style="width: 7.4rem; z-index: 1"></app-navigation-bar>
   <app-navigation-content style="width: 39rem"></app-navigation-content>
-  <div class="main-tab" [class.show]="(mainTab$ | async) === TAB.CHAT" style="flex: 1; z-index: 1">
+  <div class="main-tab" [hidden]="(mainTab$ | async) !== TAB.CHAT" style="flex: 1; z-index: 1">
     <app-room-content></app-room-content>
   </div>
 
-  <div style="flex: 1; z-index: 1;" class="contact-tab" [class.show]="(mainTab$ | async) === TAB.CONTACT">
+  <div style="flex: 1; z-index: 1;" class="contact-tab" [hidden]="(mainTab$ | async) !== TAB.CONTACT">
     <app-contact></app-contact>
   </div>
 </div>
