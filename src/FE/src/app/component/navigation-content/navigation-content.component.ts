@@ -110,10 +110,11 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
         if (value && 'group' in value && !this.conversations.includes(value)) return of(value as Conversation);
 
         if (value && 'conversationId' in value) {
+          if (value.content === 'delete')  return of(undefined);
           const existingConversation = this.conversations.find(cvs => cvs.id === value.conversationId);
           if (existingConversation) {
-            existingConversation.latestMessage = value
-            existingConversation.updateAt = value.sentAt
+              existingConversation.latestMessage = value
+              existingConversation.updateAt = value.sentAt
             if (this.userService.isCurrentUser(value.senderId)) this.chatService.setActiveConversation(existingConversation)
             return of(undefined);
           }

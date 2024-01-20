@@ -143,8 +143,18 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
         this.chatMessages = value as ChatMessage[];
         this.cdf.detectChanges();
       } else {
+        const newMessage = value as ChatMessage
 
-        this.chatMessages.push(value as ChatMessage);
+        if (this.chatMessages.some(mss => mss.id === newMessage.id))  {
+          this.chatMessages.forEach( (mess, index) => {
+            if (newMessage.id === mess.id) {
+              this.chatMessages.splice(index, 1);
+            }
+          })
+        } else {
+          this.chatMessages.push(newMessage)
+        }
+
         this.cdf.detectChanges();
       }
     })

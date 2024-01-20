@@ -111,4 +111,14 @@ export class WebsocketService {
     })
 
   }
+
+  deleteMessage(message: ChatMessage) {
+    this.stompClient.publish({
+      destination: '/app/user.DeleteMessage',
+      body : JSON.stringify({
+        username : this.currentUser.username,
+        messageId : message.id
+      })
+    })
+  }
 }

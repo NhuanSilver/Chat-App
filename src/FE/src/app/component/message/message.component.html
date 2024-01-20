@@ -1,4 +1,4 @@
-<div *ngIf="displaySentAt" style="width: 100%; text-align: center">{{ message.sentAt | myDate }}</div>
+<div class="sent-at" *ngIf="displaySentAt" style="width: 100%; text-align: center">{{ message.sentAt | myDate }}</div>
 
 <div class="message-wrapper" [ngClass]="message.senderId ===  getCurrentUser().username ? 'sender' : '' "
      [class.first]="position === 'f'"
@@ -23,13 +23,13 @@
       <img *ngFor="let imgSrc of imgToDisplay" [src]="imgSrc" alt="">
     </div>
     <div class="options-container">
-      <div #toggleOptionMenu (click)="isOptionMenu = !isOptionMenu" class="option" [hidden]="!isOptionMenu">
+      <div #toggleOptionMenu (click)="toggleMenu()" class="option" [hidden]="!isOptionMenu">
         <span >
           <fa-icon [icon]="faEllipsisVertical"></fa-icon>
         </span>
       </div>
       <ul #optionMenu [hidden]="!isOptionMenu" class="option-menu">
-        <li>Xóa tin nhắn</li>
+        <li (click)="deleteMessage(message)">Xóa tin nhắn</li>
         <li>Sao chép</li>
       </ul>
 

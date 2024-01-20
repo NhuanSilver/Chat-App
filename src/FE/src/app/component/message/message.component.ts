@@ -7,6 +7,7 @@ import {Conversation} from "../../model/Conversation";
 import {MyDatePipe} from "../../shared/my-date.pipe";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faEllipsisVertical} from "@fortawesome/free-solid-svg-icons";
+import {ChatService} from "../../service/chat.service";
 
 @Component({
   selector: 'app-message',
@@ -38,6 +39,7 @@ export class MessageComponent implements OnInit, AfterViewInit {
   imgToDisplay: string [] = [];
 
   constructor(private userService: UserService,
+              private chatService : ChatService,
               private renderer: Renderer2) {
 
   }
@@ -48,7 +50,6 @@ export class MessageComponent implements OnInit, AfterViewInit {
         && !this.optionMenu.nativeElement.contains(e.target)) {
         this.isOptionMenu = false
       }
-
     })
   }
 
@@ -67,4 +68,18 @@ export class MessageComponent implements OnInit, AfterViewInit {
     return this.conversation?.members.find(member => member.username === this.message.senderId)?.avatarUrl
   }
 
+  deleteMessage(message: ChatMessage) {
+    this.chatService.deleteMessage(message)
+  }
+
+  toggleMenu() {
+    this.isOptionMenu = !this.isOptionMenu;
+    const rect = this.optionMenu.nativeElement.getBoundingClientRect();
+    const viewportHeight = document.documentElement.clientHeight;
+
+    if (rect.top <= viewportHeight / 2) {
+      // Phần tử nằm trên nửa màn hình
+      this.renderer.setStyle(this.optionMenu.nativeElement, 'top', '-8rem');
+    }
+  }
 }

@@ -119,4 +119,7 @@ export class ChatService {
       })
   }
 
+  deleteMessage(message: ChatMessage) {
+    this.websocketService.deleteMessage(message);
+  }
 }

@@ -1,4 +1,11 @@
 @import "../../../assets/variables";
+.sent-at {
+  &:first-child {
+    &:first-child {
+      margin-top: 7rem;
+    }
+  }
+}
 .message-wrapper {
   display: flex;
   margin: 0.1rem 0 0 4.5rem;
@@ -31,10 +38,11 @@
         text-align: center;
       }
       .option-menu {
+        z-index: 99999;
         position: absolute;
+        background-color: #ffffff;
         width: 150px;
         list-style: none;
-        top: -8rem;
         left: 2rem;
         box-shadow: 0 0 6px rgba(15,34,58,.12);
         li {

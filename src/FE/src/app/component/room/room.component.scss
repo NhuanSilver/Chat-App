@@ -59,22 +59,26 @@
         font-size: 1.3rem;
       }
     }
-    .latest-message {
-      font-size: 1.3rem;
-      width: 100%;
-      margin: 0;
-      span {
-        display: block;
-        width: 100%;
-        overflow: hidden;
-        white-space: nowrap; /* Don't forget this one */
-        text-overflow: ellipsis;
-        margin-top: 0.4rem;
+    .latest-message-holder {
+      min-height: 2.4rem;
+      .latest-message {
         font-size: 1.3rem;
-        fa-icon {
+        width: 100%;
+        margin: 0;
+        span {
+          display: block;
+          width: 100%;
+          overflow: hidden;
+          white-space: nowrap; /* Don't forget this one */
+          text-overflow: ellipsis;
+          margin-top: 0.4rem;
+          font-size: 1.3rem;
+          fa-icon {
 
+          }
         }
       }
     }
+
   }
 }

@@ -20,7 +20,8 @@
       </span>
       <span class="time" *ngIf="conversation && conversation.latestMessage" >{{conversation.latestMessage.sentAt | myDate : 'detail'}}</span>
     </div>
-    <span class="latest-message" *ngIf="conversation && conversation.latestMessage as message">
+   <div class="latest-message-holder">
+      <span class="latest-message" *ngIf="conversation && conversation.latestMessage as message">
       <span *ngIf="message.type === 'TEXT'"> {{getCurrentUser().username === message.senderId ? 'Bạn: ' +  message.content :  message.content}}</span>
       <span *ngIf="message.type ==='IMG'">
         {{getCurrentUser().username === message.senderId ? 'Bạn: ': ''}}
@@ -28,6 +29,7 @@
         Ảnh
       </span>
     </span>
+   </div>
   </div>
 
 </div>

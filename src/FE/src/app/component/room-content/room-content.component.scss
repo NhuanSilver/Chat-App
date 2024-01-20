@@ -1,6 +1,7 @@
 @import "../../../assets/variables";
 .room-content {
   display: none;
+  position: relative;
   flex-direction: column;
   box-shadow: 0 2px 4px rgba(15,34,58,.12);
   height: 100%;
@@ -9,6 +10,12 @@
   }
   .room-header-container {
     display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    z-index: 2;
     justify-content: space-between;
     border-bottom: 1px solid #f0eff5;
     .room-user-area {
@@ -61,87 +68,8 @@
     }
   }
   .message-area{
-    overflow-y: scroll;
+    overflow-y: auto;
     padding: 2rem 3rem 0;
     flex: 1;
-  }
-  .message-form {
-    border-top: 1px solid #f0eff5;
-    padding: 2rem;
-    .message-img {
-      width: 100%;
-      .img-preview-list {
-        display: flex;
-        padding-bottom: 2rem;
-        gap: 1rem;
-        .img-preview-item {
-          width: 5rem;
-          border-radius: 0.4rem;
-          overflow: hidden;
-          height: 5rem;
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          }
-        }
-      }
-    }
-    .input-message {
-      width: 100%;
-      padding: 1.2rem;
-      margin-right: 1rem;
-      border-radius: 0.6rem;
-      outline: none;
-      border: 1px solid #e6ebf5;
-      background-color: #e6ebf5;
-    }
-   .message-content {
-     display: flex;
-     .form-group-options {
-       display: flex;
-       margin-left: 1rem;
-       position: relative;
-       .emoji-picker{
-         position: absolute;
-         bottom: 100%;
-         right: 0;
-         display: none;
-         &.show {
-           display: block;
-         }
-       }
-       .btn-img {
-         padding: 1rem 1.6rem;
-         border-radius: 0.6rem;
-         background-color: transparent;
-         border: none;
-         cursor: pointer;
-         &:hover {
-           background-color: #e6e8ea;
-         }
-       }
-       .btn-emoji {
-         padding: 1rem 1.6rem;
-         border-radius: 0.6rem;
-         background-color: transparent;
-         border: none;
-         cursor: pointer;
-         position: relative;
-         &:hover {
-           background-color: #e6e8ea;
-         }
-       }
-       .btn-submit {
-         padding: 1rem 1.6rem;
-         font-size: 1.6rem;
-         cursor: pointer;
-         border-radius: 0.6rem;
-         background-color: $primary-color;
-         border: 1px solid $primary-color;
-         color: #fff;
-       }
-     }
-   }
   }
 }
