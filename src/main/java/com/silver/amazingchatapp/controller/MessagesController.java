@@ -21,6 +21,10 @@ public class MessagesController {
     public List<MessageDTO> getChatMessagesByConversationId(@PathVariable Long id, @PathVariable String username) {
         return messageService.getChatMessagesByConversationId(id, username);
     }
+    @GetMapping("/conversation/{id}/users/{username}/latest")
+    public MessageDTO getLatestMessage(@PathVariable Long id, @PathVariable String username) {
+        return this.messageService.getLatestMessage(id, username);
+    }
 
     @MessageMapping("/user.DeleteMessage")
     public void deleteMessage (@Payload DeleteMessageRequest request) {

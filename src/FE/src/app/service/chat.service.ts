@@ -122,4 +122,12 @@ export class ChatService {
   deleteMessage(message: ChatMessage) {
     this.websocketService.deleteMessage(message);
   }
+
+  getLatestMessage(id: string, username: string) {
+    return this.http.get<ChatMessage>(`http://localhost:8080/api/messages/conversation/${id}/users/${username}/latest`)
+  }
+
+  getAllGroup() {
+    return this.http.get<Conversation[]>(`http://localhost:8080/api/conversations/users/${this.userService.getCurrentUser().username}/group`)
+  }
 }

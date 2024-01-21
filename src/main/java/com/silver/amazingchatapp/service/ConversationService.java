@@ -58,4 +58,8 @@ public class ConversationService {
         this.conversationRepository.flush();
         return this.conversationDtoMapper.conversationDto(savedConversation);
     }
+
+    public List<ConversationDTO> getAllGroupConversation(String username) {
+        return this.conversationRepository.findByUsersUsernameAndIsGroup(username, true).stream().map(conversationDtoMapper::conversationDto).toList();
+    }
 }

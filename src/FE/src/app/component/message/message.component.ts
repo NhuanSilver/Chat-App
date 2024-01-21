@@ -24,6 +24,7 @@ import {ChatService} from "../../service/chat.service";
   styleUrl: './message.component.scss'
 })
 export class MessageComponent implements OnInit, AfterViewInit {
+  @Input() isFirstMessage !: boolean
   @Input() message !: ChatMessage
   @Input() displaySentAt !: boolean
   @Input() position !: string

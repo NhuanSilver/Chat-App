@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,15 +28,19 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public UserDto login(LoginRequest loginRequest) {
-
+        String normalUsername =  Normalizer
+                .normalize(loginRequest.getUsername(), Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+                .toLowerCase();
+        log.info(normalUsername);
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
+                        normalUsername,
                         loginRequest.getPassword()
                 )
         );
 
-        User user = userRepository.findById(loginRequest.getUsername())
+        User user = userRepository.findById(normalUsername)
                 .orElseThrow(() -> new ApiRequestException("User not found"));
 
         String jwtToken = jwtService.generateToken(user);

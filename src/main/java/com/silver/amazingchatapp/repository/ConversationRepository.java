@@ -20,4 +20,6 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
                                                   Long usersCount, boolean isGroup);
 
     List<Conversation> findByUsersUsername(String userId);
+
+    List<Conversation> findByUsersUsernameAndIsGroup(String username, boolean isGroup);
 }

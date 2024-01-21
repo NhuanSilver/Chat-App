@@ -1,27 +1,28 @@
-<div class="room-user" (click)="setConversation()" [class.isActive]="conversation.id === (getActivatedCvs() | async)?.id">
-  <div class="user-container" [class.group]="conversation.group">
-    <div class="user" *ngFor="let member of members">
-      <img class="user-img" [src]="member.avatarUrl" alt="">
-      <span class="user-status" *ngIf="member.status === STATUS.ONLINE && !this.conversation.group">
+<ng-container *ngIf="conversation && conversation.latestMessage as message">
+  <div class="room-user" (click)="setConversation()" [class.isActive]="conversation.id === (getActivatedCvs() | async)?.id">
+    <div class="user-container" [class.group]="conversation.group">
+      <div class="user" *ngFor="let member of members">
+        <img class="user-img" [src]="member.avatarUrl" alt="">
+        <span class="user-status" *ngIf="member.status === STATUS.ONLINE && !this.conversation.group">
     </span>
+      </div>
+      <div class="user" *ngIf="conversation.group" >
+        <img class="user-img" [src]="getCurrentUser().avatarUrl" alt="" >
+      </div>
     </div>
-    <div class="user" *ngIf="conversation.group" >
-      <img class="user-img" [src]="getCurrentUser().avatarUrl" alt="">
-    </div>
-  </div>
 
-  <div class="room">
-    <div class="message-info">
+    <div class="room">
+      <div class="message-info">
       <span class="user-fullName"  *ngIf="!conversation.group">
         <ng-container  *ngFor="let member of members">{{member.fullName}}</ng-container>
       </span>
-      <span class="user-fullName"  *ngIf="conversation.group">
+        <span class="user-fullName"  *ngIf="conversation.group">
         {{conversation.name}}
       </span>
-      <span class="time" *ngIf="conversation && conversation.latestMessage" >{{conversation.latestMessage.sentAt | myDate : 'detail'}}</span>
-    </div>
-   <div class="latest-message-holder">
-      <span class="latest-message" *ngIf="conversation && conversation.latestMessage as message">
+        <span class="time" >{{conversation.latestMessage.sentAt | myDate : 'detail'}}</span>
+      </div>
+      <div class="latest-message-holder">
+      <span class="latest-message">
       <span *ngIf="message.contentType === 'TEXT'"> {{getCurrentUser().username === message.senderId ? 'Bạn: ' +  message.content :  message.content}}</span>
       <span *ngIf="message.contentType ==='IMG'">
         {{getCurrentUser().username === message.senderId ? 'Bạn: ': ''}}
@@ -29,8 +30,10 @@
         Ảnh
       </span>
     </span>
-   </div>
+      </div>
+    </div>
+
   </div>
 
-</div>
 
+</ng-container>

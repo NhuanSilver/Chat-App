@@ -128,7 +128,7 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
         filter(newMessage => this.conversation?.id === newMessage.conversationId)
       )
     ).subscribe(value => {
-      if (Array.isArray(value) && value.length > 0 && 'username' in value[0]) {
+      if (this.isUserArr(value)) {
         this.recipients = value as User[];
         this.chatMessages = [];
         this.cdf.detectChanges()
@@ -137,19 +137,13 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
         this.chatMessages = value as ChatMessage[];
         this.cdf.detectChanges();
       } else {
-        const newMessage = value as ChatMessage
 
+        const newMessage = value as ChatMessage
         if (newMessage.messageType == MESSAGE_TYPE.DELETE)  {
-          this.chatMessages.forEach( (mess, index) => {
-            if (newMessage.id === mess.id) {
-              this.chatMessages.splice(index, 1);
-              if (this.conversation?.latestMessage) {
-                this.conversation.latestMessage = this.chatMessages[this.chatMessages.length - 1];
-                this.chatService.setNewConversation(this.conversation)
-              }
-            }
-          })
+
+          this.deleteMessage(newMessage);
         } else {
+
           this.chatMessages.push(newMessage)
         }
 
@@ -159,4 +153,19 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
     this.subscriptions.push(chatMssSub)
   }
 
+  private deleteMessage(newMessage : ChatMessage) {
+    this.chatMessages.forEach( (mess, index) => {
+      if (newMessage.id === mess.id) {
+        this.chatMessages.splice(index, 1);
+        if (this.conversation?.latestMessage) {
+          this.conversation.latestMessage = this.chatMessages[this.chatMessages.length - 1];
+          this.chatService.setNewConversation(this.conversation)
+        }
+      }
+    })
+  }
+
+  private isUserArr(value: unknown) {
+    return  Array.isArray(value) && value.length > 0 && 'username' in value[0]
+  }
 }

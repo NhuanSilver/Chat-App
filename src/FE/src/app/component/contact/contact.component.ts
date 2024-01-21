@@ -11,7 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {TAB} from "../../model/TAB";
 import {TabService} from "../../service/tab.service";
-import {CommonModule, KeyValue} from "@angular/common";
+import {CommonModule, KeyValue, NgOptimizedImage} from "@angular/common";
 import {Friend} from "../../model/Friend";
 import {FriendService} from "../../service/friend.service";
 import {STATUS} from "../../model/STATUS";
@@ -21,6 +21,7 @@ import {User} from "../../model/User";
 import {ChatService} from "../../service/chat.service";
 import {FormBuilder, ReactiveFormsModule} from "@angular/forms";
 import {debounceTime, distinctUntilChanged} from "rxjs";
+import {Conversation} from "../../model/Conversation";
 
 @Component({
   selector: 'app-contact',
@@ -28,7 +29,8 @@ import {debounceTime, distinctUntilChanged} from "rxjs";
   imports: [
     FaIconComponent,
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgOptimizedImage
   ],
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.scss'
@@ -61,6 +63,8 @@ export class ContactComponent extends BaseComponent implements OnInit, AfterView
   searchForm = this.fb.group({
     fullName: ''
   })
+
+  conversations$ = this.chatService.getAllGroup();
 
   constructor(private tabService: TabService,
               private chatService: ChatService,
@@ -168,5 +172,10 @@ export class ContactComponent extends BaseComponent implements OnInit, AfterView
       friendArray.push(friend);
       this.friendMap.set(firstLetter, friendArray);
     })
+  }
+
+  setConv(conv: Conversation) {
+    this.chatService.setConversation(conv)
+    this.tabService.setMainTabSubject(TAB.CHAT)
   }
 }

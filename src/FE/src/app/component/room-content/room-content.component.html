@@ -23,8 +23,9 @@
       </ul>
     </div>
     <div #scrollMe [scrollTop]="scrollMe.scrollHeight" class="message-area">
-      <ng-container *ngFor="let message of chatMessages">
+      <ng-container *ngFor="let message of chatMessages; let isFirst = first">
         <app-message *ngIf="message"
+                     [isFirstMessage] = "isFirst"
                      [displaySentAt] ="greaterThanPrevious5Minutes(message)"
                      [position]="getPositionOfMessage(message)"
                      [conversation]="conversation"

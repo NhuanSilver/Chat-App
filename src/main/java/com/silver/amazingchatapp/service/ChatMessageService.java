@@ -6,6 +6,7 @@ import com.silver.amazingchatapp.dto.DeleteMessageRequest;
 import com.silver.amazingchatapp.dto.MessageDTO;
 import com.silver.amazingchatapp.dto.MessageRequest;
 import com.silver.amazingchatapp.exception.ApiRequestException;
+import com.silver.amazingchatapp.mapper.MessageMapper;
 import com.silver.amazingchatapp.model.ChatMessage;
 import com.silver.amazingchatapp.model.Conversation;
 import com.silver.amazingchatapp.model.MESSAGE_TYPE;
@@ -15,13 +16,11 @@ import com.silver.amazingchatapp.repository.ConversationRepository;
 import com.silver.amazingchatapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.env.Environment;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,7 +34,7 @@ public class ChatMessageService {
     private final SimpMessagingTemplate messagingTemplate;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
-    private final Environment environment;
+    private final MessageMapper messageMapper;
 
     @Transactional
     public void saveMessage(MessageRequest message) {
@@ -49,7 +48,7 @@ public class ChatMessageService {
                 )
                 .collect(Collectors.toSet());
 
-        Conversation  conversation = this.conversationRepository.findById(message.getConversationId())
+        Conversation conversation = this.conversationRepository.findById(message.getConversationId())
                 .orElseThrow(() -> new ApiRequestException("Conversation not found by id: " + message.getConversationId()));
 
         String contentToSave = message.getContent();
@@ -91,11 +90,11 @@ public class ChatMessageService {
         for (User recipient : recipients) {
             recipient.getMessages().add(chatMessage);
             userRepository.save(recipient);
-            this.notifyMessage(recipient.getUsername(), conversation.getId(), chatMessage);
+            this.notifyMessage(recipient.getUsername(), chatMessage);
         }
 
         //Notify to sender
-        this.notifyMessage(sender.getUsername(), conversation.getId(), chatMessage);
+        this.notifyMessage(sender.getUsername(), chatMessage);
     }
 
 
@@ -103,50 +102,18 @@ public class ChatMessageService {
 
         List<ChatMessage> messages = this.chatMessageRepository.findByConversationIdAndUsersInOrderBySentAt(id, Set.of(username));
         return messages.stream()
-                .map(m -> MessageDTO.builder()
-                        .id(m.getId())
-                        .conversationId(messages.get(0).getConversation().getId())
-                        .senderId(m.getSender().getUsername())
-                        .content(m.getContentType().equals("IMG") ? getImageURI(m.getContent()) : m.getContent()
-                        )
-                        .messageType(m.getMessageType())
-                        .sentAt(m.getSentAt())
-                        .contentType(m.getContentType())
-                        .build())
+                .map(messageMapper::toDTO)
                 .collect(Collectors.toList());
 
     }
 
 
-    private void notifyMessage(String destinationUsername, Long conversationID, ChatMessage message) {
-        messagingTemplate.convertAndSendToUser(destinationUsername, "/queue/messages",
-                MessageDTO.builder()
-                        .id(message.getId())
-                        .conversationId(message.getConversation().getId())
-                        .senderId(message.getSender().getUsername())
-                        .content(message.getContentType().equals("IMG") ? getImageURI(message.getContent()) : message.getContent()
-                        )
-                        .sentAt(message.getSentAt())
-                        .contentType(message.getContentType())
-                        .messageType(message.getMessageType())
-                        .build()
+    private void notifyMessage(String destinationUsername, ChatMessage message) {
+        messagingTemplate.convertAndSendToUser(
+                destinationUsername,
+                "/queue/messages",
+                messageMapper.toDTO(message)
         );
-    }
-
-    private String getImageURI(String content) {
-        List<String> imgPaths;
-        try {
-            imgPaths = this.objectMapper.readValue(content, new TypeReference<>() {
-            });
-            final String serverURI = "http://" + InetAddress.getLocalHost().getHostName() + ":" +
-                    this.environment.getProperty("local.server.port") + "/";
-
-            return this.objectMapper.writeValueAsString(imgPaths.stream().map(path -> serverURI + path));
-        } catch (Exception e) {
-            log.info("can not get server uri");
-            return "";
-        }
-
     }
 
     private byte[] getImagByte(String content) {
@@ -193,6 +160,17 @@ public class ChatMessageService {
         user.getMessages().remove(message);
         message.setMessageType(MESSAGE_TYPE.DELETE);
         userRepository.save(user);
-        notifyMessage(request.getUsername(), message.getConversation().getId(), message);
+        notifyMessage(request.getUsername(), message);
+    }
+
+    public MessageDTO getLatestMessage(Long id, String username) {
+        List<ChatMessage> messages = this.chatMessageRepository.findByConversationIdAndUsersInOrderBySentAt(id, Set.of(username));
+        if (messages.isEmpty()) return null;
+        return messages
+                .stream()
+                .skip(messages.size() - 1)
+                .findFirst()
+                .map(this.messageMapper::toDTO)
+                .orElseThrow(null);
     }
 }

@@ -32,6 +32,11 @@ public class ConversationController {
         return this.conversationService.getPrivateConversation(sender, recipient);
     }
 
+    @GetMapping("/users/{username}/group")
+    public List<ConversationDTO> getAllGroupConversation(@PathVariable String username) {
+        return this.conversationService.getAllGroupConversation(username);
+    }
+
     @PostMapping("/private")
     public ConversationDTO createPrivateConversation(@RequestBody @NonNull ConversationRequest request) {
        return this.conversationService.createConversation(request);

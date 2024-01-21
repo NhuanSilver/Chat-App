@@ -63,7 +63,20 @@
               </div>
             </div>
           </div>
+        </div>
 
+
+        <div class="friend-list" *ngIf="tab === TAB.GROUP_LIST">
+          <div class="friend-item" [hidden]="currentSortItem !== 'Từ A-Z'"  *ngFor="let conv of conversations$ | async ">
+            <div class="friend-info" (click)="setConv(conv)" >
+             <div class="group-image">
+               <img *ngFor="let member of conv.members" [src]="member.avatarUrl" alt="">
+             </div>
+              <div class="friend-name">{{conv.name}}
+                <fa-icon [icon]="faEllipsis"></fa-icon>
+              </div>
+            </div>
+          </div>
 
         </div>
       </div>

@@ -1,4 +1,4 @@
-<div class="sent-at" *ngIf="displaySentAt" style="width: 100%; text-align: center">{{ message.sentAt | myDate }}</div>
+<div [class.sent-at] = "isFirstMessage" *ngIf="displaySentAt" style="width: 100%; text-align: center">{{ message.sentAt | myDate }}</div>
 
 <div class="message-wrapper" [ngClass]="message.senderId ===  getCurrentUser().username ? 'sender' : '' "
      [class.first]="position === 'f'"
