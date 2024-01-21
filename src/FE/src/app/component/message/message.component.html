@@ -10,7 +10,7 @@
            class="user-img" src="{{getAvatarUrl() }}"
            alt="">
     </div>
-    <p *ngIf="message.type == 'TEXT'"
+    <p *ngIf="message.contentType == 'TEXT'"
        [class.first]="position === 'f'"
        [class.last]="position === 'l'"
        [class.firstLast]="position === 'fl'"
@@ -19,7 +19,7 @@
     <div class="message-img"
          [class.first]="position === 'f'"
          [class.last]="position === 'l'"
-         *ngIf="message.type == 'IMG'">
+         *ngIf="message.contentType == 'IMG'">
       <img *ngFor="let imgSrc of imgToDisplay" [src]="imgSrc" alt="">
     </div>
     <div class="options-container">

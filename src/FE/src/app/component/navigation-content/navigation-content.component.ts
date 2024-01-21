@@ -17,6 +17,7 @@ import {TabService} from "../../service/tab.service";
 import {TabsListComponent} from "../tabs-list/tabs-list.component";
 import {MatDialog} from "@angular/material/dialog";
 import {PopUpComponent} from "../pop-up/pop-up.component";
+import {MESSAGE_TYPE} from "../../model/MESSAGE_TYPE";
 
 @Component({
   selector: 'app-navigation-content',
@@ -110,7 +111,7 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
         if (value && 'group' in value && !this.conversations.includes(value)) return of(value as Conversation);
 
         if (value && 'conversationId' in value) {
-          if (value.content === 'delete')  return of(undefined);
+          if (value.messageType === MESSAGE_TYPE.DELETE)  return of(undefined);
           const existingConversation = this.conversations.find(cvs => cvs.id === value.conversationId);
           if (existingConversation) {
               existingConversation.latestMessage = value
@@ -125,7 +126,8 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
     )
       .subscribe(conversation => {
         if (conversation) {
-          if(!conversation.group && this.userService.isCurrentUser(conversation.latestMessage?.senderId)) this.chatService.setActiveConversation(conversation)
+          if(!conversation.group && this.userService.isCurrentUser(conversation.latestMessage?.senderId))
+            this.chatService.setActiveConversation(conversation)
           this.conversations = this.sortConversation([...this.conversations, conversation]);
         }
         this.conversations = this.sortConversation(this.conversations)

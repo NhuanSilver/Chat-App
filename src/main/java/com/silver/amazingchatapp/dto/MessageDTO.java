@@ -1,5 +1,6 @@
 package com.silver.amazingchatapp.dto;
 
+import com.silver.amazingchatapp.model.MESSAGE_TYPE;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,5 +13,6 @@ public class MessageDTO {
     private String senderId;
     private String content;
     private Timestamp sentAt;
-    private String type;
+    private String contentType;
+    private MESSAGE_TYPE messageType;
 }

@@ -64,7 +64,7 @@ export class WebsocketService {
           senderId: this.userService.getCurrentUser().username,
           recipientIds: message.recipientIds,
           content: message.content,
-          type: message.type
+          contentType: message.contentType
         }),
       }
     )

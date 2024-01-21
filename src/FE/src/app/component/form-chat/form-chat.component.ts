@@ -134,7 +134,7 @@ export class FormChatComponent extends BaseComponent implements AfterViewInit{
       this.sendMessage({
         conversationId: cvs.id,
         content: JSON.stringify(this.imgSrcArr),
-        type: "IMG",
+        contentType: "IMG",
         recipientIds: recipientsClone.map(re => re.username),
       });
     }
@@ -142,7 +142,7 @@ export class FormChatComponent extends BaseComponent implements AfterViewInit{
       this.sendMessage({
         conversationId: cvs.id,
         content: message,
-        type: "TEXT",
+        contentType: "TEXT",
         recipientIds: recipientsClone.map(re => re.username),
       });
     }

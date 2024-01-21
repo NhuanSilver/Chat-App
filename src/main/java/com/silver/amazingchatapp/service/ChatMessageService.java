@@ -8,6 +8,7 @@ import com.silver.amazingchatapp.dto.MessageRequest;
 import com.silver.amazingchatapp.exception.ApiRequestException;
 import com.silver.amazingchatapp.model.ChatMessage;
 import com.silver.amazingchatapp.model.Conversation;
+import com.silver.amazingchatapp.model.MESSAGE_TYPE;
 import com.silver.amazingchatapp.model.User;
 import com.silver.amazingchatapp.repository.ChatMessageRepository;
 import com.silver.amazingchatapp.repository.ConversationRepository;
@@ -54,7 +55,7 @@ public class ChatMessageService {
         String contentToSave = message.getContent();
         List<String> imgPathSaved = new ArrayList<>();
 
-        if (message.getType().equals("IMG")) {
+        if (message.getContentType().equals("IMG")) {
             List<String> base64Img;
             try {
                 base64Img = objectMapper.readValue(message.getContent(), new TypeReference<>() {
@@ -76,7 +77,8 @@ public class ChatMessageService {
                 .sender(sender)
                 .users(recipients)
                 .conversation(conversation)
-                .type(message.getType())
+                .contentType(message.getContentType())
+                .messageType(MESSAGE_TYPE.NORMAL)
                 .build();
 
         sender.getMessages().add(chatMessage);
@@ -105,10 +107,11 @@ public class ChatMessageService {
                         .id(m.getId())
                         .conversationId(messages.get(0).getConversation().getId())
                         .senderId(m.getSender().getUsername())
-                        .content(m.getType().equals("IMG") ? getImageURI(m.getContent()) : m.getContent()
+                        .content(m.getContentType().equals("IMG") ? getImageURI(m.getContent()) : m.getContent()
                         )
+                        .messageType(m.getMessageType())
                         .sentAt(m.getSentAt())
-                        .type(m.getType())
+                        .contentType(m.getContentType())
                         .build())
                 .collect(Collectors.toList());
 
@@ -118,13 +121,14 @@ public class ChatMessageService {
     private void notifyMessage(String destinationUsername, Long conversationID, ChatMessage message) {
         messagingTemplate.convertAndSendToUser(destinationUsername, "/queue/messages",
                 MessageDTO.builder()
-                        .id(conversationID)
+                        .id(message.getId())
                         .conversationId(message.getConversation().getId())
                         .senderId(message.getSender().getUsername())
-                        .content(message.getType().equals("IMG") ? getImageURI(message.getContent()) : message.getContent()
+                        .content(message.getContentType().equals("IMG") ? getImageURI(message.getContent()) : message.getContent()
                         )
                         .sentAt(message.getSentAt())
-                        .type(message.getType())
+                        .contentType(message.getContentType())
+                        .messageType(message.getMessageType())
                         .build()
         );
     }
@@ -187,6 +191,7 @@ public class ChatMessageService {
                 .filter(chatMessage -> chatMessage.getId().equals(request.getMessageId()))
                 .findFirst().orElseThrow();
         user.getMessages().remove(message);
+        message.setMessageType(MESSAGE_TYPE.DELETE);
         userRepository.save(user);
         notifyMessage(request.getUsername(), message.getConversation().getId(), message);
     }

@@ -1,0 +1,7 @@
+export enum MESSAGE_TYPE {
+  JOIN = 'JOIN',
+  DELETE = 'DELETE',
+  RECALL = 'RECALL',
+  CREATE = 'CREATE',
+  NORMAL = 'NORMAL'
+}

@@ -22,7 +22,7 @@ public class ConversationDTOMapper {
                                 .content(conversation.getLatestMessage().getContent())
                                 .senderId(conversation.getLatestMessage().getSender().getUsername())
                                 .sentAt(conversation.getLatestMessage().getSentAt())
-                                .type(conversation.getLatestMessage().getType())
+                                .contentType(conversation.getLatestMessage().getContentType())
                                 .build() : null
                 )
                 .members(conversation.getUsers().stream()

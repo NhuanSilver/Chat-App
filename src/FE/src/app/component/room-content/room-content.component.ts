@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ChatMessage} from "../../model/ChatMessage";
 import {CommonModule} from "@angular/common";
 import {MessageComponent} from "../message/message.component";
@@ -22,6 +15,7 @@ import {UserService} from "../../service/user.service";
 import {STATUS} from "../../model/STATUS";
 import {PickerComponent} from "@ctrl/ngx-emoji-mart";
 import {FormChatComponent} from "../form-chat/form-chat.component";
+import {MESSAGE_TYPE} from "../../model/MESSAGE_TYPE";
 
 @Component({
   selector: 'app-room-content',
@@ -145,10 +139,14 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
       } else {
         const newMessage = value as ChatMessage
 
-        if (this.chatMessages.some(mss => mss.id === newMessage.id))  {
+        if (newMessage.messageType == MESSAGE_TYPE.DELETE)  {
           this.chatMessages.forEach( (mess, index) => {
             if (newMessage.id === mess.id) {
               this.chatMessages.splice(index, 1);
+              if (this.conversation?.latestMessage) {
+                this.conversation.latestMessage = this.chatMessages[this.chatMessages.length - 1];
+                this.chatService.setNewConversation(this.conversation)
+              }
             }
           })
         } else {

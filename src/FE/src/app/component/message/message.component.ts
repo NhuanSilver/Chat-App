@@ -54,7 +54,7 @@ export class MessageComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    if (this.message.type === "IMG") {
+    if (this.message.contentType === "IMG") {
       this.imgToDisplay = this.JSON.parse(this.message.content)
     }
   }

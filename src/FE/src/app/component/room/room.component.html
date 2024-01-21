@@ -22,8 +22,8 @@
     </div>
    <div class="latest-message-holder">
       <span class="latest-message" *ngIf="conversation && conversation.latestMessage as message">
-      <span *ngIf="message.type === 'TEXT'"> {{getCurrentUser().username === message.senderId ? 'Bạn: ' +  message.content :  message.content}}</span>
-      <span *ngIf="message.type ==='IMG'">
+      <span *ngIf="message.contentType === 'TEXT'"> {{getCurrentUser().username === message.senderId ? 'Bạn: ' +  message.content :  message.content}}</span>
+      <span *ngIf="message.contentType ==='IMG'">
         {{getCurrentUser().username === message.senderId ? 'Bạn: ': ''}}
         <fa-icon [icon]="faImage" > </fa-icon>
         Ảnh

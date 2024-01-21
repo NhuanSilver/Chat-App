@@ -14,5 +14,5 @@ public class MessageRequest {
     private String senderId;
     private List<String> recipientIds;
     private String content;
-    private String type;
+    private String contentType;
 }

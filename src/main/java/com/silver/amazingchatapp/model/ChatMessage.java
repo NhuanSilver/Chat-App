@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -22,7 +21,8 @@ public class ChatMessage {
     private Long id;
     private String content;
     private Timestamp sentAt;
-    private String type;
+    private String contentType;
+    private MESSAGE_TYPE messageType;
     @ManyToOne
     private User sender;
     @ManyToOne
