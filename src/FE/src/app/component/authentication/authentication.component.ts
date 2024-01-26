@@ -75,6 +75,7 @@ export class AuthenticationComponent implements OnInit {
           this.router.navigate(['/'])
         },
         error: err => {
+          console.log(err)
           this.invalidUsernameOrPassword = "Sai tài khoản hoặc mật khẩu"
         }
       })

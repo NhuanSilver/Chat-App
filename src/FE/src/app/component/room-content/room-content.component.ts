@@ -138,7 +138,7 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
         this.cdf.detectChanges();
       } else {
 
-        const newMessage = value as ChatMessage
+        const newMessage = value as ChatMessage;
         if (newMessage.messageType == MESSAGE_TYPE.DELETE)  {
 
           this.deleteMessage(newMessage);

@@ -78,7 +78,8 @@ export class FormChatComponent extends BaseComponent implements AfterViewInit{
       for (let i = 0; i < inputElement.files.length; i++) {
         const fileReader = new FileReader();
         fileReader.onload = _ => {
-          this.imgSrcArr.push(fileReader.result as string)
+          this.imgSrcArr.push(fileReader.result as string);
+          this.cdf.detectChanges();
         }
         fileReader.readAsDataURL(inputElement.files[i]);
       }
@@ -149,6 +150,7 @@ export class FormChatComponent extends BaseComponent implements AfterViewInit{
     this.imgSrcArr = []
     this.inputFile.nativeElement.value = ""
     this.messageForm.get('messageControl')?.setValue('')
+    this.cdf.detectChanges();
   }
 
 }
