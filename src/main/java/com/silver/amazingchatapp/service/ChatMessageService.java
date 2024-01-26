@@ -136,6 +136,14 @@ public class ChatMessageService {
     private String saveImage(byte[] imgByte, String ext) {
         String path = "upload/" + UUID.nameUUIDFromBytes(imgByte) + "." + ext;
         File file = new File(path);
+        File dir = new File("upload");
+        if (!dir.exists()) {
+            boolean isNewFolder = dir.mkdirs();
+            if (!isNewFolder) {
+                log.error("Error when creating a new folder");
+            }
+        }
+
         try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
             outputStream.write(imgByte);
         } catch (IOException e) {
