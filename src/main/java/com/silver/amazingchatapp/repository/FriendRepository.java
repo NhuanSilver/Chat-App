@@ -18,4 +18,6 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     Set<Friend> findByOwnerAndStatus(User owner, FRIEND_STATUS status);
 
     Set<Friend> findByRequestAndStatus(User user, FRIEND_STATUS friendStatus);
+
+    Optional<Friend> findByOwnerUsernameAndRequestUsername(String id, String other);
 }

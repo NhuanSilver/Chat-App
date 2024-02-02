@@ -132,4 +132,7 @@ public class FriendService {
         if (this.friendRepository.existsById(id)) this.friendRepository.deleteById(id);
     }
 
+    public boolean checkFriend(String id, String other) {
+        return this.friendRepository.findByOwnerUsernameAndRequestUsername(id, other).isPresent();
+    }
 }
