@@ -29,6 +29,9 @@
   </ng-container>
 
   <div #searchMenu class="search-menu" [class.show]="isSearchMenu">
-    <app-user-list [users$]="users$"></app-user-list>
+    <table>
+      <app-user-list [user]="user" *ngFor="let user of (users$ | async)">
+      </app-user-list>
+    </table>
   </div>
 </div>

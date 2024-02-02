@@ -1,60 +1,56 @@
 @import "../../../assets/variables";
-.user-list{
-  width: 100%;
-  height: 100%;
-  background-color: #f5f7fb;
-  &.add-friend {
+
+.user {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  height: 6rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e6e8ea;
+  }
+
+  input {
 
   }
 
+  .info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    font-size: 1.6rem;
+    gap: 2rem;
 
-  table {
-    display: block;
-    max-height: 100%;
-    max-width: 100%;
-    overflow-y: auto;
-    .user {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      padding: 2rem;
-      height: 6rem;
+    img {
+      width: 4rem;
+      height: 4rem;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+
+  .action {
+    display: flex;
+    align-items: center;
+
+    button {
       cursor: pointer;
-      &:hover {
-        background-color: #e6e8ea;
-      }
-      input {
+      padding: 0.6rem 2rem;
+      background-color: $primary-color;
+      color: #ffffff;
+      border: 1px solid $primary-color;
+      border-radius: 0.4rem;
 
+      &:hover {
+        opacity: 0.9;
       }
-      .info {
-        display: flex;
-        align-items: center;
-        flex: 1;
-        font-size: 1.6rem;
-        gap: 2rem;
-        img {
-          width: 4rem;
-          height: 4rem;
-          object-fit: cover;
-          border-radius: 50%;
-        }
-      }
-      .action {
-        display: flex;
-        align-items: center;
-        button {
-          cursor: pointer;
-          padding: 0.6rem 2rem;
-          background-color: $primary-color;
-          color: #ffffff;
-          border: 1px solid $primary-color;
-          border-radius: 0.4rem;
-          &:hover {
-            opacity: 0.9;
-          }
-        }
+      &:disabled {
+        opacity: 0.6;
       }
     }
   }
 }
+

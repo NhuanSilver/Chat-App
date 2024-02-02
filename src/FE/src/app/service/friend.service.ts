@@ -33,6 +33,9 @@ export class FriendService {
   getFriend$() {
     return this.webSocketService.getFriend$();
   }
+  checkFriend(username : string) {
+    return this.http.get<boolean>(`http://localhost:8080/api/friends/users/${this.currentUser.username}/isFriend/${username}`)
+  }
 
 
 }

@@ -82,6 +82,13 @@
     left: 0;
     right: 0;
     height: calc(100% - 7.36rem);
+    table {
+      display: block;
+      max-width: 100%;
+      overflow-y: auto;
+      height: 100%;
+      background-color: #f5f7fb;
+    }
     &.show {
       display: block;
       z-index: 9999;

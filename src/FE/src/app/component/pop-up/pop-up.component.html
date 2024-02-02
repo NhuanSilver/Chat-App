@@ -8,7 +8,15 @@
       <fa-icon [icon]="faSearch"></fa-icon>
       <input class="search-value"  placeholder="Nhập tên hoặc ID" [formControlName]="controlProps.SEARCH">
     </div>
-    <app-user-list [users$]="users$" [parent]="data.name" (eventEmitter)="handleCheckbox($event)"></app-user-list>
+    <table>
+      <app-user-list [user]="user"
+                     [parent]="data.name"
+                     *ngFor="let user of (users$ | async)"
+                     (eventEmitter)="handleCheckbox($event)"
+      >
+      </app-user-list>
+    </table>
+
     <div class="btn-group" *ngIf="data.name === 'Tạo nhóm'">
       <button type="button" class="btn-close" (click)="dialogRef.close()">Đóng</button>
       <button [disabled]="form.invalid" class="btn-create" (click)="createGroup()" >Tạo nhóm</button>

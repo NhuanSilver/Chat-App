@@ -10,6 +10,12 @@
 
   }
   .form {
+    table {
+      display: block;
+      max-height: 100%;
+      max-width: 100%;
+      overflow-y: auto;
+      }
 
     .form-group--name {
       margin: 2rem 0;

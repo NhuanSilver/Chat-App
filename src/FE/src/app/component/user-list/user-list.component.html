@@ -1,14 +1,10 @@
-<div class="user-list {{getParentClassName()}}">
-  <table>
-    <tr class="user" (click)="setMember(user)" *ngFor="let user of (users$ | async)">
+    <tr class="user" (click)="setMember(user)">
       <input #checkbox (change)="sendUsernameToParent($event)" *ngIf="parent ===  'Tạo nhóm'" [value]="user.username" type="checkbox">
       <div class="info">
         <img [src]="user.avatarUrl" alt="">
         <span>{{user.fullName}}</span>
       </div>
       <div class="action" *ngIf="parent ===  'Thêm bạn'" >
-        <button (click)="addFriend(user.username, $event)">Kết bạn</button>
+        <button [disabled]="(isFriend | async) || isSent"  (click)="addFriend(user.username, $event)">Kết bạn</button>
       </div>
     </tr>
-  </table>
-</div>

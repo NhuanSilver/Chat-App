@@ -7,7 +7,7 @@ import {BaseComponent} from "../../shared/BaseComponent";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faAdd, faSearch, faUserGroup} from "@fortawesome/free-solid-svg-icons";
 import {UserListComponent} from "../user-list/user-list.component";
-import {catchError, debounceTime, distinctUntilChanged, map, Observable, of, switchMap, merge, filter} from "rxjs";
+import {catchError, debounceTime, distinctUntilChanged, map, Observable, of, switchMap, merge} from "rxjs";
 import {UserService} from "../../service/user.service";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {environment} from "../../../environments/environment.development";
