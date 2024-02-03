@@ -3,7 +3,7 @@ package com.silver.amazingchatapp.service;
 import com.silver.amazingchatapp.dto.AddFriendRequest;
 import com.silver.amazingchatapp.dto.FriendDTO;
 import com.silver.amazingchatapp.exception.ApiRequestException;
-import com.silver.amazingchatapp.mapper.UserDTOMapper;
+import com.silver.amazingchatapp.mapper.FriendDTOMapper;
 import com.silver.amazingchatapp.model.FRIEND_STATUS;
 import com.silver.amazingchatapp.model.Friend;
 import com.silver.amazingchatapp.model.User;
@@ -24,34 +24,20 @@ import java.util.Set;
 @Slf4j
 public class FriendService {
     private final FriendRepository friendRepository;
+    private final FriendDTOMapper friendDTOMapper;
     private final UserRepository userRepository;
-    private final UserDTOMapper userDTOMapper;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     public List<FriendDTO> getFriendsByUser(String username) {
         User user = this.userRepository.findById(username).orElseThrow(() -> new ApiRequestException("User not found"));
         return friendRepository.findByOwnerAndStatus(user, FRIEND_STATUS.ACTIVE)
-                .stream().map(friend ->
-                        FriendDTO.builder()
-                                .id(friend.getId())
-                                .owner(userDTOMapper.toDTO(friend.getOwner()))
-                                .requestTo(userDTOMapper.toDTO(friend.getRequest()))
-                                .status(friend.getStatus())
-                                .build()
-                ).toList();
+                .stream().map(friendDTOMapper::toFriedDTO).toList();
     }
 
     public List<FriendDTO> getFriendsRequestByUser(String username) {
         User user = this.userRepository.findById(username).orElseThrow(() -> new ApiRequestException("User not found"));
         return friendRepository.findByRequestAndStatus(user, FRIEND_STATUS.PENDING)
-                .stream().map(friend ->
-                        FriendDTO.builder()
-                                .id(friend.getId())
-                                .owner(userDTOMapper.toDTO(friend.getOwner()))
-                                .requestTo(userDTOMapper.toDTO(friend.getRequest()))
-                                .status(friend.getStatus())
-                                .build()
-                ).toList();
+                .stream().map(friendDTOMapper::toFriedDTO).toList();
     }
 
     public void addFriend(AddFriendRequest request) {
@@ -86,16 +72,7 @@ public class FriendService {
                 existedFriend.setStatus(FRIEND_STATUS.ACTIVE);
                 friendRepository.save(existedFriend);
 
-
-
-                Friend friendAccepted = friendRepository.save(acceptFriend);
-
-                FriendDTO friendAcceptedDTO = FriendDTO.builder()
-                        .id(friendAccepted.getId())
-                        .owner(this.userDTOMapper.toDTO(friendAccepted.getOwner()))
-                        .requestTo(this.userDTOMapper.toDTO(friendAccepted.getRequest()))
-                        .status(friendAccepted.getStatus())
-                        .build();
+                FriendDTO friendAcceptedDTO = friendDTOMapper.toFriedDTO(friendRepository.save(acceptFriend));
 
                 this.simpMessagingTemplate.convertAndSendToUser(request.getOwner(), "/queue/friends", friendAcceptedDTO);
 
@@ -103,7 +80,6 @@ public class FriendService {
             }
             return;
         }
-
 
         // Create new friend request
         Friend friendRequest = this.friendRepository.save(
@@ -115,13 +91,7 @@ public class FriendService {
                         .build()
 
         );
-
-        FriendDTO friendDTO = FriendDTO.builder()
-                .id(friendRequest.getId())
-                .owner(this.userDTOMapper.toDTO(owner))
-                .requestTo(this.userDTOMapper.toDTO(requestTo))
-                .status(friendRequest.getStatus())
-                .build();
+        FriendDTO friendDTO = friendDTOMapper.toFriedDTO(friendRequest);
 
         this.simpMessagingTemplate.convertAndSendToUser(request.getOwner(), "/queue/friends", friendDTO);
         this.simpMessagingTemplate.convertAndSendToUser(request.getRequestTo(), "/queue/friends", friendDTO);

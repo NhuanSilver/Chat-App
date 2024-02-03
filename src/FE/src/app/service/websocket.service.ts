@@ -121,4 +121,14 @@ export class WebsocketService {
       })
     })
   }
+
+  recallMessage(message : ChatMessage) {
+    this.stompClient.publish({
+      destination: '/app/user.RecallMessage',
+      body : JSON.stringify({
+        username : this.currentUser.username,
+        messageId : message.id
+      })
+    })
+  }
 }

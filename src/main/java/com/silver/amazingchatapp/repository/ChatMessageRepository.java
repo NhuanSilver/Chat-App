@@ -9,7 +9,7 @@ import java.util.Set;
 
 
 @Repository
-public interface ChatMessageRepository extends JpaRepository<ChatMessage, String> {
+public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
 
     List<ChatMessage> findByConversationIdAndUsersInOrderBySentAt(Long conversation_id, Set<String> users);
 }

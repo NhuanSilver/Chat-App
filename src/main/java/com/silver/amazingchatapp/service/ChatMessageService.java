@@ -2,7 +2,7 @@ package com.silver.amazingchatapp.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.silver.amazingchatapp.dto.DeleteMessageRequest;
+import com.silver.amazingchatapp.dto.EditMessageRequest;
 import com.silver.amazingchatapp.dto.MessageDTO;
 import com.silver.amazingchatapp.dto.MessageRequest;
 import com.silver.amazingchatapp.exception.ApiRequestException;
@@ -77,7 +77,7 @@ public class ChatMessageService {
                 .users(recipients)
                 .conversation(conversation)
                 .contentType(message.getContentType())
-                .messageType(MESSAGE_TYPE.NORMAL)
+                .messageType(MESSAGE_TYPE.CREATE)
                 .build();
 
         sender.getMessages().add(chatMessage);
@@ -158,16 +158,15 @@ public class ChatMessageService {
         return this.saveImage(imgByte, imgExt);
     }
 
-    @Transactional
-    public void deleteMessage(DeleteMessageRequest request) {
+    public void deleteMessage(EditMessageRequest request) {
         User user = this.userRepository.findById(request.getUsername()).orElseThrow();
         ChatMessage message = user.getMessages()
                 .stream()
                 .filter(chatMessage -> chatMessage.getId().equals(request.getMessageId()))
                 .findFirst().orElseThrow();
         user.getMessages().remove(message);
+        userRepository.saveAndFlush(user);
         message.setMessageType(MESSAGE_TYPE.DELETE);
-        userRepository.save(user);
         notifyMessage(request.getUsername(), message);
     }
 
@@ -180,5 +179,17 @@ public class ChatMessageService {
                 .findFirst()
                 .map(this.messageMapper::toDTO)
                 .orElseThrow(null);
+    }
+
+    public void recallMessage(EditMessageRequest request) {
+        ChatMessage message = this.chatMessageRepository.findById(request.getMessageId()).orElseThrow();
+
+        // User is not sender
+        if (!message.isSender(request.getUsername())) return;
+
+        // Update and notify for users
+        message.setContent("Recall message");
+        message.setMessageType(MESSAGE_TYPE.RECALL);
+        message.getUsers().forEach(user -> notifyMessage(user.getUsername(), chatMessageRepository.save(message)));
     }
 }

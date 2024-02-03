@@ -1,25 +1,26 @@
-<div [class.sent-at] = "isFirstMessage" *ngIf="displaySentAt" style="width: 100%; text-align: center">{{ message.sentAt | myDate }}</div>
+<div [class.sent-at] = "isFirstMessage" *ngIf="displaySentAt" style="width: 100%; text-align: center">
+  {{ message.sentAt | myDate }}</div>
 
-<div class="message-wrapper" [ngClass]="message.senderId ===  getCurrentUser().username ? 'sender' : '' "
+<div class="message-wrapper" [ngClass]="message.sender.username ===  getCurrentUser().username ? 'sender' : '' "
      [class.first]="position === 'f'"
      [class.last]="position === 'l'"
      [class.firstLast]="position === 'fl'">
   <div class="message-container">
-    <div *ngIf="message.senderId !==  getCurrentUser().username" class="message-image-container">
+    <div *ngIf="message.sender.username !==  getCurrentUser().username" class="message-image-container">
       <img *ngIf="(position === 'l' || position ==='fl')"
            class="user-img" src="{{getAvatarUrl() }}"
            alt="">
     </div>
-    <p *ngIf="message.contentType == 'TEXT'"
+    <p *ngIf="message.contentType == 'TEXT' || message.messageType === MESSAGE_TYPE.RECALL"
        [class.first]="position === 'f'"
        [class.last]="position === 'l'"
        [class.firstLast]="position === 'fl'"
        class="message-content">
-      {{ message.content }}</p>
+      {{ message | message }}</p>
     <div class="message-img"
          [class.first]="position === 'f'"
          [class.last]="position === 'l'"
-         *ngIf="message.contentType == 'IMG'">
+         *ngIf="imgToDisplay.length > 0">
       <img *ngFor="let imgSrc of imgToDisplay" [src]="imgSrc" alt="">
     </div>
     <div class="options-container">
@@ -30,7 +31,7 @@
       </div>
       <ul #optionMenu [hidden]="!isOptionMenu" class="option-menu">
         <li (click)="deleteMessage(message)">Xóa tin nhắn</li>
-        <li>Sao chép</li>
+        <li *ngIf="this.getCurrentUser().username === message.sender.username && message.messageType !== MESSAGE_TYPE.RECALL" (click)="recallMessage(message)">Thu hồi tin nhắn</li>
       </ul>
 
     </div>

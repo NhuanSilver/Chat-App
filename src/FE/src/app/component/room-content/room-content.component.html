@@ -3,7 +3,7 @@
       <div class="room-user-area">
         <div class="room-user-img" [class.group] ="conversation?.group">
             <img [src]="recipient.avatarUrl" alt="" *ngFor="let recipient of recipients">
-            <img *ngIf="conversation?.group" [src]="currentUser.avatarUrl">
+            <img *ngIf="conversation?.group" [src]="currentUser.avatarUrl" alt="">
         </div>
         <div *ngIf="!conversation?.group" class="room-user-name">
           <span class="room-user-name-content" *ngFor="let recipient of recipients; let isLast = last">

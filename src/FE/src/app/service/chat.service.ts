@@ -123,6 +123,10 @@ export class ChatService {
     this.websocketService.deleteMessage(message);
   }
 
+  recallMessage(message: ChatMessage) {
+    this.websocketService.recallMessage(message)
+  }
+
   getLatestMessage(id: string, username: string) {
     return this.http.get<ChatMessage>(`http://localhost:8080/api/messages/conversation/${id}/users/${username}/latest`)
   }

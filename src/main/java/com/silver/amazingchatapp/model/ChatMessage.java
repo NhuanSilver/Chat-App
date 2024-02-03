@@ -27,6 +27,10 @@ public class ChatMessage {
     private User sender;
     @ManyToOne
     private Conversation conversation;
-    @ManyToMany(mappedBy = "messages")
+    @ManyToMany(mappedBy = "messages", fetch = FetchType.EAGER)
     private Set<User> users = new HashSet<>();
+
+    public boolean isSender(String username) {
+        return this.sender.getUsername().equals(username);
+    }
 }

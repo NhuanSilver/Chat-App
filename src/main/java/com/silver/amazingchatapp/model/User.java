@@ -29,7 +29,7 @@ public class User implements UserDetails {
     @ManyToMany
     private Set<Conversation> conversations;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_message",
             joinColumns = @JoinColumn(name = "user_id"),

@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 public class MessageDTO {
     private Long id;
     private Long conversationId;
-    private String senderId;
+    private UserDto sender;
     private String content;
     private Timestamp sentAt;
     private String contentType;

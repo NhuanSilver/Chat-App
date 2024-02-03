@@ -1,6 +1,6 @@
 package com.silver.amazingchatapp.controller;
 
-import com.silver.amazingchatapp.dto.DeleteMessageRequest;
+import com.silver.amazingchatapp.dto.EditMessageRequest;
 import com.silver.amazingchatapp.dto.MessageDTO;
 import com.silver.amazingchatapp.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,6 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +26,12 @@ public class MessagesController {
     }
 
     @MessageMapping("/user.DeleteMessage")
-    public void deleteMessage (@Payload DeleteMessageRequest request) {
+    public void deleteMessage (@Payload EditMessageRequest request) {
         messageService.deleteMessage(request);
+    }
+
+    @MessageMapping("/user.RecallMessage")
+    public void recallMessage(@Payload EditMessageRequest request) {
+        messageService.recallMessage(request);
     }
 }

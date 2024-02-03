@@ -8,6 +8,8 @@ import {MyDatePipe} from "../../shared/my-date.pipe";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faEllipsisVertical} from "@fortawesome/free-solid-svg-icons";
 import {ChatService} from "../../service/chat.service";
+import {MESSAGE_TYPE} from "../../model/MESSAGE_TYPE";
+import {MessagePipe} from "../../shared/message.pipe";
 
 @Component({
   selector: 'app-message',
@@ -18,6 +20,7 @@ import {ChatService} from "../../service/chat.service";
     NgForOf,
     DatePipe,
     MyDatePipe,
+    MessagePipe,
     FaIconComponent
   ],
   templateUrl: './message.component.html',
@@ -38,6 +41,7 @@ export class MessageComponent implements OnInit, AfterViewInit {
   isOptionMenu: boolean = false;
 
   imgToDisplay: string [] = [];
+  protected readonly MESSAGE_TYPE = MESSAGE_TYPE;
 
   constructor(private userService: UserService,
               private chatService : ChatService,
@@ -55,7 +59,7 @@ export class MessageComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    if (this.message.contentType === "IMG") {
+    if (this.message.contentType === "IMG" && this.message.messageType !== MESSAGE_TYPE.RECALL) {
       this.imgToDisplay = this.JSON.parse(this.message.content)
     }
   }
@@ -66,21 +70,19 @@ export class MessageComponent implements OnInit, AfterViewInit {
   }
 
   getAvatarUrl() {
-    return this.conversation?.members.find(member => member.username === this.message.senderId)?.avatarUrl
+    return this.conversation?.members.find(member => member.username === this.message.sender.username)?.avatarUrl
   }
 
   deleteMessage(message: ChatMessage) {
     this.chatService.deleteMessage(message)
   }
 
+  recallMessage(message: ChatMessage) {
+    this.chatService.recallMessage(message)
+  }
+
   toggleMenu() {
     this.isOptionMenu = !this.isOptionMenu;
-    const rect = this.optionMenu.nativeElement.getBoundingClientRect();
-    const viewportHeight = document.documentElement.clientHeight;
-
-    if (rect.top <= viewportHeight / 2) {
-      // Phần tử nằm trên nửa màn hình
-      this.renderer.setStyle(this.optionMenu.nativeElement, 'top', '-8rem');
-    }
   }
+
 }

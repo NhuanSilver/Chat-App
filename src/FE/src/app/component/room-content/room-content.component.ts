@@ -25,7 +25,7 @@ import {MESSAGE_TYPE} from "../../model/MESSAGE_TYPE";
   changeDetection: ChangeDetectionStrategy.Default,
   styleUrl: './room-content.component.scss'
 })
-export class RoomContentComponent extends BaseComponent implements OnInit{
+export class RoomContentComponent extends BaseComponent implements OnInit {
   @ViewChild('chatBox') chatBox !: ElementRef;
   @ViewChild('emojiPicker') picker !: ElementRef;
   @ViewChild('emojiToggle') togglePicker !: ElementRef<HTMLButtonElement>;
@@ -54,9 +54,9 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
   conversation: Conversation | undefined;
 
   constructor(
-              private chatService: ChatService,
-              private userService: UserService,
-              private cdf: ChangeDetectorRef) {
+    private chatService: ChatService,
+    private userService: UserService,
+    private cdf: ChangeDetectorRef) {
     super();
 
   }
@@ -69,11 +69,11 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
 
   getPositionOfMessage(message: ChatMessage): string {
     const index = this.chatMessages.indexOf(message);
-    const samePrevSender = message.senderId === this.chatMessages[index - 1]?.senderId;
-    const sameNextSender = message.senderId === this.chatMessages[index + 1]?.senderId;
+    const samePrevSender = message.sender.username === this.chatMessages[index - 1]?.sender.username;
+    const sameNextSender = message.sender.username === this.chatMessages[index + 1]?.sender.username;
 
 
-    if (index === 0 && (!sameNextSender || this.greaterThanNext5Minutes(message)) ) return 'fl';
+    if (index === 0 && (!sameNextSender || this.greaterThanNext5Minutes(message))) return 'fl';
     if (index === 0) return 'f';
     if (index > 0) {
 
@@ -98,13 +98,13 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
     return this.minusMinutes(message.sentAt, this.chatMessages[index - 1].sentAt) >= 5;
   }
 
-  greaterThanNext5Minutes (message : ChatMessage) {
+  greaterThanNext5Minutes(message: ChatMessage) {
     const index = this.chatMessages.indexOf(message);
     return this.minusMinutes(this.chatMessages[index + 1].sentAt, message.sentAt) >= 5;
   }
 
-  minusMinutes(a : Date, b : Date) {
-    return  Math.floor(((new Date(a).getTime() - new Date(b).getTime()) / 1000)/60)
+  minusMinutes(a: Date, b: Date) {
+    return Math.floor(((new Date(a).getTime() - new Date(b).getTime()) / 1000) / 60)
   }
 
   private initConversation() {
@@ -120,52 +120,65 @@ export class RoomContentComponent extends BaseComponent implements OnInit{
         );
 
       })
-    )
-
-    const chatMssSub = merge(
-      conversationOsb,
-      this.chatService.getMessage$().pipe(
-        filter(newMessage => this.conversation?.id === newMessage.conversationId)
-      )
     ).subscribe(value => {
+
       if (this.isUserArr(value)) {
+
         this.recipients = value as User[];
         this.chatMessages = [];
         this.cdf.detectChanges()
+
       } else if (Array.isArray(value)) {
 
         this.chatMessages = value as ChatMessage[];
-        this.cdf.detectChanges();
-      } else {
-
-        const newMessage = value as ChatMessage;
-        if (newMessage.messageType == MESSAGE_TYPE.DELETE)  {
-
-          this.deleteMessage(newMessage);
-        } else {
-
-          this.chatMessages.push(newMessage)
-        }
-
+        console.log(this.chatMessages)
         this.cdf.detectChanges();
       }
     })
-    this.subscriptions.push(chatMssSub)
+
+   const newMessageSub =  this.chatService.getMessage$().pipe(
+     filter(newMessage => this.conversation?.id === newMessage.conversationId)
+   )
+     .subscribe(newMessage => {
+
+       if (newMessage.messageType === MESSAGE_TYPE.CREATE) {
+         this.chatMessages.push(newMessage)
+       } else {
+         this.editMessage(newMessage);
+       }
+       this.cdf.detectChanges();
+
+     })
+    this.subscriptions.push(newMessageSub)
+    this.subscriptions.push(conversationOsb)
   }
 
-  private deleteMessage(newMessage : ChatMessage) {
-    this.chatMessages.forEach( (mess, index) => {
+  private editMessage(newMessage: ChatMessage) {
+    this.chatMessages.forEach((mess, index) => {
       if (newMessage.id === mess.id) {
-        this.chatMessages.splice(index, 1);
-        if (this.conversation?.latestMessage) {
-          this.conversation.latestMessage = this.chatMessages[this.chatMessages.length - 1];
-          this.chatService.setNewConversation(this.conversation)
+
+        if (newMessage.messageType === MESSAGE_TYPE.DELETE) {
+          this.chatMessages.splice(index, 1);
+         this.notifyLatestMessage();
         }
+
+        if (newMessage.messageType === MESSAGE_TYPE.RECALL) {
+          this.chatMessages[index] = newMessage;
+          this.notifyLatestMessage();
+
+        }
+
       }
     })
   }
-
-  private isUserArr(value: unknown) {
-    return  Array.isArray(value) && value.length > 0 && 'username' in value[0]
+  private notifyLatestMessage() {
+    if (this.conversation?.latestMessage) {
+      this.conversation.latestMessage = this.chatMessages[this.chatMessages.length - 1];
+      this.chatService.setNewConversation(this.conversation)
+    }
   }
+  private isUserArr(value: unknown) {
+    return Array.isArray(value) && value.length > 0 && 'username' in value[0]
+  }
+
 }

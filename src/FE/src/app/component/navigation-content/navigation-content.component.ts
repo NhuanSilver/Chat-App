@@ -111,12 +111,13 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
         if (value && 'group' in value && !this.conversations.includes(value)) return of(value as Conversation);
 
         if (value && 'conversationId' in value) {
-          if (value.messageType === MESSAGE_TYPE.DELETE)  return of(undefined);
+
+          if (value.messageType === MESSAGE_TYPE.DELETE || value.messageType === MESSAGE_TYPE.RECALL)  return of(undefined);
           const existingConversation = this.conversations.find(cvs => cvs.id === value.conversationId);
           if (existingConversation) {
               existingConversation.latestMessage = value
               existingConversation.updateAt = value.sentAt
-            if (this.userService.isCurrentUser(value.senderId)) this.chatService.setActiveConversation(existingConversation)
+            if (this.userService.isCurrentUser(value.sender.username)) this.chatService.setActiveConversation(existingConversation)
             return of(undefined);
           }
           return this.chatService.getConversationById(value.conversationId)
@@ -126,7 +127,7 @@ export class NavigationContentComponent extends BaseComponent implements OnInit,
     )
       .subscribe(conversation => {
         if (conversation) {
-          if(!conversation.group && this.userService.isCurrentUser(conversation.latestMessage?.senderId))
+          if(!conversation.group && this.userService.isCurrentUser(conversation.latestMessage?.sender.username))
             this.chatService.setActiveConversation(conversation)
           this.conversations = this.sortConversation([...this.conversations, conversation]);
         }

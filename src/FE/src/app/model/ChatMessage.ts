@@ -1,9 +1,10 @@
 import {MESSAGE_TYPE} from "./MESSAGE_TYPE";
+import {User} from "./User";
 
 export interface ChatMessage {
   id : string,
   conversationId: string
-  senderId : string,
+  sender : User,
   content: string,
   sentAt: Date,
   contentType: string,

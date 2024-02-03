@@ -5,5 +5,4 @@ public enum MESSAGE_TYPE {
     DELETE,
     RECALL,
     CREATE,
-    NORMAL
 }
