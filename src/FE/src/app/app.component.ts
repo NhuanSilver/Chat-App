@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RouterLink, RouterOutlet} from '@angular/router';
 import {NavigationBarComponent} from "./component/navigation-bar/navigation-bar.component";
-import {NavigationContentComponent} from "./component/navigation-content/navigation-content.component";
-import {RoomContentComponent} from "./component/room-content/room-content.component";
+import {SideBarComponent} from "./component/side-bar/side-bar.component";
+import {ChatAreaComponent} from "./component/chat-area/chat-area.component";
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, NavigationBarComponent, NavigationContentComponent, RoomContentComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, NavigationBarComponent, SideBarComponent, ChatAreaComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

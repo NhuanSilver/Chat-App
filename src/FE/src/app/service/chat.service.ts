@@ -9,6 +9,7 @@ import {User} from "../model/User";
 import {TabService} from "./tab.service";
 import {TAB} from "../model/TAB";
 import {MessageRequest} from "../model/MessageRequest";
+import {environment} from "../../environments/environment.development";
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class ChatService {
   private recipientsSubject = new BehaviorSubject<User[]>([]);
   private activeConversationSubject : BehaviorSubject<Conversation | undefined> = new BehaviorSubject<Conversation | undefined>(undefined);
   private newConversation = new Subject<Conversation>();
+  private API_BASE = environment.API_BASE;
   constructor(private websocketService : WebsocketService,
               private tabService : TabService,
               private http: HttpClient,
@@ -27,18 +29,18 @@ export class ChatService {
     this.websocketService.sendMessage(message)
   }
   getConversationMessages(conversationId : string, username : string) {
-    return this.http.get<ChatMessage[]>(`http://localhost:8080/api/messages/conversations/${conversationId}/${username}`);
+    return this.http.get<ChatMessage[]>(`${this.API_BASE}/messages/conversations/${conversationId}/${username}`);
   }
   getConversationByUsernames(sender: string, recipient: string) {
-    return this.http.get<Conversation>(`http://localhost:8080/api/conversations/private/${sender}/${recipient}`);
+    return this.http.get<Conversation>(`${this.API_BASE}/conversations/private/${sender}/${recipient}`);
   }
 
   getConversationById(id : string) {
-    return this.http.get<Conversation>(`http://localhost:8080/api/conversations/${id}`);
+    return this.http.get<Conversation>(`${this.API_BASE}/conversations/${id}`);
   }
 
   getAllConversations() {
-    return  this.http.get<Conversation[]>(`http://localhost:8080/api/conversations/users/${this.userService.getCurrentUser().username}`)
+    return  this.http.get<Conversation[]>(`${this.API_BASE}/conversations/users/${this.userService.getCurrentUser().username}`)
   }
 
   createPrivateChat(name: string, recipient: string) {
@@ -48,7 +50,7 @@ export class ChatService {
       group: false
     }
 
-    return this.http.post<Conversation>('http://localhost:8080/api/conversations/private', request )
+    return this.http.post<Conversation>(`${this.API_BASE}/conversations/private`, request )
   }
 
   createGroupChat(name: string, recipients : string[]) {
@@ -57,7 +59,7 @@ export class ChatService {
       usernames: recipients,
       group: true
     }
-    return this.http.post<Conversation>('http://localhost:8080/api/conversations/group', request )
+    return this.http.post<Conversation>(`${this.API_BASE}/conversations/group`, request )
   }
 
   getMessage$() {
@@ -128,10 +130,10 @@ export class ChatService {
   }
 
   getLatestMessage(id: string, username: string) {
-    return this.http.get<ChatMessage>(`http://localhost:8080/api/messages/conversation/${id}/users/${username}/latest`)
+    return this.http.get<ChatMessage>(`${this.API_BASE}/messages/conversation/${id}/users/${username}/latest`)
   }
 
   getAllGroup() {
-    return this.http.get<Conversation[]>(`http://localhost:8080/api/conversations/users/${this.userService.getCurrentUser().username}/group`)
+    return this.http.get<Conversation[]>(`${this.API_BASE}/conversations/users/${this.userService.getCurrentUser().username}/group`)
   }
 }

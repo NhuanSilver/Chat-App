@@ -1,8 +1,8 @@
 <div class="main">
   <app-navigation-bar style="width: 7.4rem; z-index: 1"></app-navigation-bar>
-  <app-navigation-content style="width: 39rem"></app-navigation-content>
+  <app-side-bar style="width: 39rem"></app-side-bar>
   <div class="main-tab" [hidden]="(mainTab$ | async) !== TAB.CHAT" style="flex: 1; z-index: 1">
-    <app-room-content></app-room-content>
+    <app-chat-area></app-chat-area>
   </div>
 
   <div style="flex: 1; z-index: 1;" class="contact-tab" [hidden]="(mainTab$ | async) !== TAB.CONTACT">

@@ -1,25 +1,25 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {User} from "../model/User";
-import {BehaviorSubject, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {StorageService} from "./storage.service";
-import {WebsocketService} from "./websocket.service";
-import {Friend} from "../model/Friend";
+import {environment} from "../../environments/environment.development";
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class UserService {
+  private API_BASE = environment.API_BASE;
   constructor(private http: HttpClient,
               private storageService : StorageService) {
 
   }
   public login(username: string, password: string): Observable<User> {
-    return  this.http.post<User>('http://localhost:8080/api/users/login', {username: username, password : password})
+    return  this.http.post<User>(`${this.API_BASE}/users/login`, {username: username, password : password})
   }
   public getAllUsers() {
-    return this.http.get<User[]>('http://localhost:8080/api/users')
+    return this.http.get<User[]>(`${this.API_BASE}/users`)
   }
   isCurrentUser(username : string) : boolean {
     return username === this.getCurrentUser().username;
@@ -28,11 +28,11 @@ export class UserService {
     return this.storageService.getCurrentUser()
   }
   searchUserFriendByUsernameOrName(value : string) : Observable<User[]>  {
-    return this.http.get<User[]>(`http://localhost:8080/api/users/${this.getCurrentUser().username}/friends/search/${value}`)
+    return this.http.get<User[]>(`${this.API_BASE}/users/${this.getCurrentUser().username}/friends/search/${value}`)
   }
 
   searchUserNotFriendByUsernameOrFullName(value : string) : Observable<User[]> {
-    return this.http.get<User[]>(`http://localhost:8080/api/users/${this.getCurrentUser().username}/notFriends/search/${value}`)
+    return this.http.get<User[]>(`${this.API_BASE}/users/${this.getCurrentUser().username}/notFriends/search/${value}`)
   }
 
   logOut() {
@@ -41,6 +41,6 @@ export class UserService {
   }
 
   register(fullName: string, username: string, password: string) {
-    return  this.http.post<User>('http://localhost:8080/api/users/register', {fullName, username, password} )
+    return  this.http.post<User>(`${this.API_BASE}/users/register`, {fullName, username, password} )
   }
 }

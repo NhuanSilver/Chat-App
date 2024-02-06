@@ -1,4 +1,7 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {
+  AfterViewInit, booleanAttribute, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {ChatMessage} from "../../model/ChatMessage";
 import {DatePipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {UserService} from "../../service/user.service";
@@ -29,7 +32,7 @@ import {MessagePipe} from "../../shared/message.pipe";
 export class MessageComponent implements OnInit, AfterViewInit {
   @Input() isFirstMessage !: boolean
   @Input() message !: ChatMessage
-  @Input() displaySentAt !: boolean
+  @Input() displaySentAt : string = '';
   @Input() position !: string
   @Input() conversation: Conversation | undefined
 
@@ -38,22 +41,24 @@ export class MessageComponent implements OnInit, AfterViewInit {
 
   protected readonly JSON = JSON;
   protected readonly faEllipsisVertical = faEllipsisVertical;
+  protected readonly MESSAGE_TYPE = MESSAGE_TYPE;
+
   isOptionMenu: boolean = false;
 
   imgToDisplay: string [] = [];
-  protected readonly MESSAGE_TYPE = MESSAGE_TYPE;
 
   constructor(private userService: UserService,
-              private chatService : ChatService,
+              private chatService: ChatService,
               private renderer: Renderer2) {
 
   }
+
 
   ngAfterViewInit(): void {
     this.renderer.listen('window', 'click', e => {
       if (!this.toggleOptionMenu.nativeElement.contains(e.target)
         && !this.optionMenu.nativeElement.contains(e.target)) {
-        this.isOptionMenu = false
+        this.isOptionMenu = false;
       }
     })
   }
@@ -63,6 +68,7 @@ export class MessageComponent implements OnInit, AfterViewInit {
       this.imgToDisplay = this.JSON.parse(this.message.content)
     }
   }
+
 
   getCurrentUser(): User {
 

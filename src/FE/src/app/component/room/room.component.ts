@@ -11,8 +11,6 @@ import {TAB} from "../../model/TAB";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {faImage} from "@fortawesome/free-solid-svg-icons";
 import {MyDatePipe} from "../../shared/my-date.pipe";
-import {ChatMessage} from "../../model/ChatMessage";
-import {Observable} from "rxjs";
 import {MESSAGE_TYPE} from "../../model/MESSAGE_TYPE";
 import {MessagePipe} from "../../shared/message.pipe";
 

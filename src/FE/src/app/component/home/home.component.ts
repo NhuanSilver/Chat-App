@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NavigationBarComponent} from "../navigation-bar/navigation-bar.component";
-import {NavigationContentComponent} from "../navigation-content/navigation-content.component";
-import {RoomContentComponent} from "../room-content/room-content.component";
+import {SideBarComponent} from "../side-bar/side-bar.component";
+import {ChatAreaComponent} from "../chat-area/chat-area.component";
 import {WebsocketService} from "../../service/websocket.service";
 import {TabService} from "../../service/tab.service";
 import {AsyncPipe, NgIf} from "@angular/common";
@@ -19,8 +19,8 @@ import {BaseComponent} from "../../shared/BaseComponent";
   standalone: true,
   imports: [
     NavigationBarComponent,
-    NavigationContentComponent,
-    RoomContentComponent,
+    SideBarComponent,
+    ChatAreaComponent,
     NgIf,
     AsyncPipe,
     ContactComponent

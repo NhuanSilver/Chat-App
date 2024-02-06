@@ -20,7 +20,7 @@ import {PopUpComponent} from "../pop-up/pop-up.component";
 import {MESSAGE_TYPE} from "../../model/MESSAGE_TYPE";
 
 @Component({
-  selector: 'app-navigation-content',
+  selector: 'app-side-bar',
   standalone: true,
   imports: [
     CommonModule,
@@ -30,10 +30,10 @@ import {MESSAGE_TYPE} from "../../model/MESSAGE_TYPE";
     ReactiveFormsModule,
     TabsListComponent
   ],
-  templateUrl: './navigation-content.component.html',
-  styleUrl: './navigation-content.component.scss'
+  templateUrl: './side-bar.component.html',
+  styleUrl: './side-bar.component.scss'
 })
-export class NavigationContentComponent extends BaseComponent implements OnInit, AfterViewInit {
+export class SideBarComponent extends BaseComponent implements OnInit, AfterViewInit {
   @ViewChild('searchMenu') searchMenu !: ElementRef<HTMLDivElement>;
   @ViewChild('searchInput') searchInput !: ElementRef<HTMLDivElement>;
   @ViewChild('form') formElement !: ElementRef<HTMLFormElement>;
