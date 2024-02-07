@@ -3,6 +3,7 @@ package com.silver.amazingchatapp.controller;
 import com.silver.amazingchatapp.dto.AddFriendRequest;
 import com.silver.amazingchatapp.dto.FriendDTO;
 import com.silver.amazingchatapp.service.FriendService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -19,8 +20,7 @@ public class FriendController {
     private final FriendService friendService;
 
     @MessageMapping("/user.AddFriend")
-    public void addFriend(@Payload AddFriendRequest request) {
-        log.info("Start add");
+    public void addFriend(@Payload @Valid AddFriendRequest request) {
         this.friendService.addFriend(request);
     }
 

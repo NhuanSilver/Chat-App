@@ -32,7 +32,6 @@ public class UserService {
                 .normalize(loginRequest.getUsername(), Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
                 .toLowerCase();
-        log.info(normalUsername);
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         normalUsername,

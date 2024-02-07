@@ -4,6 +4,7 @@ import com.silver.amazingchatapp.dto.LoginRequest;
 import com.silver.amazingchatapp.dto.RegistrationRequest;
 import com.silver.amazingchatapp.dto.UserDto;
 import com.silver.amazingchatapp.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -34,12 +35,12 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public UserDto login(@RequestBody LoginRequest request) {
+    public UserDto login(@RequestBody @Valid LoginRequest request) {
         return userService.login(request);
     }
 
     @PostMapping("/register")
-    public UserDto register(@RequestBody RegistrationRequest request) {
+    public UserDto register(@RequestBody @Valid RegistrationRequest request) {
         return this.userService.register(request);
     }
 

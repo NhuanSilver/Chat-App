@@ -130,7 +130,7 @@ export class ChatAreaComponent extends BaseComponent implements OnInit {
 
         if (newMessage.messageType === MESSAGE_TYPE.DELETE) {
           this.chatMessages.splice(index, 1);
-          if (index == 0) {
+          if (index == 0 || index < this.chatMessages.length - 1) {
             const messageToEdit = this.chatMessages[index];
             this.chatMessages[index] = {...messageToEdit};
             this.cdf.detectChanges()
