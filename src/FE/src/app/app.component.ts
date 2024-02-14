@@ -11,7 +11,6 @@ import {ChatAreaComponent} from "./component/chat-area/chat-area.component";
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, NavigationBarComponent, SideBarComponent, ChatAreaComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
 })
 export class AppComponent {
 }

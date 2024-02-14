@@ -6,6 +6,7 @@ import com.silver.amazingchatapp.service.ConversationService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,10 +39,12 @@ public class ConversationController {
     }
 
     @PostMapping("/private")
+    @ResponseStatus(HttpStatus.CREATED)
     public ConversationDTO createPrivateConversation(@RequestBody @NonNull ConversationRequest request) {
        return this.conversationService.createConversation(request);
     }
     @PostMapping("/group")
+    @ResponseStatus(HttpStatus.CREATED)
     public ConversationDTO createGroupConversation(@RequestBody @NonNull ConversationRequest request) {
         return this.conversationService.createConversation(request);
     }
