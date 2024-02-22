@@ -127,7 +127,7 @@ export class SideBarComponent extends BaseComponent implements OnInit, AfterView
     )
       .subscribe(conversation => {
         if (conversation) {
-          if(!conversation.group && this.userService.isCurrentUser(conversation.latestMessage?.sender.username))
+          if(!conversation.group)
             this.chatService.setActiveConversation(conversation)
           this.conversations = this.sortConversation([...this.conversations, conversation]);
         }

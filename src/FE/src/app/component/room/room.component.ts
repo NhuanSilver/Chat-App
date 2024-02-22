@@ -47,7 +47,17 @@ export class RoomComponent extends BaseComponent implements OnInit {
         if (member) member.status = user.status;
       }
     });
-    this.chatService.getLatestMessage(this.conversation.id, this.userService.getCurrentUser().username).subscribe(m => this.conversation.latestMessage = m);
+    this.chatService.getLatestMessage(this.conversation.id, this.userService.getCurrentUser().username).subscribe(m => {
+      if(m != null) {
+        this.conversation.latestMessage = m;
+      } else {
+        this.subscriptions.push(this.chatService.getMessage$().subscribe(mess => {
+          if(this.conversation.id === mess.conversationId) {
+            this.conversation.latestMessage = mess;
+          }
+        }))
+      }
+    });
 
     this.subscriptions.push(userSub);
   }

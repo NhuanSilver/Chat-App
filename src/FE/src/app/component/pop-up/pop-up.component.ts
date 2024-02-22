@@ -6,7 +6,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {environment} from "../../../environments/environment.development";
 import {CommonModule} from "@angular/common";
-import {catchError, debounceTime, distinctUntilChanged, Observable, of, switchMap} from "rxjs";
+import {catchError, debounceTime, distinctUntilChanged, filter, Observable, of, switchMap} from "rxjs";
 import {UserService} from "../../service/user.service";
 import {User} from "../../model/User";
 import {ChatService} from "../../service/chat.service";
@@ -55,6 +55,7 @@ export class PopUpComponent extends BaseComponent implements OnInit {
     }
     this.users$ = this.form.controls[this.controlProps.SEARCH]?.valueChanges.pipe(
       debounceTime(100),
+      filter(value => value.length > 0),
       distinctUntilChanged(),
       switchMap(value => {
           if (value.length === 0) return of([])

@@ -94,13 +94,9 @@ export class FormChatComponent extends BaseComponent implements AfterViewInit{
     if (!this.conversation) {
       this.subscriptions.push(this.chatService.createPrivateChat(this.userService.getCurrentUser().username + "_" + recipientsClone[0].username, recipientsClone[0].username)
         .subscribe(cvs => {
-
-          if (cvs) {
             this.conversation = cvs;
             this.chatService.setNewConversation(this.conversation)
             this.sendMessageWithCondition(recipientsClone, cvs, message)
-          }
-
         }))
 
     } else {
