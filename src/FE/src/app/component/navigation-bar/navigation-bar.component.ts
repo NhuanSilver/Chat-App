@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
-import {NavigationItemComponent} from "../navigation-item/navigation-item.component";
 import {NavItem} from "../../model/NavItem";
 import {
   faAddressBook,
@@ -20,7 +19,6 @@ import {TabService} from "../../service/tab.service";
   selector: 'app-navigation-bar',
   standalone: true,
   imports: [
-    NavigationItemComponent,
     CommonModule,
     FaIconComponent
   ],

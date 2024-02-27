@@ -7,7 +7,6 @@ import {ChatService} from "../../service/chat.service";
 import {distinctUntilChanged, filter, map, switchMap} from "rxjs";
 import {Conversation} from "../../model/Conversation";
 import {BaseComponent} from "../../shared/BaseComponent";
-import {NavigationItemComponent} from "../navigation-item/navigation-item.component";
 import {faBars, faPhone, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {NavItem} from "../../model/NavItem";
 import {User} from "../../model/User";
@@ -21,7 +20,7 @@ import {MessagePipe} from "../../shared/message.pipe";
 @Component({
   selector: 'app-chat-area',
   standalone: true,
-  imports: [CommonModule, MessageComponent, FaIconComponent, NavigationItemComponent, PickerComponent, FormChatComponent, MessagePipe],
+  imports: [CommonModule, MessageComponent, FaIconComponent, PickerComponent, FormChatComponent, MessagePipe],
   templateUrl: './chat-area.component.html',
   styleUrl: './chat-area.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

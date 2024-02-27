@@ -4,12 +4,14 @@
          src="https://freepngimg.com/save/97432-logo-chat-photos-download-free-image/512x512">
   </a>
   <ul class="nav-link" >
-    <li *ngFor="let item of getNavItems()"  [class.active]="currentTab===item.name" (click)="changeTab(item)" app-navigation-item [item]=item>
+    <li class="icon-wrapper" *ngFor="let item of getNavItems()"  [class.active]="currentTab===item.name" (click)="changeTab(item)">
+      <fa-icon class="icon" [icon]="item.icon"></fa-icon>
     </li>
   </ul>
 
   <ul>
-    <li *ngFor="let item of getUserNavItems()" app-navigation-item [item]=item>
+    <li class="icon-wrapper" *ngFor="let item of getUserNavItems()">
+        <fa-icon class="icon" [icon]="item.icon"></fa-icon>
     </li>
     <li class="user-nav">
       <div *ngIf="user" #toggleButton (click)="toggleMenu()">

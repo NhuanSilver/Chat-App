@@ -66,3 +66,12 @@
   }
 }
 
+.icon-wrapper {
+    display: block;
+    text-align: center;
+    padding: 2.4rem 0;
+    cursor: pointer;
+    .icon {
+      font-size: 2rem;
+    }
+}

@@ -18,7 +18,8 @@
         </div>
       </div>
       <ul class="room-user-actions">
-        <li *ngFor="let item of roomNavItems" app-navigation-item [item]="item">
+        <li class="icon-wrapper" *ngFor="let item of roomNavItems">
+          <fa-icon class="icon" [icon]="item.icon"></fa-icon>
         </li>
       </ul>
     </div>

@@ -10,7 +10,7 @@ import {ChatAreaComponent} from "./component/chat-area/chat-area.component";
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterLink, NavigationBarComponent, SideBarComponent, ChatAreaComponent],
-  templateUrl: './app.component.html',
+  template: `<router-outlet></router-outlet>`,
 })
 export class AppComponent {
 }
