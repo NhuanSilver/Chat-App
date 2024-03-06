@@ -58,14 +58,18 @@ export class UserListComponent extends BaseComponent implements OnInit {
     this.isSent = true;
   }
 
-  setMember(user: User) {
+  setMember(user: User, event?: Event) {
     switch (this.parent) {
       case 'Thêm bạn' : {
         this.subscriptions.push(this.chatService.setMember(user))
         break;
       }
       case 'Tạo nhóm' : {
-
+        if (event && event.target && (event.target as HTMLInputElement).type === 'checkbox') {
+          break;
+        }
+        this.checkbox.nativeElement.checked = !this.checkbox.nativeElement.checked;
+        this.eventEmitter.emit(this.checkbox.nativeElement);
         break;
       }
       default : {
@@ -76,8 +80,8 @@ export class UserListComponent extends BaseComponent implements OnInit {
   }
 
 
-  sendUsernameToParent($event: Event) {
-    this.eventEmitter.emit($event)
+  sendUsernameToParent() {
+    this.eventEmitter.emit(this.checkbox.nativeElement)
   }
 
 }

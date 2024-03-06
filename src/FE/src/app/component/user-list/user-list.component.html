@@ -1,5 +1,5 @@
-    <tr class="user" (click)="setMember(user)">
-      <input #checkbox (change)="sendUsernameToParent($event)" *ngIf="parent ===  'Tạo nhóm'" [value]="user.username" type="checkbox">
+    <tr class="user" (click)="setMember(user, $event)">
+      <input #checkbox (change)="sendUsernameToParent()" *ngIf="parent ===  'Tạo nhóm'" [value]="user.username" type="checkbox">
       <div class="info">
         <img [src]="user.avatarUrl" alt="">
         <span>{{user.fullName}}</span>

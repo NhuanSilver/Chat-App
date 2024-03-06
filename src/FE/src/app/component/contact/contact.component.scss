@@ -4,6 +4,7 @@
   height: 100%;
   width: 100%;
   .contact__header {
+    background-color: #fff;
     display: flex;
     padding: 0 2rem;
     height: 7.3rem;
@@ -30,6 +31,7 @@
       background-color: #f5f7fb;
       padding: 2rem 2rem 0 2rem;
       .main__area {
+         overflow: auto;
         height: 100%;
         width: 100%;
         background-color: #fff;
@@ -143,6 +145,7 @@
   .friend__request__container {
     height: calc(100% - 7.3rem);
     .friend__request__grid {
+      overflow: auto;
       padding: 2rem 2rem 2rem 2rem;
       height: 100%;
       border-radius: 0.4rem;

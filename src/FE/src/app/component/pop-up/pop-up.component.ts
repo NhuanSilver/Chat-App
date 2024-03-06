@@ -51,7 +51,7 @@ export class PopUpComponent extends BaseComponent implements OnInit {
     )
     if (this.data.name === 'Tạo nhóm') {
       this.form.addControl(this.controlProps.GROUP_NAME, new FormControl('', Validators.required))
-      this.form.addControl(this.controlProps.USERNAME, new FormArray ([]));
+      this.form.addControl(this.controlProps.USERNAME, new FormArray ([], Validators.required));
     }
     this.users$ = this.form.controls[this.controlProps.SEARCH]?.valueChanges.pipe(
       debounceTime(100),
@@ -79,6 +79,7 @@ export class PopUpComponent extends BaseComponent implements OnInit {
   createGroup() {
     const groupName = this.form.get(this.controlProps.GROUP_NAME)?.value
     const recipients = this.form.get(this.controlProps.USERNAME)?.value
+    if(this.form.invalid) return;
     this.subscriptions.push(this.chatService.createGroupChat(groupName, [...recipients, this.userService.getCurrentUser().username]).subscribe(cvs => {
       this.chatService.setNewConversation(cvs)
       this.dialogRef.close();
@@ -86,19 +87,19 @@ export class PopUpComponent extends BaseComponent implements OnInit {
   }
 
   handleCheckbox(event: any) {
+    
     const checkboxes = this.form.get(this.controlProps.USERNAME) as FormArray;
-    if (event.target.checked) {
-
-        checkboxes.push(new FormControl(event.target.value))
-
+    const isChecked = event.checked;
+    
+    if (isChecked) {
+        checkboxes.push(new FormControl(event.value))
     } else {
       checkboxes.controls.forEach( (c, index) => {
-        if (c.value === event.target.value) {
+        if (c.value === event.value) {
           checkboxes.removeAt(index)
           return;
         }
       })
-
     }
   }
 }
